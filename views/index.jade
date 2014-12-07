@@ -3,16 +3,27 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  <div id="map-canvas" style='height:30em'></div>
-  <div id="locationField">
-  <input id="searchPlace" placeholder="Enter a place" type="text" style="height: 30px; width: 90%" />
-  </div>
+  div#map-canvas(style='height:30em')
+  div#locationField
+   input#searchSource(
+     placeholder="Enter a place",
+     type="text",
+     style="height: 30px; width: 90%"
+   )
+   input#searchDestination(
+     placeholder="Enter a place",
+     type="text",
+     style="height: 30px; width: 90%"
+   )
 
   script(type='text/javascript').
     var map_container = document.getElementById('map-canvas');
-    var autocomplete_container = document.getElementById('searchPlace');
+    var source_container = document.getElementById('searchSource');
+    var destination_container = document.getElementById('searchDestination');
+
     google.maps.event.addDomListener(window, 'load', function() {
       chanakya.Map.intializeGmapsUsingNavigator(map_container, function() {
-        chanakya.MapSearch.initializePlaces(autocomplete_container);
+        chanakya.Map.Search.initializeSourceBox(source_container);
+        chanakya.Map.Search.initializeDestinationBox(destination_container);
       });
     });

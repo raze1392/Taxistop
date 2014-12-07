@@ -1,57 +1,68 @@
-window.chanakya.MapSearch = (function () {
-  var SearchPlaces = {
-    refineSearch: null,
-    country: null
+window.chanakya = window.chanakya || {};
+window.chanakya.Map = window.chanakya.Map || {}:
+window.chanakya.Map.Search = (function () {
+
+  var initializeSourceBox = function(element) {
+    chanakya.Map.Details.autocompleteSource = new google.maps.places.Autocomplete(element, {});
+    google.maps.event.addListener(chanakya.Map.Details.autocompleteSource, 'place_changed', function() {
+      onPlaceChanged(element, "source");
+    });
   }
 
-  var searchWithGeoLocation = function() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var geolocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        chanakya.MapInfo.autocomplete.setBounds(new google.maps.LatLngBounds(geolocation, geolocation));
-      });
-    }
+  var initializeDestinationBox = function(element) {
+    chanakya.Map.Details.autocompleteDestination = new google.maps.places.Autocomplete(element, {});
+    google.maps.event.addListener(chanakya.Map.Details.autocompleteDestination, 'place_changed', function() {
+      onPlaceChanged(element, "destination");
+    });
   }
 
   var search = function() {
     var search = {
-      bounds: chanakya.MapInfo.map.getBounds()
+      bounds: chanakya.Map.Details.map.getBounds()
     };
-
-    chanakya.MapInfo.places.nearbySearch(search, function(results, status) {
-      console.log("SEXS");
+    chanakya.Map.Details.places.nearbySearch(search, function(results, status) {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
-          chanakya.MapInfo.results.push(results[i]);
+          chanakya.Map.Details.results.push(results[i]);
           console.log(results[i]);
         }
       }
     });
   }
 
-  var onPlaceChanged = function(element) {
-    var place = chanakya.MapInfo.autocomplete.getPlace();
+  var onPlaceChanged = function(element, type) {
+    var placeDetails = {};
+
+    if (type === "source") {
+      placeDetails = {
+        autocomplete: "autocompleteSource",
+        index: 0,
+        title: "Source",
+        type: type
+      };
+    } else if (type === "destination"){
+      placeDetails = {
+        autocomplete: "autocompleteDestination",
+        index: 1,
+        title: "Destination",
+        type: type
+      };
+    }
+
+    var place = chanakya.Map.Details[placeDetails.autocomplete].getPlace();
     if (place.geometry) {
-      chanakya.MapInfo.map.panTo(place.geometry.location);
-      chanakya.MapInfo.map.setZoom(15);
-      //search();
-      console.log(place);
+      chanakya.Map.Details.map.panTo(place.geometry.location);
+      chanakya.Map.Details[placeDetails.type] = place;
+      chanakya.Map.clearMarkers(placeDetails.index);
+      chanakya.Map.Details.markers[placeDetails.index] = chanakya.Map.setMarkerByLocation(place.geometry.location, placeDetails.title);
     } else {
       element.placeholder = 'Enter a city';
     }
   }
 
-
-  var initializePlaces = function(element) {
-    chanakya.MapInfo.autocomplete = new google.maps.places.Autocomplete(element, {});
-    chanakya.MapInfo.places = new google.maps.places.PlacesService(chanakya.MapInfo.map);
-
-    google.maps.event.addListener(chanakya.MapInfo.autocomplete, 'place_changed', function() {
-      onPlaceChanged(element);
-    });
-  }
-
   return {
-    initializePlaces: initializePlaces
+    initializeSourceBox: initializeSourceBox,
+    initializeDestinationBox: initializeDestinationBox
   }
+
 }());
