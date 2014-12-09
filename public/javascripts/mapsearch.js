@@ -1,5 +1,5 @@
 window.chanakya = window.chanakya || {};
-window.chanakya.Map = window.chanakya.Map || {}:
+window.chanakya.Map = window.chanakya.Map || {};
 window.chanakya.Map.Search = (function () {
 
   var initializeSourceBox = function(element) {

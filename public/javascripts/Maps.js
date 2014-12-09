@@ -14,7 +14,9 @@ window.chanakya.Map = (function() {
   };
 
   var intializeGmaps = function(element, callback, location) {
-    chanakya.Map.Details.map = new google.maps.Map(element, { center: location, zoom: 9 });
+    $('#searchSource').val("");
+    $('#searchDestination').val("");
+    chanakya.Map.Details.map = new google.maps.Map(element, { center: location, zoom: 12 });
     chanakya.Map.Details.source = location;
     chanakya.Map.Details.markers[0] = chanakya.Map.setMarkerByLocation(location, "Source");
     chanakya.Map.Details.places = new google.maps.places.PlacesService(chanakya.Map.Details.map);
@@ -23,10 +25,12 @@ window.chanakya.Map = (function() {
   }
 
   var intializeGmapsUsingNavigator = function(element, callback) {
+    $('#searchSource').val("My current location");
+    $('#searchDestination').val("");
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
         var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        chanakya.Map.Details.map = new google.maps.Map(element, { center: location, zoom: 9 });
+        chanakya.Map.Details.map = new google.maps.Map(element, { center: location, zoom: 12 });
         chanakya.Map.Details.source = location;
         chanakya.Map.Details.markers[0] = chanakya.Map.setMarker(position.coords.latitude, position.coords.longitude, "Source");
         chanakya.Map.Details.places = new google.maps.places.PlacesService(chanakya.Map.Details.map);

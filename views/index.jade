@@ -1,20 +1,20 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  div#map-canvas(style='height:30em')
-  div#locationField
-   input#searchSource(
-     placeholder="Enter a place",
-     type="text",
-     style="height: 30px; width: 90%"
-   )
-   input#searchDestination(
-     placeholder="Enter a place",
-     type="text",
-     style="height: 30px; width: 90%"
-   )
+  div#map-canvas
+  div#content
+      h2#title= title
+      div#locationField
+           input#searchSource(
+             placeholder="Enter source",
+             type="text",
+             style="height: 30px; width: 90%"
+           )
+           input#searchDestination(
+             placeholder="Enter destination",
+             type="text",
+             style="height: 30px; width: 90%"
+           )
 
   script(type='text/javascript').
     var map_container = document.getElementById('map-canvas');
