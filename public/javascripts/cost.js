@@ -38,6 +38,7 @@ window.chanakya = window.chanakya || {};
           if (type === "nano") return 10;
           if (type === "indica") return 14;
           if (type === "sedan") return 16;
+          // TODO: for airport
           //          if (type === "airportmini") return 13;
           //          if (type === "airportsedan") return 16;
           //          if (type === "airportprime") return 18;
