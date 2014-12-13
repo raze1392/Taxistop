@@ -23,7 +23,7 @@ block content
 
     google.maps.event.addDomListener(window, 'load', function() {
       chanakya.Map.intializeGmapsUsingNavigator(map_container, function() {
-        chanakya.Map.Search.initializeSourceBox(source_container);
-        chanakya.Map.Search.initializeDestinationBox(destination_container);
+        chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
+        chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
       });
     });
