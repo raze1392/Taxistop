@@ -1,3 +1,8 @@
+/*
+ * @Author: Abhinav Kushwaha <akush2007@gmail.com>
+ * 
+ */
+
 window.chanakya = window.chanakya || {};
 (function ($) {
 
