@@ -14,8 +14,13 @@ block content
              type="text",
              style="height: 30px; width: 95%"
            )
-  h2#title= title
+  div#title
 
+  script(src='scripts/input.js')
+  script(src='scripts/cost.js')
+  script(src='scripts/Maps.js')
+  script(src='scripts/MapSearch.js')
+  script(src='scripts/MapDirections.js')
   script(type='text/javascript').
     var map_container = document.getElementById('map-canvas');
     var source_container = document.getElementById('searchSource');
