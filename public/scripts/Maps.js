@@ -63,7 +63,8 @@ window.chanakya.Map = (function() {
             routeAlternatives: false,
             travelModeSelected: google.maps.TravelMode.DRIVING,
             unitSystemSelected: google.maps.UnitSystem.METRIC
-        }
+        },
+        Markers: []
     };
 
     var initializeMaps = function(element, location) {
@@ -102,6 +103,7 @@ window.chanakya.Map = (function() {
         $('#searchSource').val("");
         $('#searchDestination').val("");
         // Initializing Maps, Place and Direction Services
+        var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         initializeMaps(element, location);
         // Setting Source
         chanakya.Map.setSource(location);
@@ -132,12 +134,14 @@ window.chanakya.Map = (function() {
         });
     }
 
-    var setMarker = function(location, title) {
+    var setMarker = function(location, title, icon) {
         var marker = new google.maps.Marker({
             position: location,
-            title: title
+            title: title,
+            icon: (icon) ? icon : '',
         });
         marker.setMap(chanakya.Map._Details.map);
+        chanakya.Map._Details.Markers.push(marker);
         return marker;
     }
 
@@ -152,6 +156,15 @@ window.chanakya.Map = (function() {
         if ((!type || type === 'destination') && (chanakya.Map.existsDestination() && chanakya.Map.getDestination().marker)) {
             chanakya.Map._Details.Destination.marker.setMap(null);
             chanakya.Map._Details.Destination.marker = null;
+        }
+
+        // Remove the cab markers
+        if ((!type || type === 'cabs')) {
+            for (var i = chanakya.Map._Details.Markers.length - 1; i >= 0; i--) {
+                chanakya.Map._Details.Markers[i].setMap(null);
+                chanakya.Map._Details.Markers[i] = null;
+            };
+            chanakya.Map._Details.Markers = [];
         }
     }
 

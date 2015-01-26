@@ -16,38 +16,44 @@ google.maps.event.addDomListener(window, 'load', function() {
                 lng: longitude
             },
             function(jsonData) {
-                console.log('====== OLA ======');
-                console.log(jsonData);
+                mapNearByCabs(jsonData.cabsNearby, 'ola');
             });
 
-        $.getJSON(
-            '/cabs/tfs', {
-                lat: latitude,
-                lng: longitude
-            },
-            function(jsonData) {
-                console.log('====== TFS ======');
-                console.log(jsonData);
-            });
+        // $.getJSON(
+        //     '/cabs/tfs', {
+        //         lat: latitude,
+        //         lng: longitude
+        //     },
+        //     function(jsonData) {
+        //         console.log('====== TFS ======');
+        //         console.log(jsonData);
+        //     });
 
-        $.getJSON(
-            '/cabs/uber', {
-                lat: latitude,
-                lng: longitude
-            },
-            function(jsonData) {
-                console.log('====== UBER ======');
-                console.log(jsonData);
-            });
+        // $.getJSON(
+        //     '/cabs/uber', {
+        //         lat: latitude,
+        //         lng: longitude
+        //     },
+        //     function(jsonData) {
+        //         console.log('====== UBER ======');
+        //         console.log(jsonData);
+        //     });
 
-        $.getJSON(
-            '/cabs/meru', {
-                lat: latitude,
-                lng: longitude
-            },
-            function(jsonData) {
-                console.log('====== MERU ======');
-                console.log(jsonData);
-            });
+        // $.getJSON(
+        //     '/cabs/meru', {
+        //         lat: latitude,
+        //         lng: longitude
+        //     },
+        //     function(jsonData) {
+        //         console.log('====== MERU ======');
+        //         console.log(jsonData);
+        //     });
     });
 });
+
+function mapNearByCabs(cabs, service) {
+    for (var i = cabs.length - 1; i >= 0; i--) {
+        var location = chanakya.Map.convertLatLngToLocation(cabs[i].lat, cabs[i].lng);
+        chanakya.Map.setMarker(location, service.toUpperCase() + ' ' + cabs[i].type, '../images/sedan_map_v1.png');
+    };
+}
