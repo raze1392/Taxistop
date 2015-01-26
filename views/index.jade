@@ -21,14 +21,5 @@ block content
   script(src='scripts/Maps.js')
   script(src='scripts/MapSearch.js')
   script(src='scripts/MapDirections.js')
-  script(type='text/javascript').
-    var map_container = document.getElementById('map-canvas');
-    var source_container = document.getElementById('searchSource');
-    var destination_container = document.getElementById('searchDestination');
-
-    google.maps.event.addDomListener(window, 'load', function() {
-      chanakya.Map.intializeGmapsUsingNavigator(map_container, function() {
-        chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
-        chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
-      });
-    });
+  script(src='scripts/cabbie.js')
+  
