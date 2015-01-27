@@ -69,10 +69,20 @@ window.chanakya.Map = (function() {
 
     var initializeMaps = function(element, location) {
         // Initializing Maps, Place and Direction Services
-        chanakya.Map._Details.map = new google.maps.Map(element, {
+        var mapOptions = {
             center: location,
-            zoom: 12
-        });
+            zoom: 14,
+            disableDefaultUI: true,
+            mapTypeControl: false,
+            zoomControl: true,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.SMALL,
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
+            },
+            scaleControl: false,
+            streetViewControl: false
+        };
+        chanakya.Map._Details.map = new google.maps.Map(element, mapOptions);
         chanakya.Map._Details.places = new google.maps.places.PlacesService(chanakya.Map._Details.map);
         chanakya.Map._Details.directionsService = new google.maps.DirectionsService();
         chanakya.Map._Details.directionsDisplay = new google.maps.DirectionsRenderer();

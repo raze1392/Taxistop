@@ -52,7 +52,7 @@ google.maps.event.addDomListener(window, 'load', function() {
 });
 
 function mapNearByCabs(cabs, service) {
-    for (var i = cabs.length - 1; i >= 0; i--) {
+    for (var i = cabs.length - 1; i >= 0 && i > cabs.length - 6; i--) {
         var location = chanakya.Map.convertLatLngToLocation(cabs[i].lat, cabs[i].lng);
         chanakya.Map.setMarker(location, service.toUpperCase() + ' ' + cabs[i].type, '../images/sedan_map_v1.png');
     };
