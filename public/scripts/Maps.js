@@ -39,11 +39,13 @@ window.chanakya.Map = (function() {
         directionsDisplay: null,
         Source: {
             location: null,
-            marker: null
+            marker: null,
+            container: null
         },
         Destination: {
             location: null,
-            marker: null
+            marker: null,
+            container: null
         },
         Autocomplete: {
             source: null,
@@ -65,10 +67,13 @@ window.chanakya.Map = (function() {
             travelModeSelected: google.maps.TravelMode.DRIVING,
             unitSystemSelected: google.maps.UnitSystem.METRIC
         },
-        Markers: []
+        Markers: [],
+        Events: {
+            sourceLocationChangedEvent: null,
+        }
     };
 
-    var initializeMaps = function(element, location) {
+    var initializeMaps = function(element, sourceElem, destinationElem, location) {
         // Initializing Maps, Place and Direction Services
         var mapOptions = {
             center: location,
@@ -85,6 +90,10 @@ window.chanakya.Map = (function() {
         };
 
         chanakya.Map._Details.map = new google.maps.Map(element, mapOptions);
+
+        chanakya.Map.setContainer('source', sourceElem);
+        chanakya.Map.setContainer('destination', destinationElem);
+
         // Adding a marker at the center;
         addVirtualSourceMarker();
 
@@ -98,20 +107,39 @@ window.chanakya.Map = (function() {
     var addVirtualSourceMarker = function() {
         $('<div/>').addClass('centerMarker').appendTo(chanakya.Map._Details.map.getDiv());
 
-        // On gragging Map, source should be redrawn
-        google.maps.event.addListener(chanakya.Map._Details.map, 'drag', function() {
+        // On dragging Map, source should be redrawn
+        google.maps.event.addListener(chanakya.Map._Details.map, 'dragend', function() {
             chanakya.Map.setSource(chanakya.Map._Details.map.getCenter());
         });
+    }
+
+    var setContainer = function(type, element) {
+        if (type && element && type.toLowerCase() === 'source') {
+            chanakya.Map._Details.Source.container = element;
+            chanakya.Map._Details.Source.container.value = "";
+        } else if (type && element && type.toLowerCase() === 'destination') {
+            chanakya.Map._Details.Destination.container = element;
+            chanakya.Map._Details.Destination.container.value = "";
+        }
     }
 
     var setSource = function(location) {
         chanakya.Map._Details.Source.location = location;
         //chanakya.Map._Details.Source.marker = chanakya.Map.setMarker(location, "Source");
         chanakya.Map.getGeoLocation(location, function(loc) {
-            $('#searchSource').val(loc);
+            chanakya.Map._Details.Source.container.value = loc;
         }, function() {
-            $('#searchSource').val("Dropped pin location");
+            chanakya.Map._Details.Source.container.value = "Dropped pin location";
         });
+        
+        //Creating SourceLocationChanged event
+        chanakya.Map._Details.sourceLocationChangedEvent = new CustomEvent('sourceLocationChanged', {
+            'detail': {
+                'lat': chanakya.Map.getSourceLatitude(),
+                'lng': chanakya.Map.getSourceLongitude()
+            }
+        });
+        chanakya.Map._Details.Source.container.dispatchEvent(chanakya.Map._Details.sourceLocationChangedEvent);
     }
 
     var clearSource = function() {
@@ -129,26 +157,23 @@ window.chanakya.Map = (function() {
         chanakya.Map.clearMarkers("destination");
     }
 
-    var intializeGmaps = function(element, callback, location) {
-        $('#searchSource').val("");
-        $('#searchDestination').val("");
-        // Initializing Maps, Place and Direction Services
+    var intializeGmaps = function(element, sourceElem, destinationElem, callback, location) {
         var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        initializeMaps(element, location);
+        initializeMaps(element, sourceElem, destinationElem, location);
         // Setting Source
         chanakya.Map.setSource(location);
         callback();
         return true;
     }
 
-    var intializeGmapsUsingNavigator = function(element, callback) {
+    var intializeGmapsUsingNavigator = function(element, sourceElem, destinationElem, callback) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 // Initializing Maps, Place and Direction Services
                 var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                initializeMaps(element, location);
+                initializeMaps(element, sourceElem, destinationElem, location);
                 // Setting Source
-                chanakya.Map.setSource(location);
+                chanakya.Map.setSource(location, sourceElem);
                 callback();
                 return true;
             });
@@ -264,6 +289,7 @@ window.chanakya.Map = (function() {
         intializeGmaps: intializeGmaps,
         intializeGmapsUsingNavigator: intializeGmapsUsingNavigator,
         intializeInfoWindow: intializeInfoWindow,
+        setContainer: setContainer,
         setSource: setSource,
         clearSource: clearSource,
         setDestination: setDestination,

@@ -28,6 +28,7 @@ window.chanakya.Map.Directions = (function() {
             if (status == google.maps.DirectionsStatus.OK) {
                 chanakya.Map.clearMarkers();
                 chanakya.Map._Details.directionsDisplay.setDirections(response);
+                $('.centerMarker').hide();
             }
         });
     }
