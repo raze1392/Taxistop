@@ -133,6 +133,8 @@ window.chanakya.Map = (function() {
                 chanakya.Map.setSource(location);
                 var currentLoc = chanakya.Map.getGeoLocation(position.coords.latitude, position.coords.longitude, function(loc) {
                     $('#searchSource').val(loc);
+                }, function() {
+                    $('#searchSource').val("Dropped pin location");
                 });
                 callback();
                 return true;
@@ -202,7 +204,7 @@ window.chanakya.Map = (function() {
         return false;
     }
 
-    var getGeoLocation = function(lat, lng, cb) {
+    var getGeoLocation = function(lat, lng, cb, ecb) {
         console.log("getting geo location");
         var latlng = new google.maps.LatLng(lat, lng);
         var geocoder = new google.maps.Geocoder();
@@ -213,7 +215,11 @@ window.chanakya.Map = (function() {
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
                     cb(results[0].formatted_address);
+                } else {
+                    ecb();
                 }
+            } else {
+                ecb();
             }
         });
     }
