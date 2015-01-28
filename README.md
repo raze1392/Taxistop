@@ -12,4 +12,4 @@ Development
 
 Run server
 --------
-npm start
+jsx src/ public/scripts/ && npm start

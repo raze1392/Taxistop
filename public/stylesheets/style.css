@@ -1,41 +1,67 @@
-html,
-body,
-#map-canvas {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+html, body, #map-canvas {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 body {
-  padding: 50px;
-  font: 14px"Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 50px;
+    font: 14px"Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
-  color: #00B7FF;
+    color: #00B7FF;
 }
 #map-canvas {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 0;
 }
 #content {
-  position: absolute;
-  width: 250px;
-  top: 10px;
-  left: 10px;
-  z-index: 1;
-  background: white;
-  padding: 10px;
+    position: absolute;
+    width: 250px;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    background: white;
+    padding: 5px;
+}
+#content input {
+  width: 100%;
+  height: 30px;
+  border: none
+}
+#content input:active, #content input:hover, #content input:focus {
+  border: none;
+  outline: 0;
+  outline-width: 0;
 }
 #title {
-  position: absolute;
-  bottom: -9px;
-  left: 70px;
+    position: absolute;
+    bottom: -9px;
+    left: 70px;
 }
 #title h2 {
-  color: white;
-  text-shadow: 2px 2px 2px #000;
-  font-size: 19px;
+    color: white;
+    text-shadow: 2px 2px 2px #000;
+    font-size: 19px;
+}
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 0.1em 0;
+    padding: 0;
+}
+
+@media screen and (max-width: 480px){
+  #content {
+    width: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
 }

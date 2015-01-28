@@ -77,7 +77,7 @@ window.chanakya.Map = (function() {
             zoomControl: true,
             zoomControlOptions: {
                 style: google.maps.ZoomControlStyle.SMALL,
-                position: google.maps.ControlPosition.RIGHT_BOTTOM
+                position: google.maps.ControlPosition.RIGHT_CENTER
             },
             scaleControl: false,
             streetViewControl: false
@@ -131,6 +131,9 @@ window.chanakya.Map = (function() {
                 initializeMaps(element, location);
                 // Setting Source
                 chanakya.Map.setSource(location);
+                var currentLoc = chanakya.Map.getGeoLocation(position.coords.latitude, position.coords.longitude, function(loc) {
+                    $('#searchSource').val(loc);
+                });
                 callback();
                 return true;
             });
@@ -199,6 +202,22 @@ window.chanakya.Map = (function() {
         return false;
     }
 
+    var getGeoLocation = function(lat, lng, cb) {
+        console.log("getting geo location");
+        var latlng = new google.maps.LatLng(lat, lng);
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({
+            'latLng': latlng
+        }, function(results, status) {
+            console.log("geocoder", status, results);
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    cb(results[0].formatted_address);
+                }
+            }
+        });
+    }
+
     var getSource = function() {
         return chanakya.Map._Details.Source;
     }
@@ -236,6 +255,7 @@ window.chanakya.Map = (function() {
         clearDestination: clearDestination,
         existsSource: existsSource,
         existsDestination: existsDestination,
+        getGeoLocation: getGeoLocation,
         getSource: getSource,
         getDestination: getDestination,
         setMarker: setMarker,
