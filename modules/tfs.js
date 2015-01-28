@@ -7,6 +7,12 @@ TFS.options = {
     method: 'GET',
     path: ''
 };
+TFS.Taxi_Name_Map = {
+    hatchback: 'Hatchback',
+    sedan: 'Sedan',
+    auto: 'Auto',
+    nano: 'Nano'
+}
 
 function buildURL(latitude, longitude, userId) {
     var url = '/getNearestDriversForApp/?density=320&appVersion=4.1.1';
@@ -19,11 +25,73 @@ function buildURL(latitude, longitude, userId) {
     return url;
 }
 
-exports.call = function(responseHandler, response, latitude, longitude, userId) {
+function parseResponse(response, status) {
+    var output = {
+        status: status
+    }
+
+    var cabsEstimate = {};
+    var cabs = {};
+
+    if (status && status.toLowerCase() === 'success') {
+        // Generate locations of available cabs
+        for (var i = response.data.length - 1; i >= 0; i--) {
+            var tName = TFS.Taxi_Name_Map[response.data[i].carType.toLowerCase()];
+
+            if (!cabs[tName]) {
+                cabs[tName] = [];
+            }
+
+            cabs[tName].push({
+                lat: response.data[i].latitude,
+                lng: response.data[i].longitude,
+                distance: parseFloat(response.data[i].distance),
+                duration: response.data[i].duration,
+            });
+        };
+
+        for (cab in cabs) {
+            console.log(cabs[cab]);
+            var cabEO = {
+                available: false
+            };
+
+            if (cabs[cab].length > 0) {
+                cabEO['available'] = true;
+                cabEO['distance'] = cabs[cab][0].distance;
+                cabEO['duration'] = cabs[cab][0].duration;
+                delete cabs[cab][0].distance;
+                delete cabs[cab][0].duration;
+
+                for (var i = cabs[cab].length - 1; i >= 1; i--) {
+                    if (cabs[cab][i].distance < cabEO.distance) {
+                        cabEO['distance'] = cabs[cab][i].distance;
+                        cabEO['duration'] = cabs[cab][i].duration;
+                    }
+
+                    delete cabs[cab][i].distance;
+                    delete cabs[cab][i].duration;
+                };
+            }
+
+            cabsEstimate[cab] = cabEO;
+        }
+
+        output.cabs = cabs;
+        output.cabsEstimate = cabsEstimate;
+    }
+
+    return output;
+}
+
+exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     TFS.options.path = buildURL(latitude, longitude, userId);
 
     request.getJSON(TFS.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
+        if (shouldParseData) {
+            result = parseResponse(result.response_data, result.status);
+        }
         responseHandler(response, result);
     });
 }

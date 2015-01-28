@@ -13,9 +13,10 @@ router.get('/:cab', function(request, response) {
     var latitude = request.query.lat;
     var longitude = request.query.lng;
     var cabService = request.params.cab;
+    var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
 
     if (cabService && cabServiceModules[cabService]) {
-        cabServiceModules[cabService].call(sendResponse, response, latitude, longitude);
+        cabServiceModules[cabService].call(sendResponse, response, latitude, longitude, shouldParseData);
     }
 });
 

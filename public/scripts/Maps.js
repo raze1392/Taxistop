@@ -35,6 +35,7 @@ window.chanakya.Map = (function() {
         places: null,
         infoWindow: null,
         directionsService: null,
+        geoLocation: null,
         directionsDisplay: null,
         Source: {
             location: null,
@@ -82,16 +83,35 @@ window.chanakya.Map = (function() {
             scaleControl: false,
             streetViewControl: false
         };
+
         chanakya.Map._Details.map = new google.maps.Map(element, mapOptions);
+        // Adding a marker at the center;
+        addVirtualSourceMarker();
+
         chanakya.Map._Details.places = new google.maps.places.PlacesService(chanakya.Map._Details.map);
         chanakya.Map._Details.directionsService = new google.maps.DirectionsService();
         chanakya.Map._Details.directionsDisplay = new google.maps.DirectionsRenderer();
+        chanakya.Map._Details.geoLocation = new google.maps.Geocoder();
         chanakya.Map._Details.directionsDisplay.setMap(chanakya.Map._Details.map);
+    }
+
+    var addVirtualSourceMarker = function() {
+        $('<div/>').addClass('centerMarker').appendTo(chanakya.Map._Details.map.getDiv());
+
+        // On gragging Map, source should be redrawn
+        google.maps.event.addListener(chanakya.Map._Details.map, 'drag', function() {
+            chanakya.Map.setSource(chanakya.Map._Details.map.getCenter());
+        });
     }
 
     var setSource = function(location) {
         chanakya.Map._Details.Source.location = location;
-        chanakya.Map._Details.Source.marker = chanakya.Map.setMarker(location, "Source");
+        //chanakya.Map._Details.Source.marker = chanakya.Map.setMarker(location, "Source");
+        chanakya.Map.getGeoLocation(location, function(loc) {
+            $('#searchSource').val(loc);
+        }, function() {
+            $('#searchSource').val("Dropped pin location");
+        });
     }
 
     var clearSource = function() {
@@ -122,8 +142,6 @@ window.chanakya.Map = (function() {
     }
 
     var intializeGmapsUsingNavigator = function(element, callback) {
-        $('#searchSource').val("My current location");
-        $('#searchDestination').val("");
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 // Initializing Maps, Place and Direction Services
@@ -131,11 +149,6 @@ window.chanakya.Map = (function() {
                 initializeMaps(element, location);
                 // Setting Source
                 chanakya.Map.setSource(location);
-                var currentLoc = chanakya.Map.getGeoLocation(position.coords.latitude, position.coords.longitude, function(loc) {
-                    $('#searchSource').val(loc);
-                }, function() {
-                    $('#searchSource').val("Dropped pin location");
-                });
                 callback();
                 return true;
             });
@@ -204,22 +217,18 @@ window.chanakya.Map = (function() {
         return false;
     }
 
-    var getGeoLocation = function(lat, lng, cb, ecb) {
-        console.log("getting geo location");
-        var latlng = new google.maps.LatLng(lat, lng);
-        var geocoder = new google.maps.Geocoder();
-        geocoder.geocode({
-            'latLng': latlng
+    var getGeoLocation = function(location, onSuccess, onError) {
+        chanakya.Map._Details.geoLocation.geocode({
+            'latLng': location
         }, function(results, status) {
-            console.log("geocoder", status, results);
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
-                    cb(results[0].formatted_address);
+                    onSuccess(results[0].formatted_address);
                 } else {
-                    ecb();
+                    onError();
                 }
             } else {
-                ecb();
+                onError();
             }
         });
     }

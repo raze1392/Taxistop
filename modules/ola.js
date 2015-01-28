@@ -44,18 +44,22 @@ function parseResponse(response, status) {
         status: status
     }
 
-    var cabsNearby = [];
     var cabsEstimate = {};
+    var cabs = {};
 
     if (status && status.toLowerCase() === 'success') {
         // Generate locations of available cabs
         for (var i = response.cabs.length - 1; i >= 0; i--) {
-            cabsNearby.push({
+            var tName = OLA.Taxi_Name_Map[response.cabs[i].category_id];
+            
+            if (!cabs[tName]) {
+                cabs[tName] = [];
+            }
+
+            cabs[tName].push({
                 lat: response.cabs[i].lat,
                 lng: response.cabs[i].lng,
-                type: OLA.Taxi_Name_Map[response.cabs[i].category_id],
             });
-
         }
 
         //detail of nearest cab
@@ -66,26 +70,28 @@ function parseResponse(response, status) {
         	};
 
         	if (availability) {
-        		cabData.duration = response.cab_categories[i].duration;
-        		cabData.distance = response.cab_categories[i].distance;
+        		cabData.duration = response.cab_categories[i].duration.value;
+        		cabData.distance = response.cab_categories[i].distance.value;
         	}
 
         	cabsEstimate[OLA.Taxi_Name_Map[response.cab_categories[i].id]] = cabData;
         };
 
-        output.cabsNearby = cabsNearby;
+        output.cabs = cabs;
         output.cabsEstimate = cabsEstimate;
     }
 
     return output;
 }
 
-exports.call = function(responseHandler, response, latitude, longitude, userId) {
+exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     OLA.options.path = buildURL(latitude, longitude, userId);
 
     request.getJSON(OLA.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
-        result = parseResponse(result, result.status);
+        if (shouldParseData) {
+            result = parseResponse(result, result.status);
+        }
         responseHandler(response, result);
     });
 }
