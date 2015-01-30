@@ -10,6 +10,9 @@ body {
 a {
     color: #00B7FF;
 }
+table {
+    width: 100%;
+}
 #map-canvas {
     position: absolute;
     top: 0;
@@ -40,7 +43,7 @@ a {
 }
 #content {
     position: absolute;
-    width: 250px;
+    width: 320px;
     top: 10px;
     left: 10px;
     z-index: 1;
@@ -56,6 +59,41 @@ a {
     border: none;
     outline: 0;
     outline-width: 0;
+}
+#cabdetails {
+    position: absolute;
+    width: 320px;
+    top: 100px;
+    left: 10px;
+    z-index: 1;
+    background: white;
+    padding: 5px;
+}
+#services table tr td {
+    text-align: center;
+}
+#services table tr td div {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 50px;
+    border-radius: 5px;
+    margin: 0 auto;
+    background-color: #efefef;
+}
+#services table tr td.active div {
+    background-color: #ccc;
+}
+#services table tr td div img {
+    display: block;
+    margin: 0 auto;
+    height: 32px;
+}
+#services table tr td div span {
+    font-size: 10px;
+}
+#types {
+    height: 40px;
 }
 #title {
     position: absolute;
@@ -81,5 +119,13 @@ hr {
         top: 0;
         left: 0;
         right: 0;
+    }
+    #cabdetails {
+        width: auto;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
     }
 }

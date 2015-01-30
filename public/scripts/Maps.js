@@ -246,6 +246,7 @@ window.chanakya.Map = (function() {
         chanakya.Map._Details.geoLocation.geocode({
             'latLng': location
         }, function(results, status) {
+            console.log(status, results);
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
                     onSuccess(results[0].formatted_address);
