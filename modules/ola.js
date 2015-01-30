@@ -56,6 +56,8 @@ function parseResponse(response, status) {
                 cabs[tName] = [];
             }
 
+            if (cabs[tName].length == 5) continue;
+
             cabs[tName].push({
                 lat: response.cabs[i].lat,
                 lng: response.cabs[i].lng,

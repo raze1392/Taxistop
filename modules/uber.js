@@ -19,7 +19,7 @@ function buildURL(latitude, longitude, userId) {
     return url;
 }
 
-exports.call = function(responseHandler, response, latitude, longitude, userId) {
+exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     UBER.options.path = buildURL(latitude, longitude, userId);
 
     request.getJSON(UBER.options, function(statusCode, result) {

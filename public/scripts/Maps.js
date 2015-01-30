@@ -109,6 +109,7 @@ window.chanakya.Map = (function() {
 
         // On dragging Map, source should be redrawn
         google.maps.event.addListener(chanakya.Map._Details.map, 'dragend', function() {
+            if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) return;
             chanakya.Map.setSource(chanakya.Map._Details.map.getCenter());
         });
     }
@@ -131,7 +132,7 @@ window.chanakya.Map = (function() {
         }, function() {
             chanakya.Map._Details.Source.container.value = "Dropped pin location";
         });
-        
+
         //Creating SourceLocationChanged event
         chanakya.Map._Details.sourceLocationChangedEvent = new CustomEvent('sourceLocationChanged', {
             'detail': {
