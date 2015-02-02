@@ -88,9 +88,13 @@ table {
     display: block;
     margin: 0 auto;
     height: 32px;
+    margin-bottom: -4px;
 }
 #services table tr td div span {
     font-size: 10px;
+}
+#types, #details {
+  border-top: 1px solid #ccc;
 }
 #types {
     height: 40px;

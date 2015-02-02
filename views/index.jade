@@ -4,19 +4,19 @@ block content
   div#map-canvas
   div#content
       div#locationField
-           input#searchSource(
+           input.clearable#searchSource(
              placeholder="Enter source",
              type="text"
            )
            hr
-           input#searchDestination(
+           input.clearable#searchDestination(
              placeholder="Enter destination",
              type="text"
            )
   div#cabdetails
   div#title
 
-  script(src='scripts/input.js')
+  script(src='scripts/ui.js')
   script(src='scripts/cost.js')
   script(src='scripts/Maps.js')
   script(src='scripts/MapSearch.js')

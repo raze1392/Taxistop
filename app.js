@@ -4,9 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var browserify = require('browserify-middleware');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var ui = require('./routes/ui');
 var cabs = require('./routes/cabs');
 
 var app = express();
@@ -25,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/ui', ui);
 app.use('/cabs', cabs);
 
 // catch 404 and forward to error handler
@@ -58,6 +59,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;
