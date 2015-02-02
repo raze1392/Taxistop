@@ -2,6 +2,16 @@ var map_container = document.getElementById('map-canvas');
 var source_container = document.getElementById('searchSource');
 var destination_container = document.getElementById('searchDestination');
 
+var CAB_TYPE = {
+    Mini: '../images/mini.png',
+    Hatchback: '../images/mini.png',
+    Genie: '../images/mini.png',
+    Nano: '../images/mini.png',
+    Sedan: '../images/sedan.png',
+    Meru: '../images/sedan.png',
+    Prime: '../images/prime.png',
+}
+
 function onSourceChangeCallback(latitude, longitude) {
     $.getJSON(
         '/cabs/ola', {
@@ -63,7 +73,7 @@ function mapNearByCabs(cabs, service) {
             var _c = cabs[cabType][i];
             if (_c) {
                 var location = chanakya.Map.convertLatLngToLocation(_c.lat, _c.lng);
-                chanakya.Map.setMarker(location, service.toUpperCase() + ' ' + cabType, '../images/sedan_map_v1.png');
+                chanakya.Map.setMarker(location, service.toUpperCase() + ' ' + cabType, CAB_TYPE[cabType]);
             }
         };
     }
