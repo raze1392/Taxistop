@@ -12,6 +12,9 @@ a {
 table {
     width: 100%;
 }
+.right {
+    float: right
+}
 #map-canvas {
     position: fixed;
     top: 0;
@@ -61,21 +64,47 @@ table {
 }
 #cabdetails {
     position: absolute;
-    width: 320px;
-    top: 100px;
+    width: 330px;
+    top: 95px;
     left: 10px;
     z-index: 1;
+    background: transparent;
+}
+#details {
     background: white;
-    padding: 5px;
+    height: 215px;
+    padding: 2px 0;
+}
+#details .cab-details {
+    border-bottom: 1px solid #ccc;
+    padding: 5px 5px 5px 5px;
+    position: relative;
+}
+#details .cab-details:last-child {
+    border: none;
+}
+#details .cab-time {
+    float: right;
+}
+#details p {
+    margin: 0;
+}
+#details p.cab-desc {
+    font-size: 0.85em;
+    color: #777;
+}
+#services {
+    background: white;
 }
 #services table tr td {
     text-align: center;
+    padding: 8px;
 }
 #services table tr td div {
     cursor: pointer;
     border: 1px solid #ccc;
     padding: 5px;
-    width: 50px;
+    width: 40px;
     border-radius: 5px;
     margin: 0 auto;
     background-color: #efefef;
@@ -86,16 +115,17 @@ table {
 #services table tr td div img {
     display: block;
     margin: 0 auto;
-    height: 32px;
+    height: 25px;
     margin-bottom: -4px;
 }
 #services table tr td div span {
     font-size: 10px;
 }
-#types, #details {
-  border-top: 1px solid #ccc;
+#types {
+    border-top: 1px solid #ccc;
 }
 #types {
+    display: none;
     height: 40px;
 }
 #title {
@@ -117,6 +147,10 @@ hr {
     padding: 0;
 }
 @media screen and (max-width: 480px) {
+    #map-canvas {
+        position: fixed;
+        top: 78px;
+    }
     #content {
         width: auto;
         top: 0;
@@ -130,5 +164,11 @@ hr {
         left: 0;
         right: 0;
         z-index: 1;
+    }
+    #details {
+        margin-bottom: -5px;
+        border-bottom: 1px solid #aaa;
+        padding: 0;
+        height: auto;
     }
 }

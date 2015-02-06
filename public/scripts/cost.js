@@ -30,6 +30,7 @@ window.chanakya = window.chanakya || {};
         if (city === "Bengaluru") {
           if (type === "mini") return 10;
           if (type === "sedan") return 13;
+          if (type === "pink") return 18;
           if (type === "prime") return 18;
           if (type === "airportmini") return 13;
           if (type === "airportsedan") return 16;
@@ -63,13 +64,20 @@ window.chanakya = window.chanakya || {};
       return dist * rates.auto();
     }
     var ola = function dist(dist, type) {
+      if (type === "auto") {
+        return auto(dist);
+      }
       if (type === "mini") {
         if (dist <= 6) return 100;
         return 100 + (dist - 6) * rates.ola(type);
       }
       if (type === "sedan") {
         if (dist <= 8) return 150;
-        return 150 + (dist - 6) * rates.ola(type);
+        return 150 + (dist - 8) * rates.ola(type);
+      }
+      if (type === "pink") {
+        if (dist <= 5) return 200;
+        return 200 + (dist - 5) * rates.ola(type);
       }
       if (type === "prime") {
         if (dist <= 5) return 200;

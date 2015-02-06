@@ -151,6 +151,15 @@ window.chanakya.Map = (function() {
     var setDestination = function(location) {
         chanakya.Map._Details.Destination.location = location;
         chanakya.Map._Details.Destination.marker = chanakya.Map.setMarker(location, "Destination");
+
+        //Creating SourceLocationChanged event
+        chanakya.Map._Details.destinationLocationChangedEvent = new CustomEvent('destinationLocationChanged', {
+            'detail': {
+                'lat': chanakya.Map.getDestination().location.k,
+                'lng': chanakya.Map.getDestination().location.D
+            }
+        });
+        chanakya.Map._Details.Source.container.dispatchEvent(chanakya.Map._Details.destinationLocationChangedEvent);
     }
 
     var clearDestination = function() {
