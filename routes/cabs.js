@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var request = require('../modules/request');
 var cabServiceModules = {
     ola: require('../modules/ola'),
     tfs: require('../modules/tfs'),

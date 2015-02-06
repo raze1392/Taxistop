@@ -19,11 +19,32 @@ function buildURL(latitude, longitude, userId) {
     return url;
 }
 
+function parseResponse(response) {
+    var output = {
+        status: "success"
+    }
+    output.cabsEstimate = [];
+
+    for (var i = 0; i < response.times.length; i++) {
+        var _cEst = {
+            name: response.times[i].localized_display_name,
+            available: true,
+            duration: response.times[i].estimate / 60,
+            distance: null
+        }
+        output.cabsEstimate.push(_cEst);
+    }
+
+    return output;
+}
+
 exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     UBER.options.path = buildURL(latitude, longitude, userId);
 
     request.getJSON(UBER.options, function(statusCode, result) {
-        //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
+        if (shouldParseData) {
+            result = parseResponse(result);
+        }
         responseHandler(response, result);
     });
 }
