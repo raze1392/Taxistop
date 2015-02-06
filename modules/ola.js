@@ -80,7 +80,13 @@ function parseResponse(response, status) {
         };
 
         output.cabs = cabs;
-        output.cabsEstimate = cabsEstimate;
+        output.cabsEstimate = [];
+
+        for (key in cabsEstimate) {
+            var _cEst = cabsEstimate[key];
+            _cEst.name = key;
+            output.cabsEstimate.push(_cEst);
+        }
     }
 
     return output;

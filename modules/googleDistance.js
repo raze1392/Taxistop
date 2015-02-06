@@ -55,6 +55,13 @@ function parseGoogleEstimateForMeru(responseToSend, result) {
     duration += " mins";
     responseToSend.cabsEstimate['Genie'].duration = duration;
 
+    var tempEstimate = [];
+    for (key in responseToSend.cabsEstimate) {
+        var _cEst = responseToSend.cabsEstimate[key];
+        _cEst.name = key;
+        tempEstimate.push(_cEst);
+    }
+    responseToSend.cabsEstimate = tempEstimate;
     delete responseToSend.AddtoETA;
 
     return responseToSend;

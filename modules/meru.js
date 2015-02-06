@@ -64,7 +64,12 @@ function parseResponse(responseHandler, responseService, location, response) {
             sourceLocations: sourceLocations
         }
 
-        googleDistance.call(responseHandler, data);
+        if (response.Cablist.length > 0) {
+            googleDistance.call(responseHandler, data);
+        } else {
+            data.responsePayload.cabsEstimate = [];
+            responseHandler(data.responseService, data.responsePayload);
+        }
     }
 
     return output;
