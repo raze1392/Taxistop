@@ -203,7 +203,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             }
             $interval(function() {
                 $scope.callAtInterval();
-            }, 15000);
+            }, 60000);
         }
         $scope.callAtInterval = function() {
             $scope.getService($scope.cabs.selected);
