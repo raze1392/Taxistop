@@ -159,14 +159,16 @@ table {
     height: 40px;
 }
 #title {
-    position: absolute;
-    bottom: -9px;
-    left: 70px;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
 }
-#title h2 {
-    color: white;
-    text-shadow: 2px 2px 2px #000;
-    font-size: 19px;
+#title img {
+    width: 60px;
+    height: 60px;
 }
 hr {
     display: block;

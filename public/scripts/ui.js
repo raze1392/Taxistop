@@ -87,6 +87,8 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             else
                 map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
             google.maps.event.trigger(chanakya.Map.getMap(), "resize");
+            
+            if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) return;
             chanakya.Map.getMap().setCenter(chanakya.Map.getSource().location);
         }
 
