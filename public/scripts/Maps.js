@@ -180,8 +180,8 @@ window.chanakya.Map = (function() {
         chanakya.Map.clearMarkers("destination");
     }
 
-    var intializeGmaps = function(element, sourceElem, destinationElem, callback, location) {
-        var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    var intializeGmaps = function(element, sourceElem, destinationElem, location, callback) {
+        var location = new google.maps.LatLng(location.latitude, location.longitude);
         initializeMaps(element, sourceElem, destinationElem, location);
         // Setting Source
         chanakya.Map.setSource(location);

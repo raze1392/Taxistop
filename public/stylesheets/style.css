@@ -52,6 +52,9 @@ table {
     background: white;
     padding: 5px;
 }
+#locationField {
+    position: relative;
+}
 #content input {
     width: 100%;
     height: 30px;
@@ -100,26 +103,32 @@ table {
     text-align: center;
     padding: 8px;
 }
+#services hr {
+    position: absolute;
+    top:50%;
+}
 #services table tr td div {
     cursor: pointer;
-    border: 1px solid #ccc;
+    border: 1px solid #aaa;
     padding: 5px;
     width: 40px;
-    border-radius: 5px;
+    height: 40px;
+    border-radius: 50%;
     margin: 0 auto;
     background-color: #efefef;
 }
-#services table tr td.active div {
-    background-color: #ccc;
+#services table tr td div.active {
+    background-color: #aaa;
 }
 #services table tr td div img {
     display: block;
-    margin: 0 auto;
-    height: 25px;
+    margin: 4px auto;
+    height: 30px;
     margin-bottom: -4px;
 }
 #services table tr td div span {
     font-size: 10px;
+    display: none;
 }
 #types {
     border-top: 1px solid #ccc;

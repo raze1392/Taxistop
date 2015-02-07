@@ -8,7 +8,7 @@ window.mobilecheck = function() {
     return check;
 }
 
-var chanakyaApp = angular.module('chanakyaApp', []);
+var chanakyaApp = angular.module('chanakyaApp', ['ngSanitize']);
 
 chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http',
     function($scope, $http) {
@@ -36,54 +36,27 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http',
 
         $scope.services = [{
             name: "Ola",
-            icon: "images/ola-icon-50x50.png",
-            types: [{
-                name: "Auto",
-                icon: '../images/auto.png'
-            }, {
-                name: "Mini",
-                icon: '../images/mini.png'
-            }, {
-                name: "Pink",
-                icon: '../images/pink.png'
-            }, {
-                name: "Sedan",
-                icon: '../images/sedan.png'
-            }, {
-                name: "Prime",
-                icon: '../images/prime.png'
-            }]
+            icon: "images/ola-icon-50x50.png"
         }, {
             name: "Uber",
             icon: "images/uber-icon-50x50.png"
         }, {
             name: "TFS",
-            icon: "images/tfs-icon-50x50.jpg",
-            types: [{
-                name: "Hatchback",
-                icon: '../images/mini.png'
-            }, {
-                name: "Nano",
-                icon: '../images/nano.png'
-            }, {
-                name: "Sedan",
-                icon: '../images/sedan.png'
-            }]
+            icon: "images/tfs-icon-50x50.jpg"
         }, {
             name: "Meru",
-            icon: "images/meru-icon-50x50.jpg",
-            types: [{
-                name: "Meru",
-                icon: '../images/sedan.png'
-            }, {
-                name: "Genie",
-                icon: '../images/mini.png'
-            }]
+            icon: "images/meru-icon-50x50.jpg"
         }];
 
+        $scope.mask = false;
         $scope.availableTypes = 0;
 
         function processData(selected, data) {
+            if (!data.cabsEstimate) {
+                $scope.mask = true;
+                return;
+            }
+            $scope.mask = false;
             $scope.cabs.selected = selected;
             $scope.cabs.estimate = data.cabsEstimate;
             $scope.cabs.coordinates = data.cabs;
@@ -141,28 +114,17 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http',
             }
         }
 
-        $scope.travelTime = 10;
-        $scope.travelDistance = 5;
+        $scope.travelTime = 0;
+        $scope.travelDistance = 0;
         // TODO: get travel info 
         $scope.setTravelInfo = function() {
-            // if (!chanakya.Map.existsDestination()) return;
-            // var sourceLocation = {
-            //     lat: chanakya.Map.getSourceLatitude(),
-            //     lng: chanakya.Map.getSourceLongitude()
-            // };
-            // var destinationLocation = {
-            //     lat: chanakya.Map.getDestination().location.k,
-            //     lng: chanakya.Map.getDestination().location.D
-            // };
-            // console.log(sourceLocation, destinationLocation);
-            // $http.get(buildGoogleDistanceMatrixURL(sourceLocation, destinationLocation) + "&callback=JSON_CALLBACK").success(function(data) {
-            //     $scope.travelTime = 30;
-            //     console.log(data);
-            // }).error(function(data) {
-            //     $scope.travelTime = 20;
-            //     $scope.travelDistance = 10;
-            //     console.error(data);
-            // });
+            if (!$scope.destination || !$scope.destination.lat) return;
+            var url = 'eta?srcLat=' + $scope.source.lat + '&srcLng=' + $scope.source.lng;
+            url += '&destLat=' + $scope.destination.lat + '&destLng=' + $scope.destination.lng;
+            $http.get(url).success(function(data) {
+                $scope.travelTime = Math.ceil(data.duration.value / 60);
+                $scope.travelDistance = data.distance.value / 1000;
+            });
         }
 
         function JSON_CALLBACK(data) {
@@ -171,21 +133,26 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http',
         $scope.getTravelTime = function(cab) {
             if (!chanakya.Map.existsDestination() || !cab.available)
                 return "";
+            if ($scope.travelTime == 0) return "wait";
             var totalTravelTime = cab.duration + $scope.travelTime;
-            return totalTravelTime + " mins";
+            return Math.floor(totalTravelTime) + " mins";
         }
 
         $scope.getArrivalTime = function(cab) {
             if (cab.available)
-                return "Arrives in " + cab.duration + " mins";
+                return "Arrives in " + Math.floor(cab.duration) + " mins";
             return "Not available";
         }
 
         $scope.getTravelCost = function(cab) {
             if (!chanakya.Map.existsDestination() || !cab.available)
                 return "";
+            if ($scope.travelDistance == 0) return "calculating";
             if ($scope.cabs.selected.toLowerCase() == "ola") {
-                return "apx ₹" + chanakya.cost.ola($scope.travelDistance, cab.name.toLowerCase());
+                return "apx &#8377;" + Math.ceil(chanakya.cost.ola($scope.travelDistance, cab.name.toLowerCase()));
+            }
+            if ($scope.cabs.selected.toLowerCase() == "tfs") {
+                return "apx &#8377;" + Math.ceil(chanakya.cost.tfs($scope.travelDistance, cab.name.toLowerCase()));
             }
         }
 
@@ -204,11 +171,25 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http',
             }
         }
 
+
         google.maps.event.addDomListener(window, 'load', function() {
-            chanakya.Map.intializeGmapsUsingNavigator(map_container, source_container, destination_container, function() {
-                chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
-                chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
-            });
+            if (navigator.userAgent.match(/Android/i)) {
+                console.log(Android.getUserLocation());
+                var location = Android.getUserLocation().split('|');
+                chanakya.Map.intializeGmaps(map_container, source_container, destination_container, {
+                        latitude: location[0],
+                        longitude: location[1]
+                    },
+                    function() {
+                        chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
+                        chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
+                    });
+            } else {
+                chanakya.Map.intializeGmapsUsingNavigator(map_container, source_container, destination_container, function() {
+                    chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
+                    chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
+                });
+            }
         });
 
         source_container.addEventListener('sourceLocationChanged', function(event) {
