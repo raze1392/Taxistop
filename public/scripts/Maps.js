@@ -107,7 +107,7 @@ window.chanakya.Map = (function() {
     }
 
     var addVirtualSourceMarker = function() {
-        $('<div/>').addClass('centerMarker').appendTo(chanakya.Map._Details.map.getDiv());
+        $('<div id="centerMark"/>').addClass('centerMarker').appendTo(chanakya.Map._Details.map.getDiv());
 
         // On dragging Map, source should be redrawn
         google.maps.event.addListener(chanakya.Map._Details.map, 'dragend', function() {
@@ -135,6 +135,7 @@ window.chanakya.Map = (function() {
         }, function() {
             chanakya.Map._Details.Source.container.value = "Dropped pin location";
         });
+        chanakya.Map._Details.map.setCenter(location);
 
         //Creating SourceLocationChanged event
         chanakya.Map._Details.sourceLocationChangedEvent = new CustomEvent('sourceLocationChanged', {
@@ -329,8 +330,13 @@ window.chanakya.Map = (function() {
         return new google.maps.LatLng(latitude, longitude);
     }
 
+    var getMap = function(latitude, longitude) {
+        return chanakya.Map._Details.map;
+    }
+
     return {
         _Details: Details,
+        getMap: getMap,
         intializeGmaps: intializeGmaps,
         intializeGmapsUsingNavigator: intializeGmapsUsingNavigator,
         intializeInfoWindow: intializeInfoWindow,

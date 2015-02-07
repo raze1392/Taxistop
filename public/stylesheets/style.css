@@ -38,9 +38,9 @@ table {
     margin-left: -10px;
     margin-top: -34px;
     /*size of the image*/
-    
     height: 34px;
     width: 20px;
+    z-index: 999;
     cursor: pointer;
 }
 #content {

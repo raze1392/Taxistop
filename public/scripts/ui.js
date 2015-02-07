@@ -76,7 +76,11 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
         function setMapHeight(lessHeight) {
             if ($scope.availableTypes == 0)
                 map_container.style.height = ($scope.mapHeight - 25) + "px";
-            map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
+            else
+                map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
+            
+            google.maps.event.trigger(chanakya.Map.getMap(), "resize");
+            chanakya.Map.getMap().setCenter(chanakya.Map.getSource().location);
         }
 
         $scope.showMask = function() {
@@ -205,6 +209,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                 $scope.callAtInterval();
             }, 60000);
         }
+
         $scope.callAtInterval = function() {
             $scope.getService($scope.cabs.selected);
             if ($scope.destination && $scope.destination.lat) {
