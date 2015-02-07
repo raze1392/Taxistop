@@ -30,7 +30,8 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http',
             Nano: '../images/mini.png',
             Sedan: '../images/sedan.png',
             Meru: '../images/sedan.png',
-            Prime: '../images/prime.png'
+            Prime: '../images/prime.png',
+            'Kaali Peeli': '../images/mini.png',
         }
 
         $scope.services = [{

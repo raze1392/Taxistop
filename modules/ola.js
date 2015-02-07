@@ -17,7 +17,8 @@ OLA.Taxi_Name_Map = {
     compact: 'Mini',
     local_auto: 'Auto',
     pink: 'Pink',
-    luxury_sedan: 'Prime'
+    luxury_sedan: 'Prime',
+    local_taxi: 'Kaali Peeli'
 }
 
 function buildURL(latitude, longitude, userId) {
