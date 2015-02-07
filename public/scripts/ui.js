@@ -43,7 +43,11 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             Sedan: '../images/sedan.png',
             Meru: '../images/sedan.png',
             Prime: '../images/prime.png',
+            Pink: '../images/prime.png',
+            Auto: '../images/auto.png',
             'Kaali Peeli': '../images/mini.png',
+            uberX: '../images/mini.png',
+            UberBLACK: '../images/sedan.png'
         }
 
         $scope.services = [{
@@ -87,7 +91,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             else
                 map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
             google.maps.event.trigger(chanakya.Map.getMap(), "resize");
-            
+
             if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) return;
             chanakya.Map.getMap().setCenter(chanakya.Map.getSource().location);
         }
@@ -134,6 +138,10 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             if (service.toLowerCase() == 'meru') {
                 $scope.getMeru();
             }
+        }
+
+        $scope.getCabImg = function(name) {
+            return CAB_TYPE[name];
         }
 
         $scope.travelTime = 0;
@@ -189,14 +197,17 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                 if ($scope.uberCost.multipliers[cab.name] != 1) {
                     multiplier = "<span class='multiplier'>" + $scope.uberCost.multipliers[cab.name] + "x</span>";
                 }
-                return multiplier + "apx &#8377;" + $scope.uberCost[cab.name];
+                return multiplier + " &#8377;" + $scope.uberCost[cab.name];
             }
 
         }
         $scope.getUberCost = function() {
             $http.get('cabs/uber/cost?srcLat=' + $scope.source.lat + '&srcLng=' + $scope.source.lng + '&destLat=' + $scope.destination.lat + '&destLng=' + $scope.destination.lng).success(function(data) {
                 for (item in data.prices) {
-                    $scope.uberCost[data.prices[item].name] = data.prices[item].low_estimate + "-" + data.prices[item].high_estimate;
+                    if (data.prices[item].low_estimate == data.prices[item].high_estimate)
+                        $scope.uberCost[data.prices[item].name] = data.prices[item].low_estimate;
+                    else
+                        $scope.uberCost[data.prices[item].name] = data.prices[item].low_estimate + "-" + data.prices[item].high_estimate;
                     $scope.uberCost.multipliers[data.prices[item].name] = data.prices[item].multiplier;
                 }
             });
@@ -212,6 +223,11 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
         $scope.isShownDetails = function() {
             if (!$scope.isMobile) return true;
             return !$scope.typingOn;
+        }
+
+        $scope.clearDestination = function() {
+            $scope.destination = undefined;
+            chanakya.Map.Directions.clearDirections();
         }
 
         $scope.init = function() {

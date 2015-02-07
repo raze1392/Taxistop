@@ -630,7 +630,7 @@ window.chanakya = window.chanakya || {};
                 return rate;
             }
             var tfs = function(type) {
-                var rate = chanakya.cabrates.ola[chanakya.currentCity][type].rate || -1;
+                var rate = chanakya.cabrates.tfs[chanakya.currentCity][type].rate || -1;
                 return rate;
             }
             return {
@@ -658,7 +658,7 @@ window.chanakya = window.chanakya || {};
             }
             if (dist <= chanakya.cabrates.tfs[chanakya.currentCity][type].minkm)
                 return chanakya.cabrates.tfs[chanakya.currentCity][type].minprice;
-            return chanakya.cabrates.ola[chanakya.currentCity][type].minprice + (dist - chanakya.cabrates.tfs[chanakya.currentCity][type].minkm) * rates.tfs(type);
+            return chanakya.cabrates.tfs[chanakya.currentCity][type].minprice + (dist - chanakya.cabrates.tfs[chanakya.currentCity][type].minkm) * rates.tfs(type);
         }
         var meru = function dist(dist, type) {
             if (dist <= chanakya.cabrates.meru[chanakya.currentCity][type].minkm)

@@ -38,6 +38,7 @@ table {
     margin-left: -10px;
     margin-top: -34px;
     /*size of the image*/
+    
     height: 34px;
     width: 20px;
     z-index: 999;
@@ -51,9 +52,28 @@ table {
     z-index: 1;
     background: white;
     padding: 5px;
+    -webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+.clear-dest {
+    position: absolute;
+    z-index: 100;
+    right: 0;
+    top: 46px;
+    background: white;
+    padding: 0 5px;
+    cursor: pointer;
+}
+.src-dest {
+    position: absolute;
+    height: 60px;
+    top: 10px;
+    left: 7px;
 }
 #locationField {
     position: relative;
+    margin-left: 30px;
 }
 #content input {
     width: 100%;
@@ -77,14 +97,22 @@ table {
     background: white;
     height: 215px;
     padding: 2px 0;
+    -webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
 }
 #details .cab-details {
     border-bottom: 1px solid #ccc;
     padding: 5px 5px 5px 5px;
     position: relative;
+    padding-left: 35px;
 }
 #details .cab-details:last-child {
     border: none;
+}
+#details .cab-details .cab-image {
+    position: absolute;
+    left: 5px;
 }
 #details .cab-time {
     float: right;
@@ -118,6 +146,9 @@ table {
 }
 #services {
     background: white;
+    -webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
 }
 #services table tr td {
     text-align: center;
