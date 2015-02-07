@@ -198,7 +198,6 @@ table {
     cursor: pointer;
 }
 #title img {
-    width: 60px;
     height: 60px;
 }
 hr {
@@ -213,6 +212,15 @@ hr {
     #map-canvas {
         position: fixed;
         top: 78px;
+    }
+    #title {
+        top: 90px;
+        right: 0;
+        bottom: auto;
+        height: 40px;
+    }
+    #title img {
+        height: 40px;
     }
     #content {
         width: auto;
