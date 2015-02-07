@@ -252,7 +252,7 @@ window.chanakya = window.chanakya || {};
             }
         },
         tfs: {
-            "bangalore": {
+            "bengaluru": {
                 nano: {
                     minprice: 25,
                     minkm: 2,
@@ -516,7 +516,7 @@ window.chanakya = window.chanakya || {};
             }
         },
         meru: {
-            "bangalore": {
+            "bengaluru": {
                 flexi: {
                     minprice: 80,
                     minkm: 4,
