@@ -33,7 +33,7 @@ function parseResponse(responseHandler, responseService, location, response) {
     var cabs = {};
     var sourceLocations = [];
 
-    if (response) {
+    if (response && response.Cablist) {
         // Generate locations of available cabs
         for (var i = response.Cablist.length - 1; i >= 0; i--) {
             var tName = MERU.Taxi_Name_Map[response.Cablist[i].Brand.toLowerCase()];

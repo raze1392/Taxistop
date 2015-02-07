@@ -48,7 +48,7 @@ function parseResponse(response, status) {
     var cabsEstimate = {};
     var cabs = {};
 
-    if (status && status.toLowerCase() === 'success') {
+    if (status && status.toLowerCase() === 'success' && response.cabs) {
         // Generate locations of available cabs
         for (var i = response.cabs.length - 1; i >= 0; i--) {
             var tName = OLA.Taxi_Name_Map[response.cabs[i].category_id];

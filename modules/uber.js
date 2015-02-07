@@ -36,7 +36,7 @@ function parseResponse(type, response) {
         status: "success"
     }
 
-    if (type === 'estimate') {
+    if (type === 'estimate' && response.times) {
         output.cabsEstimate = [];
 
         for (var i = 0; i < response.times.length; i++) {
@@ -48,7 +48,7 @@ function parseResponse(type, response) {
             }
             output.cabsEstimate.push(_cEst);
         }
-    } else if(type === 'price') {
+    } else if(type === 'price' && response.prices) {
         output.prices = [];
 
         for (var i = 0; i < response.prices.length; i++) {
