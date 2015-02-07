@@ -158,7 +158,7 @@ window.chanakya.Map = (function() {
         //chanakya.Map._Details.Destination.marker = chanakya.Map.setMarker(location, "Destination");
         chanakya.Map.getGeoLocation(location, function(city, address) {
             chanakya.Map.setDestinationCity(city);
-            //chanakya.Map._Details.Destination.container.value = address;
+            chanakya.Map._Details.Destination.container.value = address;
         }, function() {
             //chanakya.Map._Details.Destination.container.value = "Dropped pin location";
         });

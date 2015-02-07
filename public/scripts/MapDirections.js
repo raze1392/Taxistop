@@ -44,7 +44,7 @@ window.chanakya.Map.Directions = (function() {
 
         // If both Source and Destination is selected, then show the route
         if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) {
-            c.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
+            chanakya.Map.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
         }
     }
 
@@ -71,7 +71,7 @@ window.chanakya.Map.Directions = (function() {
 
         // If both Source and Destination is selected, then show the route
         if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) {
-            c.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
+            chanakya.Map.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
         }
     }
 
