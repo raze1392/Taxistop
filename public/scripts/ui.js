@@ -8,6 +8,14 @@ window.mobilecheck = function() {
     return check;
 }
 
+window.androidAppCheck = function() {
+    var check = false;
+    (function(a, b) {
+        if (/TaxiStopApp\/[0-9\.]+$/.test(navigator.userAgent)) check = true;
+    })(navigator.userAgent || navigator.vendor || window.opera);
+    return check;
+}
+
 function _l(str) {
     return str.toLowerCase();
 }
@@ -78,7 +86,6 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                 map_container.style.height = ($scope.mapHeight - 25) + "px";
             else
                 map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
-            
             google.maps.event.trigger(chanakya.Map.getMap(), "resize");
             chanakya.Map.getMap().setCenter(chanakya.Map.getSource().location);
         }
@@ -201,8 +208,12 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
 
         $scope.init = function() {
             $scope.isMobile = window.mobilecheck();
-            if ($scope.isMobile) {
+            $scope.isAndroidApp = window.androidAppCheck();
+            if ($scope.isMobile && !$scope.isAndroidApp) {
                 $scope.mapHeight = document.body.clientHeight - (78 + 70);
+                map_container.style.height = $scope.mapHeight + "px";
+            } else if ($scope.isMobile && $scope.isAndroidApp) {
+                $scope.mapHeight = screen.height - (78 + 70);
                 map_container.style.height = $scope.mapHeight + "px";
             }
             $interval(function() {
@@ -220,7 +231,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
 
 
         google.maps.event.addDomListener(window, 'load', function() {
-            if (/TaxiStopApp\/[0-9\.]+$/.test(navigator.userAgent)) {
+            if (window.androidAppCheck()) {
                 console.log(Android.getUserLocation());
                 var location = Android.getUserLocation().split('|');
                 chanakya.Map.intializeGmaps(map_container, source_container, destination_container, {
