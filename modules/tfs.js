@@ -33,7 +33,7 @@ function parseResponse(response, status) {
     var cabsEstimate = {};
     var cabs = {};
 
-    if (status && status.toLowerCase() === 'success') {
+    if (status && status.toLowerCase() === 'success' && response.data) {
         // Generate locations of available cabs
         for (var i = response.data.length - 1; i >= 0; i--) {
             var tName = TFS.Taxi_Name_Map[response.data[i].carType.toLowerCase()];

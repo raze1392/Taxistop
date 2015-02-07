@@ -25,7 +25,7 @@ function buildGoogleDistanceMatrixURL(sourceLocations, destinationLocation, mode
 }
 
 function parseGoogleEstimateForMeru(responseToSend, result) {
-    if (result && result.rows.length > 0) {
+    if (result && result.rows && result.rows.length > 0) {
         var MeruIndex = 0;
         var MeruLength = responseToSend.cabs.Meru ? responseToSend.cabs.Meru.length : 0;
         var GenieLength = responseToSend.cabs.Genie ? responseToSend.cabs.Genie.length : 0;
@@ -95,7 +95,7 @@ function parseGoogleOutputForEstimate(responseToSend, result) {
         duration: null
     };
 
-    if (result && result.rows.length > 0) {
+    if (result && result.rows && result.rows.length > 0) {
         output.success = true;
         output.distance = result.rows[0].elements[0].distance;
         output.duration = result.rows[0].elements[0].duration;
