@@ -69,8 +69,8 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             for (var i = 0; i < data.cabsEstimate.length; i++) {
                 if (data.cabsEstimate[i].available) $scope.availableTypes++;
             };
-            // setMapHeight($scope.availableTypes * 43);
-            setMapHeight(0);
+            setMapHeight($scope.availableTypes * 43);
+            //setMapHeight(0);
         }
 
         function setMapHeight(lessHeight) {
@@ -203,7 +203,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             }
             $interval(function() {
                 $scope.callAtInterval();
-            }, 15000);
+            }, 60000);
         }
         $scope.callAtInterval = function() {
             $scope.getService($scope.cabs.selected);
