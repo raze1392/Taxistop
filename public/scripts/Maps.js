@@ -170,7 +170,7 @@ window.chanakya.Map = (function() {
                 'lng': chanakya.Map.getDestination().location.D
             }
         });
-        chanakya.Map._Details.Source.container.dispatchEvent(chanakya.Map._Details.destinationLocationChangedEvent);
+        chanakya.Map._Details.Destination.container.dispatchEvent(chanakya.Map._Details.destinationLocationChangedEvent);
     }
 
     var clearDestination = function() {
