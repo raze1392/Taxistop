@@ -40,12 +40,14 @@ window.chanakya.Map = (function() {
         Source: {
             location: null,
             marker: null,
-            container: null
+            container: null,
+            City: null
         },
         Destination: {
             location: null,
             marker: null,
-            container: null
+            container: null,
+            City: null
         },
         Autocomplete: {
             source: null,
@@ -127,8 +129,13 @@ window.chanakya.Map = (function() {
     var setSource = function(location) {
         chanakya.Map._Details.Source.location = location;
         //chanakya.Map._Details.Source.marker = chanakya.Map.setMarker(location, "Source");
-        chanakya.Map.getGeoLocation(location, function(loc) {
-            chanakya.Map._Details.Source.container.value = loc;
+        chanakya.Map.getGeoLocation(location, function(location) {
+            for (var i = location.address_components.length - 1; i > 0; i--) {
+                if (location.address_components[i].types[0] == 'administrative_area_level_2') {
+                    chanakya.Map.setSourceCity(location.address_components[i].long_name);
+                }
+            }
+            chanakya.Map._Details.Source.container.value = location.formatted_address;
         }, function() {
             chanakya.Map._Details.Source.container.value = "Dropped pin location";
         });
@@ -150,7 +157,17 @@ window.chanakya.Map = (function() {
 
     var setDestination = function(location) {
         chanakya.Map._Details.Destination.location = location;
-        chanakya.Map._Details.Destination.marker = chanakya.Map.setMarker(location, "Destination");
+        //chanakya.Map._Details.Destination.marker = chanakya.Map.setMarker(location, "Destination");
+        chanakya.Map.getGeoLocation(location, function(location) {
+            for (var i = location.address_components.length - 1; i > 0; i--) {
+                if (location.address_components[i].types[0] == 'administrative_area_level_2') {
+                    chanakya.Map.setDestinationCity(location.address_components[i].long_name);
+                }
+            }
+            //chanakya.Map._Details.Destination.container.value = location.formatted_address;
+        }, function() {
+            //chanakya.Map._Details.Destination.container.value = "Dropped pin location";
+        });
 
         //Creating SourceLocationChanged event
         chanakya.Map._Details.destinationLocationChangedEvent = new CustomEvent('destinationLocationChanged', {
@@ -258,7 +275,7 @@ window.chanakya.Map = (function() {
         }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
-                    onSuccess(results[0].formatted_address);
+                    onSuccess(results[0]);
                 } else {
                     onError();
                 }
@@ -274,6 +291,22 @@ window.chanakya.Map = (function() {
 
     var getDestination = function() {
         return chanakya.Map._Details.Destination;
+    }
+
+    var getSourceCity = function() {
+        return chanakya.Map._Details.Source.City;
+    }
+
+    var getDestinationCity = function() {
+        return chanakya.Map._Details.Destination.City;
+    }
+
+    var setSourceCity = function(city) {
+        chanakya.Map._Details.Source.City = city;
+    }
+
+    var setDestinationCity = function() {
+        chanakya.Map._Details.Destination.City = city;
     }
 
     var getSourceLatitude = function() {
@@ -309,6 +342,10 @@ window.chanakya.Map = (function() {
         getGeoLocation: getGeoLocation,
         getSource: getSource,
         getDestination: getDestination,
+        getSourceCity: getSourceCity,
+        getDestinationCity: getDestinationCity,
+        setSourceCity: setSourceCity,
+        setDestinationCity: setDestinationCity,
         setMarker: setMarker,
         clearMarkers: clearMarkers,
         clearResults: clearResults,
