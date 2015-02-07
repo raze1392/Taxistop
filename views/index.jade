@@ -7,13 +7,15 @@ block content
            input.clearable#searchSource(
              placeholder="Enter source",
              type="text"
+             ng-focus="typingOn = true"
            )
            hr
            input.clearable#searchDestination(
              placeholder="Enter destination",
              type="text"
+             ng-focus="typingOn = true"
            )
-  div#cabdetails
+  div#cabdetails(ng-show="isShownDetails()")
     div#details
       div.cab-details(ng-hide="showMask()")
         p.center-align.mask-image
