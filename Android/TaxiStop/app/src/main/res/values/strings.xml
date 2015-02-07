@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">TaxiStop</string>
-    <string name="app_url">http://10.0.0.2:3000</string>
-    <string name="user_agent_suffix">TaxiStopApp/1.0</string>
-
-</resources>
