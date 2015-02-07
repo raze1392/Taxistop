@@ -92,9 +92,29 @@ table {
 #details p {
     margin: 0;
 }
+.mask-image {
+    margin-top: 50px !important;
+}
+.center-align {
+    text-align: center;
+}
 #details p.cab-desc {
     font-size: 0.85em;
     color: #777;
+}
+#details .multiplier {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    background-color: #f0ad4e;
+    margin-right: 5px;
 }
 #services {
     background: white;
@@ -105,7 +125,7 @@ table {
 }
 #services hr {
     position: absolute;
-    top:50%;
+    top: 50%;
 }
 #services table tr td div {
     cursor: pointer;
@@ -125,6 +145,7 @@ table {
     margin: 4px auto;
     height: 30px;
     margin-bottom: -4px;
+    border-radius: 5px;
 }
 #services table tr td div span {
     font-size: 10px;
@@ -179,5 +200,8 @@ hr {
         border-bottom: 1px solid #aaa;
         padding: 0;
         height: auto;
+    }
+    .mask-image {
+        display: none !important;
     }
 }
