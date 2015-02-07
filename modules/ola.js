@@ -36,7 +36,7 @@ function buildURL(latitude, longitude, userId) {
 
     url += '&cab_category=[economy_sedan,compact,luxury_sedan,pink,local_auto]';
 
-    console.log('OLA API url :: ' + OLA.options.host + url);
+    //console.log('OLA API url :: ' + OLA.options.host + url);
     return url;
 }
 

@@ -15,7 +15,7 @@ function buildEstimateURL(latitude, longitude, userId) {
         url += '&start_latitude=' + latitude + '&start_longitude=' + longitude
     }
 
-    console.log('UBER Estimate API url :: ' + UBER.options.host + url);
+    //console.log('UBER Estimate API url :: ' + UBER.options.host + url);
     return url;
 }
 
@@ -27,7 +27,7 @@ function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, u
         url += '&end_latitude=' + destLatitude + '&end_longitude=' + destLongitude;
     }
 
-    console.log('UBER Cost API url :: ' + UBER.options.host + url);
+    //console.log('UBER Cost API url :: ' + UBER.options.host + url);
     return url;
 }
 

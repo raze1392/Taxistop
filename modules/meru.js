@@ -20,7 +20,7 @@ function buildURL(latitude, longitude, userId) {
         url += '&Lat=' + latitude + '&Lng=' + longitude
     }
 
-    console.log('MERU API url :: ' + MERU.options.host + url);
+    //console.log('MERU API url :: ' + MERU.options.host + url);
     return url;
 }
 

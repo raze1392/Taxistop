@@ -21,7 +21,7 @@ function buildURL(latitude, longitude, userId) {
         url += '&latitude=' + latitude + '&longitude=' + longitude
     }
 
-    console.log('TFS API url :: ' + TFS.options.host + url);
+    //console.log('TFS API url :: ' + TFS.options.host + url);
     return url;
 }
 
@@ -51,7 +51,6 @@ function parseResponse(response, status) {
         };
 
         for (cab in cabs) {
-            console.log(cabs[cab]);
             var cabEO = {
                 available: false
             };
