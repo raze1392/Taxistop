@@ -148,6 +148,8 @@ window.chanakya.Map = (function() {
 
     var clearSource = function() {
         chanakya.Map._Details.Source.location = null;
+        chanakya.Map._Details.Source.city = null;
+        chanakya.Map._Details.Source.container.value = '';
         chanakya.Map.clearMarkers("source");
     }
 
@@ -173,6 +175,8 @@ window.chanakya.Map = (function() {
 
     var clearDestination = function() {
         chanakya.Map._Details.Destination.location = null;
+        chanakya.Map._Details.Destination.city = null;
+        chanakya.Map._Details.Destination.container.value = '';
         chanakya.Map.clearMarkers("destination");
     }
 
@@ -303,7 +307,7 @@ window.chanakya.Map = (function() {
         chanakya.Map._Details.Source.city = city;
     }
 
-    var setDestinationCity = function() {
+    var setDestinationCity = function(city) {
         chanakya.Map._Details.Destination.city = city;
     }
 

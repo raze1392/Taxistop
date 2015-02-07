@@ -27,6 +27,7 @@ window.chanakya.Map.Directions = (function() {
         chanakya.Map._Details.directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 chanakya.Map.clearMarkers();
+                chanakya.Map._Details.directionsDisplay.setMap(chanakya.Map._Details.map);
                 chanakya.Map._Details.directionsDisplay.setDirections(response);
                 $('.centerMarker').hide();
             }
@@ -78,8 +79,18 @@ window.chanakya.Map.Directions = (function() {
         return chanakya.Map._Details.Directions.unitSystemSelected;
     }
 
+    var clearDirections = function() {
+        chanakya.Map._Details.directionsDisplay.setMap(null);
+        chanakya.Map.clearDestination();
+        if (chanakya.Map.existsSource()) {
+            chanakya.Map._Details.map.setCenter(chanakya.Map.getSource().location);
+        }
+        $('.centerMarker').show();
+    }
+
     return {
         getDirections: getDirections,
+        clearDirections: clearDirections,
         setTravelMode: setTravelMode,
         getTravelMode: getTravelMode,
         setRouteAlternatives: setRouteAlternatives,
