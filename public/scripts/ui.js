@@ -208,6 +208,12 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             return true;
         }
 
+        $scope.typingOn = false;
+        $scope.isShownDetails = function() {
+            if (!$scope.isMobile) return true;
+            return !$scope.typingOn;
+        }
+
         $scope.init = function() {
             $scope.isMobile = window.mobilecheck();
             $scope.isAndroidApp = window.androidAppCheck();
@@ -258,6 +264,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                 lng: event.detail.lng
             };
             $scope.getService($scope.cabs.selected);
+            $scope.typingOn = false;
         }, false);
 
         destination_container.addEventListener('destinationLocationChanged', function(event) {
@@ -276,6 +283,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             $scope.getService($scope.cabs.selected);
             $scope.setTravelInfo();
             $scope.getUberCost();
+            $scope.typingOn = false;
         }, false);
 
         function buildGoogleDistanceMatrixURL(sourceLocation, destinationLocation, mode) {
