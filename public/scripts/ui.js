@@ -29,7 +29,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             lng: undefined
         };
         $scope.cabs = {
-            selected: 'Ola'
+            selected: 'tfs'
         };
         var map_container = document.getElementById('map-canvas');
         var source_container = document.getElementById('searchSource');
@@ -67,20 +67,44 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
         $scope.mask = false;
         $scope.availableTypes = 0;
 
-        function processData(selected, data) {
+        function clearData() {
+            $scope.cabs.selected = "";
+            $scope.cabs.estimate = [];
+            $scope.cabs.coordinates = {};
+            $scope.availableTypes = 0;
+            mapNearByCabs($scope.cabs.coordinates, $scope.cabs.selected);
+        }
+
+        function processData(selected, data, all) {
+            if (all) {
+                if (!data.cabsEstimate) return;
+                console.log(selected, data);
+                $scope.cabs.selected = "all";
+                for (var i = 0; i < data.cabsEstimate.length; i++) {
+                    data.cabsEstimate[i].type = selected;
+                    if (data.cabsEstimate[i].available) $scope.availableTypes++;
+                };
+                $scope.cabs.estimate = $scope.cabs.estimate.concat(data.cabsEstimate);
+                for (cab in data.cabs) {
+                    $scope.cabs.coordinates[cab] = data.cabs[cab];
+                }
+                mapNearByCabs($scope.cabs.coordinates, $scope.cabs.selected);
+                return;
+            }
             if (!data.cabsEstimate) {
                 $scope.mask = true;
                 return;
             }
             $scope.mask = false;
+            $scope.availableTypes = 0;
+            for (var i = 0; i < data.cabsEstimate.length; i++) {
+                data.cabsEstimate[i].type = selected;
+                if (data.cabsEstimate[i].available) $scope.availableTypes++;
+            };
             $scope.cabs.selected = selected;
             $scope.cabs.estimate = data.cabsEstimate;
             $scope.cabs.coordinates = data.cabs;
             mapNearByCabs($scope.cabs.coordinates, $scope.cabs.selected);
-            $scope.availableTypes = 0;
-            for (var i = 0; i < data.cabsEstimate.length; i++) {
-                if (data.cabsEstimate[i].available) $scope.availableTypes++;
-            };
             setMapHeight($scope.availableTypes * 43);
             //setMapHeight(0);
         }
@@ -101,47 +125,58 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             return $scope.cabs.estimate && $scope.cabs.estimate.length > 0;
         }
 
-        $scope.getOla = function() {
+        $scope.getOla = function(all) {
             $http.get('cabs/ola?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                processData("ola", data);
+                processData("ola", data, all);
             });
         }
 
-        $scope.getUber = function() {
+        $scope.getUber = function(all) {
             $http.get('cabs/uber?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                processData("uber", data);
+                processData("uber", data, all);
             });
         }
 
-        $scope.getTfs = function() {
+        $scope.getTfs = function(all) {
             $http.get('cabs/tfs?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                processData("tfs", data);
+                processData("tfs", data, all);
             });
         }
 
-        $scope.getMeru = function() {
+        $scope.getMeru = function(all) {
             $http.get('cabs/meru?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                processData("meru", data);
+                processData("meru", data, all);
             });
         }
 
         $scope.getService = function(service) {
-            if (service.toLowerCase() == 'ola') {
+            clearData();
+            $scope.cabs.selected = service;
+            if (_l(service) === 'all') {
+                $scope.getOla(true);
+                $scope.getUber(true);
+                $scope.getTfs(true);
+                $scope.getMeru(true);
+            } else if (_l(service) == 'ola') {
                 $scope.getOla();
-            }
-            if (service.toLowerCase() == 'uber') {
+            } else if (_l(service) == 'uber') {
                 $scope.getUber();
-            }
-            if (service.toLowerCase() == 'tfs') {
+            } else if (_l(service) == 'tfs') {
                 $scope.getTfs();
-            }
-            if (service.toLowerCase() == 'meru') {
+            } else if (_l(service) == 'meru') {
                 $scope.getMeru();
             }
         }
 
         $scope.getCabImg = function(name) {
             return CAB_TYPE[name];
+        }
+
+        $scope.getCabTypeImg = function(type){
+            if(_l(type) == 'ola') return $scope.services[0].icon;
+            if(_l(type) == 'uber') return $scope.services[1].icon;
+            if(_l(type) == 'tfs') return $scope.services[2].icon;
+            if(_l(type) == 'meru') return $scope.services[3].icon;
         }
 
         $scope.travelTime = 0;
@@ -182,14 +217,14 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             if (!chanakya.Map.existsDestination() || !cab.available)
                 return "";
             if ($scope.travelDistance == 0) return "calculating";
-            if ($scope.cabs.selected.toLowerCase() == "ola") {
+            if (_l(cab.type) == "ola") {
                 return "apx &#8377;" + Math.ceil(chanakya.cost.ola($scope.travelDistance, cab.name.toLowerCase()));
             }
-            if ($scope.cabs.selected.toLowerCase() == "tfs") {
+            if (_l(cab.type) == "tfs") {
                 return "apx &#8377;" + Math.ceil(chanakya.cost.tfs($scope.travelDistance, cab.name.toLowerCase()));
             }
 
-            if (_l($scope.cabs.selected) == "uber") {
+            if (_l(cab.type) == "uber") {
                 if ($scope.uberCost[cab.name] == "") {
                     return "calculating";
                 }
@@ -296,7 +331,6 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                     UberBLACK: 1
                 }
             };
-            $scope.getService($scope.cabs.selected);
             $scope.setTravelInfo();
             $scope.getUberCost();
             $scope.typingOn = false;
