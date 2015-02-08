@@ -81,7 +81,7 @@ exports.call = function(responseHandler, response, latitude, longitude, shouldPa
 
     request.getJSON(MERU.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
-        if (shouldParseData) {
+        if (shouldParseData && result) {
             // Here we make a call to google service which will take care of sending the response back
             var location = {
                 lat: latitude,

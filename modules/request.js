@@ -14,19 +14,23 @@ exports.getJSON = function(options, onResult, hack) {
     var req = prot.request(options, function(res) {
         var output = '';
         console.log(options.host + ':' + res.statusCode);
-        res.setEncoding('utf8');
-        res.on('data', function(chunk) {
-            output += chunk;
-        });
-        res.on('end', function() {
-            // Meru returns JSON object inside as a serialized XML
-            if (hack && (hack === 'meru')) {
-                output = output.substring(output.indexOf('>{') + 1, output.lastIndexOf('}<') + 1);
-            }
+        if (res.statusCode == 200 || res.statusCode == 304) {
+            res.setEncoding('utf8');
+            res.on('data', function(chunk) {
+                output += chunk;
+            });
+            res.on('end', function() {
+                // Meru returns JSON object inside as a serialized XML
+                if (hack && (hack === 'meru')) {
+                    output = output.substring(output.indexOf('>{') + 1, output.lastIndexOf('}<') + 1);
+                }
 
-            var obj = eval("(" + output + ")");
-            onResult(res.statusCode, obj);
-        });
+                var obj = eval("(" + output + ")");
+                onResult(res.statusCode, obj);
+            });
+        } else {
+            onResult(res.statusCode, null);
+        }
     });
     req.on('error', function(err) {
         console.log('Rest :: Error : ' + err);

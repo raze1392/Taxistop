@@ -83,7 +83,7 @@ exports.price = function(responseHandler, response, srcLatitude, srcLongitude, d
     UBER.options.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
 
     request.getJSON(UBER.options, function(statusCode, result) {
-        if (shouldParseData) {
+        if (shouldParseData && result) {
             result = parseResponse('price', result);
         }
         responseHandler(response, result);

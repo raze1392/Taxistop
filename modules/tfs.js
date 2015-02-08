@@ -94,7 +94,7 @@ exports.call = function(responseHandler, response, latitude, longitude, shouldPa
 
     request.getJSON(TFS.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
-        if (shouldParseData) {
+        if (shouldParseData && result) {
             result = parseResponse(result.response_data, result.status);
         }
         responseHandler(response, result);

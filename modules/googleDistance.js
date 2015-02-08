@@ -116,12 +116,14 @@ exports.call = function(responseHandler, data) {
     GOOGLE_DM.options.path = buildGoogleDistanceMatrixURL(data.sourceLocations, data.destinationLocation, data.mode);
 
     request.getJSON(GOOGLE_DM.options, function(statusCode, result) {
-        var responseToSend = data.responsePayload;
+        if (result) {
+            var responseToSend = data.responsePayload;
 
-        if (data.service === 'meru') {
-            responseHandler(data.responseService, parseGoogleEstimateForMeru(responseToSend, result));
-        } else if (data.service === 'google') {
-            responseHandler(data.responseService, parseGoogleOutputForEstimate(responseToSend, result));
+            if (data.service === 'meru') {
+                responseHandler(data.responseService, parseGoogleEstimateForMeru(responseToSend, result));
+            } else if (data.service === 'google') {
+                responseHandler(data.responseService, parseGoogleOutputForEstimate(responseToSend, result));
+            }
         }
     });
 }
