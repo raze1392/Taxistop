@@ -26,50 +26,58 @@ function buildURL(latitude, longitude, userId) {
 
 function parseResponse(responseHandler, responseService, location, response) {
     var output = {
-        status: response ? "success" : "failure"
+        status: response ? "success" : "failure",
+        cabs: {},
+        cabsEstimate: []
     }
 
-    var cabsEstimate = {};
-    var cabs = {};
-    var sourceLocations = [];
+    try {
 
-    if (response && response.Cablist) {
-        // Generate locations of available cabs
-        for (var i = response.Cablist.length - 1; i >= 0; i--) {
-            var tName = MERU.Taxi_Name_Map[response.Cablist[i].Brand.toLowerCase()];
-            
-            if (!cabs[tName]) {
-                cabs[tName] = [];
-                cabsEstimate[tName] = {};
+        var cabsEstimate = {};
+        var cabs = {};
+        var sourceLocations = [];
+
+        if (response && response.Cablist) {
+            // Generate locations of available cabs
+            for (var i = response.Cablist.length - 1; i >= 0; i--) {
+                var tName = MERU.Taxi_Name_Map[response.Cablist[i].Brand.toLowerCase()];
+
+                if (!cabs[tName]) {
+                    cabs[tName] = [];
+                    cabsEstimate[tName] = {};
+                }
+
+                var _c = {
+                    lat: response.Cablist[i].Lat,
+                    lng: response.Cablist[i].Lng
+                }
+
+                cabs[tName].push(_c);
+                sourceLocations.push(_c);
             }
 
-            var _c = {
-                lat: response.Cablist[i].Lat,
-                lng: response.Cablist[i].Lng
+            output.cabs = cabs;
+            output.cabsEstimate = cabsEstimate;
+            output.AddtoETA = parseInt(response.AddtoETA);
+
+            var data = {
+                service: 'meru',
+                responsePayload: output,
+                responseService: responseService,
+                destinationLocation: location,
+                sourceLocations: sourceLocations
             }
 
-            cabs[tName].push(_c);
-            sourceLocations.push(_c);
+            if (response.Cablist.length > 0) {
+                googleDistance.call(responseHandler, data);
+            } else {
+                data.responsePayload.cabsEstimate = [];
+                responseHandler(data.responseService, data.responsePayload);
+            }
         }
-
-        output.cabs = cabs;
-        output.cabsEstimate = cabsEstimate;
-        output.AddtoETA = parseInt(response.AddtoETA);
-
-        var data = {
-            service: 'meru',
-            responsePayload: output,
-            responseService: responseService,
-            destinationLocation: location,
-            sourceLocations: sourceLocations
-        }
-
-        if (response.Cablist.length > 0) {
-            googleDistance.call(responseHandler, data);
-        } else {
-            data.responsePayload.cabsEstimate = [];
-            responseHandler(data.responseService, data.responsePayload);
-        }
+    } catch (ex) {
+        console.log("Error in Meru");
+        return output;
     }
 
     return output;

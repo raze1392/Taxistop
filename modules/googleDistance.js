@@ -26,60 +26,66 @@ function buildGoogleDistanceMatrixURL(sourceLocations, destinationLocation, mode
 
 function parseGoogleEstimateForMeru(responseToSend, result) {
     if (result && result.rows && result.rows.length > 0) {
-        var MeruIndex = 0;
-        var MeruLength = responseToSend.cabs.Meru ? responseToSend.cabs.Meru.length : 0;
-        var GenieLength = responseToSend.cabs.Genie ? responseToSend.cabs.Genie.length : 0;
+        try {
+            var MeruIndex = 0;
+            var MeruLength = responseToSend.cabs.Meru ? responseToSend.cabs.Meru.length : 0;
+            var GenieLength = responseToSend.cabs.Genie ? responseToSend.cabs.Genie.length : 0;
 
-        var genieAvailable = responseToSend.cabs.Genie ? true : false;
-        if (genieAvailable) {
-            MeruIndex = 0 + responseToSend.cabs.Genie.length;
-        }
-
-        if (result.rows[MeruIndex]) {
-            responseToSend.cabsEstimate['Meru'].distance = result.rows[MeruIndex].elements[0].distance;
-            responseToSend.cabsEstimate['Meru'].duration = result.rows[MeruIndex].elements[0].duration;
-        }
-        
-        if (genieAvailable) {
-            responseToSend.cabsEstimate['Genie'].distance = result.rows[0].elements[0].distance;
-            responseToSend.cabsEstimate['Genie'].duration = result.rows[0].elements[0].duration;
-        }
-
-        for (var i = 0; i < GenieLength; i++) {
-            if (responseToSend.cabsEstimate['Genie'].duration.value > result.rows[i].elements[0].duration.value) {
-                responseToSend.cabsEstimate['Genie'].distance = result.rows[i].elements[0].distance;
-                responseToSend.cabsEstimate['Genie'].duration = result.rows[i].elements[0].duration;
-            }
-        }
-        for (var i = 0; i < MeruLength; i++) {
-            if (responseToSend.cabsEstimate['Meru'].duration.value > result.rows[i + GenieLength].elements[0].duration.value) {
-                responseToSend.cabsEstimate['Meru'].distance = result.rows[i + GenieLength].elements[0].distance;
-                responseToSend.cabsEstimate['Meru'].duration = result.rows[i + GenieLength].elements[0].duration;
+            var genieAvailable = responseToSend.cabs.Genie ? true : false;
+            if (genieAvailable) {
+                MeruIndex = 0 + responseToSend.cabs.Genie.length;
             }
 
+            if (result.rows[MeruIndex]) {
+                responseToSend.cabsEstimate['Meru'].distance = result.rows[MeruIndex].elements[0].distance;
+                responseToSend.cabsEstimate['Meru'].duration = result.rows[MeruIndex].elements[0].duration;
+            }
 
-        };
+            if (genieAvailable) {
+                responseToSend.cabsEstimate['Genie'].distance = result.rows[0].elements[0].distance;
+                responseToSend.cabsEstimate['Genie'].duration = result.rows[0].elements[0].duration;
+            }
 
-        responseToSend.cabsEstimate['Meru'].distance = parseFloat(responseToSend.cabsEstimate['Meru'].distance.text.split(' ')[0]);
-        var duration = parseInt(responseToSend.cabsEstimate['Meru'].duration.text.split(' ')[0]);
-        duration += responseToSend.AddtoETA;
-        responseToSend.cabsEstimate['Meru'].duration = duration;
+            for (var i = 0; i < GenieLength; i++) {
+                if (responseToSend.cabsEstimate['Genie'].duration.value > result.rows[i].elements[0].duration.value) {
+                    responseToSend.cabsEstimate['Genie'].distance = result.rows[i].elements[0].distance;
+                    responseToSend.cabsEstimate['Genie'].duration = result.rows[i].elements[0].duration;
+                }
+            }
+            for (var i = 0; i < MeruLength; i++) {
+                if (responseToSend.cabsEstimate['Meru'].duration.value > result.rows[i + GenieLength].elements[0].duration.value) {
+                    responseToSend.cabsEstimate['Meru'].distance = result.rows[i + GenieLength].elements[0].distance;
+                    responseToSend.cabsEstimate['Meru'].duration = result.rows[i + GenieLength].elements[0].duration;
+                }
 
-        if (genieAvailable) {
-            responseToSend.cabsEstimate['Genie'].distance = parseFloat(responseToSend.cabsEstimate['Genie'].distance.text.split(' ')[0]);
-            var duration = parseInt(responseToSend.cabsEstimate['Genie'].duration.text.split(' ')[0]);
+
+            };
+
+            responseToSend.cabsEstimate['Meru'].distance = parseFloat(responseToSend.cabsEstimate['Meru'].distance.text.split(' ')[0]);
+            var duration = parseInt(responseToSend.cabsEstimate['Meru'].duration.text.split(' ')[0]);
             duration += responseToSend.AddtoETA;
-            responseToSend.cabsEstimate['Genie'].duration = duration;
-        }
+            responseToSend.cabsEstimate['Meru'].duration = duration;
 
-        var tempEstimate = [];
-        for (key in responseToSend.cabsEstimate) {
-            var _cEst = responseToSend.cabsEstimate[key];
-            _cEst.name = key;
-            tempEstimate.push(_cEst);
+            if (genieAvailable) {
+                responseToSend.cabsEstimate['Genie'].distance = parseFloat(responseToSend.cabsEstimate['Genie'].distance.text.split(' ')[0]);
+                var duration = parseInt(responseToSend.cabsEstimate['Genie'].duration.text.split(' ')[0]);
+                duration += responseToSend.AddtoETA;
+                responseToSend.cabsEstimate['Genie'].duration = duration;
+            }
+
+            var tempEstimate = [];
+            for (key in responseToSend.cabsEstimate) {
+                var _cEst = responseToSend.cabsEstimate[key];
+                _cEst.name = key;
+                tempEstimate.push(_cEst);
+            }
+            responseToSend.cabsEstimate = tempEstimate;
+            delete responseToSend.AddtoETA;
+
+        } catch (er) {
+            console.log("Error in Meru Google Parser" + responseToSend);
+            responseToSend.cabsEstimate = [];
         }
-        responseToSend.cabsEstimate = tempEstimate;
-        delete responseToSend.AddtoETA;
 
     } else {
         responseToSend.cabsEstimate = [];
@@ -97,10 +103,14 @@ function parseGoogleOutputForEstimate(responseToSend, result) {
         duration: null
     };
 
-    if (result && result.rows && result.rows.length > 0) {
-        output.success = true;
-        output.distance = result.rows[0].elements[0].distance;
-        output.duration = result.rows[0].elements[0].duration;
+    try {
+        if (result && result.rows && result.rows.length > 0) {
+            output.success = true;
+            output.distance = result.rows[0].elements[0].distance;
+            output.duration = result.rows[0].elements[0].duration;
+        }
+    } catch (ex) {
+        return output;
     }
 
     return output;

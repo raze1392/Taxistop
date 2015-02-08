@@ -33,36 +33,44 @@ function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, u
 
 function parseResponse(type, response) {
     var output = {
-        status: "success"
+        status: response ? "success" : "failure",
+        cabs: {},
+        cabsEstimate: []
     }
 
-    if (type === 'estimate' && response && response.times) {
-        output.cabsEstimate = [];
+    try {
 
-        for (var i = 0; i < response.times.length; i++) {
-            var _cEst = {
-                name: response.times[i].localized_display_name,
-                available: true,
-                duration: parseFloat(response.times[i].estimate / 60).toFixed(2),
-                distance: null
-            }
-            output.cabsEstimate.push(_cEst);
-        }
-    } else if(type === 'price' && response.prices) {
-        output.prices = [];
+        if (type === 'estimate' && response && response.times) {
+            output.cabsEstimate = [];
 
-        for (var i = 0; i < response.prices.length; i++) {
-            var _cEst = {
-                name: response.prices[i].localized_display_name,
-                available: true,
-                duration: parseFloat(response.prices[i].duration / 60).toFixed(2),
-                distance: response.prices[i].distance,
-                multiplier: response.prices[i].surge_multiplier,
-                low_estimate: response.prices[i].low_estimate,
-                high_estimate: response.prices[i].high_estimate
+            for (var i = 0; i < response.times.length; i++) {
+                var _cEst = {
+                    name: response.times[i].localized_display_name,
+                    available: true,
+                    duration: parseFloat(response.times[i].estimate / 60).toFixed(2),
+                    distance: null
+                }
+                output.cabsEstimate.push(_cEst);
             }
-            output.prices.push(_cEst);
+        } else if (type === 'price' && response.prices) {
+            output.prices = [];
+
+            for (var i = 0; i < response.prices.length; i++) {
+                var _cEst = {
+                    name: response.prices[i].localized_display_name,
+                    available: true,
+                    duration: parseFloat(response.prices[i].duration / 60).toFixed(2),
+                    distance: response.prices[i].distance,
+                    multiplier: response.prices[i].surge_multiplier,
+                    low_estimate: response.prices[i].low_estimate,
+                    high_estimate: response.prices[i].high_estimate
+                }
+                output.prices.push(_cEst);
+            }
         }
+    } catch (ex) {
+        console.log("Error in Uber");
+        return output;
     }
 
     return output;
