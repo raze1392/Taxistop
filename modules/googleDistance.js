@@ -35,9 +35,11 @@ function parseGoogleEstimateForMeru(responseToSend, result) {
             MeruIndex = 0 + responseToSend.cabs.Genie.length;
         }
 
-        responseToSend.cabsEstimate['Meru'].distance = result.rows[MeruIndex].elements[0].distance;
-        responseToSend.cabsEstimate['Meru'].duration = result.rows[MeruIndex].elements[0].duration;
-
+        if (result.rows[MeruIndex]) {
+            responseToSend.cabsEstimate['Meru'].distance = result.rows[MeruIndex].elements[0].distance;
+            responseToSend.cabsEstimate['Meru'].duration = result.rows[MeruIndex].elements[0].duration;
+        }
+        
         if (genieAvailable) {
             responseToSend.cabsEstimate['Genie'].distance = result.rows[0].elements[0].distance;
             responseToSend.cabsEstimate['Genie'].duration = result.rows[0].elements[0].duration;
