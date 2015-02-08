@@ -323,7 +323,7 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                 lat: event.detail.lat,
                 lng: event.detail.lng
             };
-            window.chanakya.currentCity = chanakya.Map.getSourceCity();
+            window.chanakya.currentCity = _l(chanakya.Map.getSourceCity());
             $scope.getService($scope.cabs.selected);
             $scope.typingOn = false;
         }, false);
