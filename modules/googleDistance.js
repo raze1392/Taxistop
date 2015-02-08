@@ -1,4 +1,5 @@
 var request = require('../modules/request');
+var globals = require('../modules/globals');
 
 var GOOGLE_DM = {};
 GOOGLE_DM.options = {
@@ -7,6 +8,10 @@ GOOGLE_DM.options = {
     method: 'GET',
     path: ''
 };
+
+var APIKeys = globals.getGoogleAPIKeys();
+var API_INDEX = 0;
+var TIMEOUT_COUNTER = APIKeys.length;
 
 function buildGoogleDistanceMatrixURL(sourceLocations, destinationLocation, mode) {
     var url = "/maps/api/distancematrix/json";
@@ -20,6 +25,9 @@ function buildGoogleDistanceMatrixURL(sourceLocations, destinationLocation, mode
     if (mode) {
         url += '&mode=' + mode;
     }
+
+    url += (APIKeys[API_INDEX] === "" ? "" : ("&key=" + APIKeys[API_INDEX]));
+    API_INDEX = (API_INDEX + 1) % (APIKeys.length);
 
     return url;
 }
@@ -125,16 +133,30 @@ function parseGoogleOutputForEstimate(responseToSend, result) {
 //     sourceLocations: sourceLocations //array of source locations
 // }
 exports.call = function(responseHandler, data) {
+    var self = this;
+
     GOOGLE_DM.options.path = buildGoogleDistanceMatrixURL(data.sourceLocations, data.destinationLocation, data.mode);
 
     request.getJSON(GOOGLE_DM.options, function(statusCode, result) {
         if (result) {
             var responseToSend = data.responsePayload;
 
-            if (data.service === 'meru') {
-                responseHandler(data.responseService, parseGoogleEstimateForMeru(responseToSend, result));
-            } else if (data.service === 'google') {
-                responseHandler(data.responseService, parseGoogleOutputForEstimate(responseToSend, result));
+            if (result.status == "OVER_QUERY_LIMIT" || result.status == "REQUEST_DENIED") {
+                // For stopping calls if all the API keys are exhausted continuously
+                TIMEOUT_COUNTER--;
+                if (TIMEOUT_COUNTER > 0) {
+                    self.call(responseHandler, data);
+                } else {
+                    responseHandler(data.responseService, parseGoogleOutputForEstimate(responseToSend, null));
+                }
+            } else {
+                // Reset counter even if 1 API key is working
+                TIMEOUT_COUNTER = APIKeys.length;
+                if (data.service === 'meru') {
+                    responseHandler(data.responseService, parseGoogleEstimateForMeru(responseToSend, result));
+                } else if (data.service === 'google') {
+                    responseHandler(data.responseService, parseGoogleOutputForEstimate(responseToSend, result));
+                }
             }
         }
     });
