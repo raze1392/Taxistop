@@ -27,7 +27,7 @@ block content
     div#details
       div.cab-details(ng-hide="showMask()")
         p.center-align.mask-image
-          img(alt="!" src="images/exclamation.png")
+          img(alt="!" src="https://cdn4.iconfinder.com/data/icons/miu/22/circle_info_more-information_detail-32.png")
         p.center-align No cabs available from {{cabs.selected}}
       div.cab-details(ng-repeat='cab in cabs.estimate | filter:showFilter')
         img.cab-image(ng-src="{{ getCabImg(cab.name) }}")
