@@ -28,7 +28,7 @@ block content
       div.cab-details(ng-hide="showMask()")
         p.center-align.mask-image
           img(alt="!" src="images/exclamation.png")
-        p.center-align No cabs to show for {{cabs.selected}}
+        p.center-align No cabs available from {{cabs.selected}}
       div.cab-details(ng-repeat='cab in cabs.estimate | filter:showFilter')
         img.cab-image(ng-src="{{ getCabImg(cab.name) }}")
         p.right(ng-bind-html='getTravelCost(cab)')
