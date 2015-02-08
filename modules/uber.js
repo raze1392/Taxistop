@@ -39,7 +39,6 @@ function parseResponse(type, response) {
     }
 
     try {
-
         if (type === 'estimate' && response && response.times) {
             output.cabsEstimate = [];
 

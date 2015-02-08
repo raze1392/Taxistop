@@ -33,7 +33,6 @@ function parseResponse(response, status) {
     }
 
     try {
-
         var cabsEstimate = {};
         var cabs = {};
 
