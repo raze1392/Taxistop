@@ -32,7 +32,6 @@ function parseResponse(responseHandler, responseService, location, response) {
     }
 
     try {
-
         var cabsEstimate = {};
         var cabs = {};
         var sourceLocations = [];
