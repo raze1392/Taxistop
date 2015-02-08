@@ -172,28 +172,35 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             return CAB_TYPE[name];
         }
 
-        $scope.getCabTypeImg = function(type){
-            if(_l(type) == 'ola') return $scope.services[0].icon;
-            if(_l(type) == 'uber') return $scope.services[1].icon;
-            if(_l(type) == 'tfs') return $scope.services[2].icon;
-            if(_l(type) == 'meru') return $scope.services[3].icon;
+        $scope.getCabTypeImg = function(type) {
+            if (_l(type) == 'ola') return $scope.services[0].icon;
+            if (_l(type) == 'uber') return $scope.services[1].icon;
+            if (_l(type) == 'tfs') return $scope.services[2].icon;
+            if (_l(type) == 'meru') return $scope.services[3].icon;
         }
 
         $scope.travelTime = 0;
         $scope.travelDistance = 0;
+        $scope.travelInfoLoadFailed = false;
         $scope.setTravelInfo = function() {
             if (!$scope.destination || !$scope.destination.lat) return;
             var url = 'eta?srcLat=' + $scope.source.lat + '&srcLng=' + $scope.source.lng;
             url += '&destLat=' + $scope.destination.lat + '&destLng=' + $scope.destination.lng;
             $http.get(url).success(function(data) {
-                $scope.travelTime = Math.ceil(data.duration.value / 60);
-                $scope.travelDistance = data.distance.value / 1000;
+                if (data.success) {
+                    $scope.travelInfoLoadFailed = false;
+                    $scope.travelTime = Math.ceil(data.duration.value / 60);
+                    $scope.travelDistance = data.distance.value / 1000;
+                } else {
+                    $scope.travelInfoLoadFailed = true;
+                }
             });
         }
 
         $scope.getTravelTime = function(cab) {
             if (!chanakya.Map.existsDestination() || !cab.available)
                 return "";
+            if ($scope.travelInfoLoadFailed) return "failed";
             if ($scope.travelTime == 0) return "wait";
             var totalTravelTime = cab.duration + $scope.travelTime;
             return Math.floor(totalTravelTime) + " mins";
@@ -218,9 +225,11 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                 return "";
             if ($scope.travelDistance == 0) return "calculating";
             if (_l(cab.type) == "ola") {
+                if ($scope.travelInfoLoadFailed) return "failed";
                 return "apx &#8377;" + Math.ceil(chanakya.cost.ola($scope.travelDistance, cab.name.toLowerCase()));
             }
             if (_l(cab.type) == "tfs") {
+                if ($scope.travelInfoLoadFailed) return "failed";
                 return "apx &#8377;" + Math.ceil(chanakya.cost.tfs($scope.travelDistance, cab.name.toLowerCase()));
             }
 
