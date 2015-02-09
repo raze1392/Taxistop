@@ -1,0 +1,45 @@
+#map-canvas,body,html{height:100%;margin:0;padding:0}
+body{font:14px"Lucida Grande",Helvetica,Arial,sans-serif}
+a{color:#00B7FF}
+table{width:100%}
+.right{float:right}
+#map-canvas{position:fixed;top:0;bottom:0;left:0;right:0;z-index:0}
+#map-canvas .centerMarker{position:absolute;background:url(http://maps.gstatic.com/mapfiles/markers2/marker.png) no-repeat;top:50%;left:50%;margin-left:-10px;margin-top:-34px;height:34px;width:20px;z-index:999;cursor:pointer}
+#content{position:absolute;width:320px;top:10px;left:10px;z-index:1;background:#fff;padding:5px;-webkit-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);-moz-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);box-shadow:2px 2px 2px 0 rgba(0,0,0,.5)}
+.clear-dest{position:absolute;z-index:100;right:0;top:46px;background:#fff;padding:0 5px;cursor:pointer}
+.src-dest{position:absolute;height:60px;top:10px;left:7px}
+#locationField{position:relative;margin-left:30px}
+#content input{width:100%;height:30px;border:none}
+#content input:active,#content input:focus,#content input:hover{border:none;outline:0}
+#cabdetails{position:absolute;width:330px;top:95px;left:10px;z-index:1;background:0 0}
+#details{background:#fff;height:215px;padding:2px 0;-webkit-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);-moz-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);overflow-y:scroll}
+#details .cab-details{border-bottom:1px solid #ccc;padding:5px 5px 5px 35px;position:relative}
+#details .cab-details.all{padding-left:60px}
+#details .cab-details:last-child{border:none}
+#details .cab-details .cab-image{position:absolute;left:5px;top:8px}
+#details .cab-details .cab-type-image{position:absolute;left:34px;height:20px;display:none;top:9px}
+#details .cab-details.all .cab-type-image{display:block!important}
+#details .cab-time{float:right}
+#details p{margin:0}
+.mask-image{margin-top:50px!important}
+.center-align{text-align:center}
+#details p.cab-desc{font-size:.85em;color:#777}
+#details .multiplier{display:inline;padding:.2em .6em .3em;font-size:75%;font-weight:700;line-height:1;color:#fff;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25em;background-color:#f0ad4e;margin-right:5px}
+#services{background:#fff;-webkit-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);-moz-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);box-shadow:2px 2px 2px 0 rgba(0,0,0,.5)}
+#services table tr td{text-align:center;padding:8px 2px}
+#services hr{position:absolute;top:50%}
+#services table tr td div{cursor:pointer;border:1px solid #aaa;padding:5px;width:40px;height:40px;border-radius:50%;margin:0 auto;background-color:#efefef}
+#services table tr td div.active{background-color:#aaa}
+#services table tr td div img{display:block;margin:4px auto -4px;height:30px;border-radius:5px}
+#services table tr td div span{font-size:10px;display:none}
+#types{border-top:1px solid #ccc;display:none;height:40px}
+#title{position:fixed;bottom:30px;right:30px;width:60px;height:60px;cursor:pointer}
+#title img{height:60px}
+hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:.1em 0;padding:0}
+@media screen and (max-width:480px){#map-canvas{position:fixed;top:78px}
+#title{top:90px;right:0;bottom:auto;height:40px}
+#title img{height:40px}
+#content{width:auto;top:0;left:0;right:0}
+#cabdetails{width:auto;top:auto;bottom:0;left:0;right:0;z-index:1}
+#details{margin-bottom:-5px;border-bottom:1px solid #aaa;padding:0;height:auto;max-height:215px}
+.mask-image{display:none!important}}

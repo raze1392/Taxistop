@@ -2,9 +2,7 @@
  * @Author: Abhinav Kushwaha <akush2007@gmail.com>
  *
  */
-
-window.chanakya = window.chanakya || {};
-(function($) {
+(function(w) {
 
     // get city http://maps.googleapis.com/maps/api/geocode/json?latlng=12.9667,77.5667
     // chanakya.Map.Details.source
@@ -17,7 +15,8 @@ window.chanakya = window.chanakya || {};
     //    dataType: 'jsonp'
     //  });
     //
-    window.chanakya.cabrates = {
+    w.chanakya = w.chanakya || {};
+    w.chanakya.cabrates = {
         auto: {
             bengaluru: {
                 minprice: 25,
@@ -663,7 +662,7 @@ window.chanakya = window.chanakya || {};
         }
     };
 
-    window.chanakya.cost = (function() {
+    w.chanakya.cost = (function() {
         var rates = (function() {
             var auto = function() {
                 return chanakya.cabrates.auto[chanakya.Map.getSourceCity()].rate;
@@ -732,4 +731,4 @@ window.chanakya = window.chanakya || {};
             cheapest: cheapest
         };
     })();
-})(jQuery);
+})(window);
