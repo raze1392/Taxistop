@@ -290,9 +290,9 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                 $scope.mapHeight = screen.height - (78 + 70);
                 map_container.style.height = $scope.mapHeight + "px";
             }
-            $interval(function() {
-                $scope.callAtInterval();
-            }, 60000);
+            // $interval(function() {
+            //     $scope.callAtInterval();
+            // }, 60000);
         }
 
         $scope.callAtInterval = function() {
