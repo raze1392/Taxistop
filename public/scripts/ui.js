@@ -36,32 +36,32 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
         var destination_container = document.getElementById('searchDestination');
 
         var CAB_TYPE = {
-            Mini: '../images/mini.png',
-            Hatchback: '../images/mini.png',
-            Genie: '../images/mini.png',
-            Nano: '../images/mini.png',
-            Sedan: '../images/sedan.png',
-            Meru: '../images/sedan.png',
-            Prime: '../images/prime.png',
-            Pink: '../images/prime.png',
-            Auto: '../images/auto.png',
-            'Kaali Peeli': '../images/mini.png',
-            uberX: '../images/mini.png',
-            UberBLACK: '../images/sedan.png'
+            Mini: 'http://akush.github.io/taxistop/images/mini.png',
+            Hatchback: 'http://akush.github.io/taxistop/images/mini.png',
+            Genie: 'http://akush.github.io/taxistop/images/mini.png',
+            Nano: 'http://akush.github.io/taxistop/images/mini.png',
+            Sedan: 'http://akush.github.io/taxistop/images/sedan.png',
+            Meru: 'http://akush.github.io/taxistop/images/sedan.png',
+            Prime: 'http://akush.github.io/taxistop/images/prime.png',
+            Pink: 'http://akush.github.io/taxistop/images/prime.png',
+            Auto: 'http://akush.github.io/taxistop/images/auto.png',
+            'Kaali Peeli': 'http://akush.github.io/taxistop/images/mini.png',
+            uberX: 'http://akush.github.io/taxistop/images/mini.png',
+            UberBLACK: 'http://akush.github.io/taxistop/images/sedan.png'
         }
 
         $scope.services = [{
             name: "Ola",
-            icon: "images/ola-icon-50x50.png"
+            icon: "http://akush.github.io/taxistop/images/ola-icon-50x50.png"
         }, {
             name: "Uber",
-            icon: "images/uber-icon-50x50.png"
+            icon: "http://akush.github.io/taxistop/images/uber-icon-50x50.png"
         }, {
             name: "TFS",
-            icon: "images/tfs-icon-50x50.jpg"
+            icon: "http://akush.github.io/taxistop/images/tfs-icon-50x50.jpg"
         }, {
             name: "Meru",
-            icon: "images/meru-icon-50x50.jpg"
+            icon: "http://akush.github.io/taxistop/images/meru-icon-50x50.jpg"
         }];
 
         $scope.mask = false;
