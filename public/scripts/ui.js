@@ -310,13 +310,16 @@
                 if (w.androidAppCheck()) {
                     console.log(Android.getUserLocation());
                     var androidLoc = Android.getUserLocation();
-                    var location = null;
+                    var location = {
+                        latitude: 21.0000,
+                        longitude: 78.0000
+                    };
                     if (androidLoc) {
                         androidLoc = androidLoc.split('|');
                         location = {
                             latitude: androidLoc[0],
                             longitude: androidLoc[1]
-                        }
+                        };
                     }
                     w.chanakya.Map.intializeGmaps(map_container, source_container, destination_container, location,
                         function() {
