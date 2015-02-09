@@ -7,6 +7,12 @@ var cabServiceModules = {
     uber: require('../modules/uber'),
     meru: require('../modules/meru'),
 }
+var totalCabServiceModules = 4;
+
+var ALL_RESP = {};
+ALL_RESP.cabs = {};
+ALL_RESP.cabsEstimate = [];
+ALL_RESP.serviceAdded = 0;
 
 router.get('/:cab', function(request, response) {
     var latitude = request.query.lat;
@@ -16,6 +22,10 @@ router.get('/:cab', function(request, response) {
 
     if (cabService && cabServiceModules[cabService]) {
         cabServiceModules[cabService].call(sendResponse, response, latitude, longitude, shouldParseData);
+    } else if (cabService === 'all') {
+        for (service in cabServiceModules) {
+            cabServiceModules[service].call(gatherGlobalResponse, response, latitude, longitude, shouldParseData);
+        }
     }
 });
 
@@ -34,6 +44,16 @@ router.get('/:cab/cost', function(request, response) {
 
 function sendResponse(response, result) {
     response.json(result);
+}
+
+function gatherGlobalResponse(response, result) {
+    ALL_RESP.serviceAdded++;
+    ALL_RESP.cabs[result.service] = result.cabs;
+    ALL_RESP.cabsEstimate = ALL_RESP.cabsEstimate.concat(result.cabsEstimate);
+    if (ALL_RESP.serviceAdded === totalCabServiceModules) {
+        delete ALL_RESP.serviceAdded;
+        sendResponse(response, ALL_RESP);
+    }
 }
 
 module.exports = router;

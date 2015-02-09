@@ -28,6 +28,7 @@ function buildURL(latitude, longitude, userId) {
 function parseResponse(response, status) {
     var output = {
         status: response ? "success" : "failure",
+        service: 'TFS',
         cabs: {},
         cabsEstimate: []
     }
@@ -55,7 +56,8 @@ function parseResponse(response, status) {
 
             for (cab in cabs) {
                 var cabEO = {
-                    available: false
+                    available: false,
+                    type: 'TFS'
                 };
 
                 if (cabs[cab].length > 0) {

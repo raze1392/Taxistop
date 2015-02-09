@@ -85,6 +85,8 @@ function parseGoogleEstimateForMeru(responseToSend, result) {
             for (key in responseToSend.cabsEstimate) {
                 var _cEst = responseToSend.cabsEstimate[key];
                 _cEst.name = key;
+                _cEst.type = 'MERU';
+                _cEst.available = true;
                 tempEstimate.push(_cEst);
             }
             responseToSend.cabsEstimate = tempEstimate;

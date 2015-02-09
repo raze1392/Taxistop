@@ -27,6 +27,7 @@ function buildURL(latitude, longitude, userId) {
 function parseResponse(responseHandler, responseService, location, response) {
     var output = {
         status: response ? "success" : "failure",
+        service: 'MERU',
         cabs: {},
         cabsEstimate: []
     }

@@ -58,13 +58,13 @@ function buildPriceURL(userId) {
 
 function parseResponse(type, response, status) {
     var output = {
-        status: response ? "success" : "failure"
+        status: response ? "success" : "failure",
+        service: 'OLA',
+        cabs: {},
+        cabsEstimate: []
     };
 
     if (type === 'cabs') {
-        output.cabs = {};
-        output.cabsEstimate = [];
-
         try {
             var cabsEstimate = {};
             var cabs = {};
@@ -90,7 +90,8 @@ function parseResponse(type, response, status) {
                 for (var i = response.cab_categories.length - 1; i >= 0; i--) {
                     var availability = response.cab_categories[i].cab_availability;
                     var cabData = {
-                        available: availability
+                        available: availability,
+                        type: 'OLA'
                     };
 
                     if (availability) {

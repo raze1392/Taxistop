@@ -34,6 +34,7 @@ function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, u
 function parseResponse(type, response) {
     var output = {
         status: response ? "success" : "failure",
+        service: 'UBER',
         cabs: {},
         cabsEstimate: []
     }
@@ -47,7 +48,8 @@ function parseResponse(type, response) {
                     name: response.times[i].localized_display_name,
                     available: true,
                     duration: parseFloat(response.times[i].estimate / 60).toFixed(2),
-                    distance: null
+                    distance: null,
+                    type: 'UBER'
                 }
                 output.cabsEstimate.push(_cEst);
             }
