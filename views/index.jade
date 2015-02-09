@@ -23,7 +23,7 @@ block content
            ng-focus="typingOn = true"
            ng-blur="typingOn = false"
          )
-  div#cabdetails(ng-show="isShownDetails()")
+  div#cabdetails(ng-show="isShownDetails()" ng-cloak)
     div#details
       div.cab-details(ng-hide="showMask()")
         p.center-align.mask-image
