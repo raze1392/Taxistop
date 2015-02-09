@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 //var browserify = require('browserify-middleware'); -- This is throwing errors on server start
 
 var routes = require('./routes/index');
-var ui = require('./routes/ui');
 var cabs = require('./routes/cabs');
 var eta = require('./routes/eta');
 
@@ -27,7 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/', routes);
-app.use('/ui', ui);
 app.use('/cabs', cabs);
 app.use('/eta', eta);
 

@@ -309,11 +309,16 @@
             google.maps.event.addDomListener(w, 'load', function() {
                 if (w.androidAppCheck()) {
                     console.log(Android.getUserLocation());
-                    var location = Android.getUserLocation().split('|');
-                    w.chanakya.Map.intializeGmaps(map_container, source_container, destination_container, {
-                            latitude: location[0],
-                            longitude: location[1]
-                        },
+                    var androidLoc = Android.getUserLocation();
+                    var location = null;
+                    if (androidLoc) {
+                        androidLoc = androidLoc.split('|');
+                        location = {
+                            latitude: androidLoc[0],
+                            longitude: androidLoc[1]
+                        }
+                    }
+                    w.chanakya.Map.intializeGmaps(map_container, source_container, destination_container, location,
                         function() {
                             w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
                             w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
