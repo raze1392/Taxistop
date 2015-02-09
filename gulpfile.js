@@ -6,8 +6,14 @@ var gulp = require('gulp'),
 
 gulp.task('build', ['css', 'js']);
 
+var scriptOrder = [
+  'public/scripts/Maps/Maps.js',
+  'public/scripts/Maps/MapSearch.js',
+  'public/scripts/Maps/MapDirections.js',
+  'public/scripts/*.js'
+];
 gulp.task('js', function () {
-   return gulp.src('public/scripts/*.js')
+   return gulp.src(scriptOrder)
       .pipe(jshint())
       .pipe(jshint.reporter('default'))
       .pipe(uglify())
