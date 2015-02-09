@@ -667,16 +667,16 @@ window.chanakya = window.chanakya || {};
         var rates = (function() {
             var auto = function() {
                 return chanakya.cabrates.auto[chanakya.Map.getSourceCity()].rate;
-            }
+            };
             var ola = function(type) {
                 return chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].rate || 14;
-            }
+            };
             var tfs = function(type) {
                 return chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].rate || 14;
-            }
+            };
             var meru = function(type) {
                 return chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].rate || 14;
-            }
+            };
             return {
                 auto: auto,
                 ola: ola,
@@ -689,28 +689,28 @@ window.chanakya = window.chanakya || {};
             if (dist <= chanakya.cabrates.auto[chanakya.Map.getSourceCity()].minkm)
                 return chanakya.cabrates.auto[chanakya.Map.getSourceCity()].minprice;
             return dist * rates.auto();
-        }
-        var ola = function dist(dist, type) {
+        };
+        var ola = function(dist, type) {
             if (type === "auto") {
                 return auto(dist);
             }
             if (dist <= chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].minkm)
                 return chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].minprice;
             return chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].minprice + (dist - chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].minkm) * rates.ola(type);
-        }
-        var tfs = function dist(dist, type) {
+        };
+        var tfs = function(dist, type) {
             if (type === "auto") {
                 return auto(dist);
             }
             if (dist <= chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].minkm)
                 return chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].minprice;
             return chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].minprice + (dist - chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].minkm) * rates.tfs(type);
-        }
-        var meru = function dist(dist, type) {
+        };
+        var meru = function(dist, type) {
             if (dist <= chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].minkm)
                 return chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].minprice;
             return chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].minprice + (dist - chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].minkm) * rates.meru(type);
-        }
+        };
         var cheapest = function(dist) {
             var service = ["", 1000000];
             if (auto(dist) < service[1]) {
@@ -723,7 +723,7 @@ window.chanakya = window.chanakya || {};
                 service = ["tfs", tfs(dist, "nano")];
             }
             return service;
-        }
+        };
         return {
             auto: auto,
             ola: ola,

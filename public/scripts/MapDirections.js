@@ -32,12 +32,12 @@ window.chanakya.Map.Directions = (function() {
                 $('.centerMarker').hide();
             }
         });
-    }
+    };
 
     var setTravelMode = function(travelMode) {
         travelMode = travelMode.toLowerCase();
         if (chanakya.Map._Details.Directions.TravelMode[travelMode]) {
-            chanakya.Map._Details.Directions.travelModeSelected = chanakya.Map._Details.Directions.TravelMode[travelMode]
+            chanakya.Map._Details.Directions.travelModeSelected = chanakya.Map._Details.Directions.TravelMode[travelMode];
         } else {
             chanakya.Map._Details.Directions.travelModeSelected = chanakya.Map._Details.Directions.TravelMode.driving;
         }
@@ -46,25 +46,25 @@ window.chanakya.Map.Directions = (function() {
         if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) {
             chanakya.Map.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
         }
-    }
+    };
 
     var getTravelMode = function() {
         return chanakya.Map._Details.Directions.travelModeSelected;
-    }
+    };
 
     var setRouteAlternatives = function(arg) {
         if (typeof arg === "boolean") chanakya.Map._Details.Directions.routeAlternatives = arg;
         else chanakya.Map._Details.Directions.routeAlternatives = false;
-    }
+    };
 
     var getRouteAlternatives = function(arg) {
         return chanakya.Map._Details.Directions.routeAlternatives;
-    }
+    };
 
     var setUnitSystem = function(unit) {
         unit = unit.toLowerCase();
         if (chanakya.Map._Details.Directions.UnitSystem[unit]) {
-            chanakya.Map._Details.Directions.unitSystemSelected = chanakya.Map._Details.Directions.UnitSystem[unit]
+            chanakya.Map._Details.Directions.unitSystemSelected = chanakya.Map._Details.Directions.UnitSystem[unit];
         } else {
             chanakya.Map._Details.Directions.unitSystemSelected = chanakya.Map._Details.Directions.UnitSystem.metric;
         }
@@ -73,11 +73,11 @@ window.chanakya.Map.Directions = (function() {
         if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) {
             chanakya.Map.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
         }
-    }
+    };
 
     var getUnitSystem = function() {
         return chanakya.Map._Details.Directions.unitSystemSelected;
-    }
+    };
 
     var clearDirections = function() {
         chanakya.Map._Details.directionsDisplay.setMap(null);
@@ -86,7 +86,7 @@ window.chanakya.Map.Directions = (function() {
             chanakya.Map._Details.map.setCenter(chanakya.Map.getSource().location);
         }
         $('.centerMarker').show();
-    }
+    };
 
     return {
         getDirections: getDirections,
@@ -97,6 +97,6 @@ window.chanakya.Map.Directions = (function() {
         getRouteAlternatives: getRouteAlternatives,
         setUnitSystem: setUnitSystem,
         getUnitSystem: getUnitSystem
-    }
+    };
 
 }());

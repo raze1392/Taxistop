@@ -15,14 +15,14 @@ window.chanakya.Map.Search = (function() {
         google.maps.event.addListener(chanakya.Map._Details.Autocomplete.source, 'place_changed', function() {
             onPlaceChanged(element, "source");
         });
-    }
+    };
 
     var initializeAutocompleteDestinationBox = function(element) {
         chanakya.Map._Details.Autocomplete.destination = new google.maps.places.Autocomplete(element, {});
         google.maps.event.addListener(chanakya.Map._Details.Autocomplete.destination, 'place_changed', function() {
             onPlaceChanged(element, "destination");
         });
-    }
+    };
 
     var search = function() {
         var search = {
@@ -36,7 +36,7 @@ window.chanakya.Map.Search = (function() {
                 }
             }
         });
-    }
+    };
 
     var onPlaceChanged = function(element, type) {
         type = type.toLowerCase();
@@ -67,11 +67,11 @@ window.chanakya.Map.Search = (function() {
         if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) {
             chanakya.Map.Directions.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
         }
-    }
+    };
 
     return {
         initializeAutocompleteSourceBox: initializeAutocompleteSourceBox,
         initializeAutocompleteDestinationBox: initializeAutocompleteDestinationBox
-    }
+    };
 
 }());

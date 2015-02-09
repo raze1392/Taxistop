@@ -104,7 +104,7 @@ window.chanakya.Map = (function() {
         chanakya.Map._Details.directionsDisplay = new google.maps.DirectionsRenderer();
         chanakya.Map._Details.geoLocation = new google.maps.Geocoder();
         chanakya.Map._Details.directionsDisplay.setMap(chanakya.Map._Details.map);
-    }
+    };
 
     var addVirtualSourceMarker = function() {
         $('<div id="centerMark"/>').addClass('centerMarker').appendTo(chanakya.Map._Details.map.getDiv());
@@ -114,7 +114,7 @@ window.chanakya.Map = (function() {
             if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) return;
             chanakya.Map.setSource(chanakya.Map._Details.map.getCenter());
         });
-    }
+    };
 
     var setContainer = function(type, element) {
         if (type && element && type.toLowerCase() === 'source') {
@@ -124,7 +124,7 @@ window.chanakya.Map = (function() {
             chanakya.Map._Details.Destination.container = element;
             chanakya.Map._Details.Destination.container.value = "";
         }
-    }
+    };
 
     var setSource = function(location) {
         chanakya.Map._Details.Source.location = location;
@@ -145,14 +145,14 @@ window.chanakya.Map = (function() {
             }
         });
         chanakya.Map._Details.Source.container.dispatchEvent(chanakya.Map._Details.sourceLocationChangedEvent);
-    }
+    };
 
     var clearSource = function() {
         chanakya.Map._Details.Source.location = null;
         chanakya.Map._Details.Source.city = null;
         chanakya.Map._Details.Source.container.value = '';
         chanakya.Map.clearMarkers("source");
-    }
+    };
 
     var setDestination = function(location) {
         chanakya.Map._Details.Destination.location = location;
@@ -172,23 +172,23 @@ window.chanakya.Map = (function() {
             }
         });
         chanakya.Map._Details.Destination.container.dispatchEvent(chanakya.Map._Details.destinationLocationChangedEvent);
-    }
+    };
 
     var clearDestination = function() {
         chanakya.Map._Details.Destination.location = null;
         chanakya.Map._Details.Destination.city = null;
         chanakya.Map._Details.Destination.container.value = '';
         chanakya.Map.clearMarkers("destination");
-    }
+    };
 
-    var intializeGmaps = function(element, sourceElem, destinationElem, location, callback) {
-        var location = new google.maps.LatLng(location.latitude, location.longitude);
+    var intializeGmaps = function(element, sourceElem, destinationElem, loc, callback) {
+        var location = new google.maps.LatLng(loc.latitude, loc.longitude);
         initializeMaps(element, sourceElem, destinationElem, location);
         // Setting Source
         chanakya.Map.setSource(location);
         callback();
         return true;
-    }
+    };
 
     var intializeGmapsUsingNavigator = function(element, sourceElem, destinationElem, callback) {
         if (navigator.geolocation) {
@@ -203,13 +203,13 @@ window.chanakya.Map = (function() {
             });
         }
         return false;
-    }
+    };
 
     var intializeInfoWindow = function(element) {
         chanakya.Map._Details.infoWindow = new google.maps.InfoWindow({
             content: element
         });
-    }
+    };
 
     var setMarker = function(location, title, icon) {
         var marker = new google.maps.Marker({
@@ -220,7 +220,7 @@ window.chanakya.Map = (function() {
         marker.setMap(chanakya.Map._Details.map);
         chanakya.Map._Details.Markers.push(marker);
         return marker;
-    }
+    };
 
     var clearMarkers = function(type) {
         type = (type) ? type.toLowerCase() : undefined;
@@ -240,10 +240,10 @@ window.chanakya.Map = (function() {
             for (var i = chanakya.Map._Details.Markers.length - 1; i >= 0; i--) {
                 chanakya.Map._Details.Markers[i].setMap(null);
                 chanakya.Map._Details.Markers[i] = null;
-            };
+            }
             chanakya.Map._Details.Markers = [];
         }
-    }
+    };
 
     var clearResults = function() {
         for (var i = 0; i < chanakya.Map._Details.Autocomplete.results.length; i++) {
@@ -252,19 +252,19 @@ window.chanakya.Map = (function() {
             }
         }
         chanakya.Map._Details.Autocomplete.results = [];
-    }
+    };
 
     var existsSource = function() {
         if (!chanakya.Map._Details.Source) return false;
         if (chanakya.Map._Details.Source.location) return true;
         return false;
-    }
+    };
 
     var existsDestination = function() {
         if (!chanakya.Map._Details.Destination) return false;
         if (chanakya.Map._Details.Destination.location) return true;
         return false;
-    }
+    };
 
     var getGeoLocation = function(location, onSuccess, onError) {
         chanakya.Map._Details.geoLocation.geocode({
@@ -286,53 +286,53 @@ window.chanakya.Map = (function() {
                 onError();
             }
         });
-    }
+    };
 
     var getSource = function() {
         return chanakya.Map._Details.Source;
-    }
+    };
 
     var getDestination = function() {
         return chanakya.Map._Details.Destination;
-    }
+    };
 
     var getSourceCity = function() {
         return chanakya.Map._Details.Source.city;
-    }
+    };
 
     var getDestinationCity = function() {
         return chanakya.Map._Details.Destination.city;
-    }
+    };
 
     var setSourceCity = function(city) {
         chanakya.Map._Details.Source.city = city;
-    }
+    };
 
     var setDestinationCity = function(city) {
         chanakya.Map._Details.Destination.city = city;
-    }
+    };
 
     var getSourceLatitude = function() {
         if (chanakya.Map.existsSource()) {
             return chanakya.Map.getSource().location.k;
         }
         return null;
-    }
+    };
 
     var getSourceLongitude = function() {
         if (chanakya.Map.existsSource()) {
             return chanakya.Map.getSource().location.D;
         }
         return null;
-    }
+    };
 
     var convertLatLngToLocation = function(latitude, longitude) {
         return new google.maps.LatLng(latitude, longitude);
-    }
+    };
 
     var getMap = function(latitude, longitude) {
         return chanakya.Map._Details.map;
-    }
+    };
 
     return {
         _Details: Details,
@@ -360,6 +360,6 @@ window.chanakya.Map = (function() {
         getSourceLatitude: getSourceLatitude,
         getSourceLongitude: getSourceLongitude,
         convertLatLngToLocation: convertLatLngToLocation
-    }
+    };
 
 }());
