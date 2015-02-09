@@ -17,8 +17,29 @@ window.chanakya = window.chanakya || {};
     //    dataType: 'jsonp'
     //  });
     //
-    window.chanakya.currentCity = "bengaluru";
     window.chanakya.cabrates = {
+        auto: {
+            bengaluru: {
+                minprice: 25,
+                minkm: 1.9,
+                rate: 13
+            },
+            mumbai: {
+                minprice: 17,
+                minkm: 1.5,
+                rate: 11.33
+            },
+            delhi: {
+                minprice: 25,
+                minkm: 2,
+                rate: 8
+            },
+            "new delhi": {
+                minprice: 25,
+                minkm: 2,
+                rate: 8
+            }
+        },
         ola: {
             "mumbai": {
                 mini: {
@@ -308,6 +329,18 @@ window.chanakya = window.chanakya || {};
                     rate: 16
                 }
             },
+            "new delhi": {
+                hatchback: {
+                    minprice: 49,
+                    minkm: 4,
+                    rate: 14
+                },
+                sedan: {
+                    minprice: 49,
+                    minkm: 6,
+                    rate: 16
+                }
+            },
             "hyderabad": {
                 hatchback: {
                     minprice: 49,
@@ -517,7 +550,7 @@ window.chanakya = window.chanakya || {};
         },
         meru: {
             "bengaluru": {
-                flexi: {
+                meru: {
                     minprice: 80,
                     minkm: 4,
                     rate: 19.50
@@ -530,7 +563,19 @@ window.chanakya = window.chanakya || {};
 
             },
             "delhi": {
-                flexi: {
+                meru: {
+                    minprice: 69,
+                    minkm: 3,
+                    rate: 23
+                },
+                genie: {
+                    minprice: 90,
+                    minkm: 4,
+                    rate: 10
+                }
+            },
+            "new delhi": {
+                meru: {
                     minprice: 69,
                     minkm: 3,
                     rate: 23
@@ -542,7 +587,7 @@ window.chanakya = window.chanakya || {};
                 }
             },
             "pune": {
-                flexi: {
+                meru: {
                     minprice: 99,
                     minkm: 4,
                     rate: 15
@@ -554,7 +599,7 @@ window.chanakya = window.chanakya || {};
                 }
             },
             "hyderabad": {
-                flexi: {
+                meru: {
                     minprice: 40,
                     minkm: 2,
                     rate: 21
@@ -566,14 +611,14 @@ window.chanakya = window.chanakya || {};
                 }
             },
             "jaipur": {
-                flexi: {
+                meru: {
                     minprice: 99,
                     minkm: 5,
                     rate: 10
                 }
             },
             "ahmedabad": {
-                flexi: {
+                meru: {
                     minprice: 100,
                     minkm: 6,
                     rate: 15
@@ -585,7 +630,7 @@ window.chanakya = window.chanakya || {};
                 }
             },
             "chennai": {
-                flexi: {
+                meru: {
                     minprice: 90,
                     minkm: 4,
                     rate: 15
@@ -597,7 +642,7 @@ window.chanakya = window.chanakya || {};
                 }
             },
             "mysore": {
-                flexi: {
+                meru: {
                     minprice: 49,
                     minkm: 2,
                     rate: 14
@@ -609,7 +654,7 @@ window.chanakya = window.chanakya || {};
                 }
             },
             "kolkata": {
-                flexi: {
+                meru: {
                     minprice: 150,
                     minkm: 6,
                     rate: 15
@@ -621,49 +666,50 @@ window.chanakya = window.chanakya || {};
     window.chanakya.cost = (function() {
         var rates = (function() {
             var auto = function() {
-                if (chanakya.currentCity === "bengaluru")
-                    return 13;
-                else return 10;
+                return chanakya.cabrates.auto[chanakya.Map.getSourceCity()].rate;
             }
             var ola = function(type) {
-                var rate = chanakya.cabrates.ola[chanakya.currentCity][type].rate || -1;
-                return rate;
+                return chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].rate || 14;
             }
             var tfs = function(type) {
-                var rate = chanakya.cabrates.tfs[chanakya.currentCity][type].rate || -1;
-                return rate;
+                return chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].rate || 14;
+            }
+            var meru = function(type) {
+                return chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].rate || 14;
             }
             return {
                 auto: auto,
                 ola: ola,
-                tfs: tfs
+                tfs: tfs,
+                meru: meru
             };
         })();
 
         var auto = function(dist) {
-            if (dist <= 1.9) return 25;
+            if (dist <= chanakya.cabrates.auto[chanakya.Map.getSourceCity()].minkm)
+                return chanakya.cabrates.auto[chanakya.Map.getSourceCity()].minprice;
             return dist * rates.auto();
         }
         var ola = function dist(dist, type) {
             if (type === "auto") {
                 return auto(dist);
             }
-            if (dist <= chanakya.cabrates.ola[chanakya.currentCity][type].minkm)
-                return chanakya.cabrates.ola[chanakya.currentCity][type].minprice;
-            return chanakya.cabrates.ola[chanakya.currentCity][type].minprice + (dist - chanakya.cabrates.ola[chanakya.currentCity][type].minkm) * rates.ola(type);
+            if (dist <= chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].minkm)
+                return chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].minprice;
+            return chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].minprice + (dist - chanakya.cabrates.ola[chanakya.Map.getSourceCity()][type].minkm) * rates.ola(type);
         }
         var tfs = function dist(dist, type) {
-            if (chanakya.currentCity === "bengaluru" && type === "auto") {
+            if (type === "auto") {
                 return auto(dist);
             }
-            if (dist <= chanakya.cabrates.tfs[chanakya.currentCity][type].minkm)
-                return chanakya.cabrates.tfs[chanakya.currentCity][type].minprice;
-            return chanakya.cabrates.tfs[chanakya.currentCity][type].minprice + (dist - chanakya.cabrates.tfs[chanakya.currentCity][type].minkm) * rates.tfs(type);
+            if (dist <= chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].minkm)
+                return chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].minprice;
+            return chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].minprice + (dist - chanakya.cabrates.tfs[chanakya.Map.getSourceCity()][type].minkm) * rates.tfs(type);
         }
         var meru = function dist(dist, type) {
-            if (dist <= chanakya.cabrates.meru[chanakya.currentCity][type].minkm)
-                return chanakya.cabrates.meru[chanakya.currentCity][type].minprice;
-            return chanakya.cabrates.meru[chanakya.currentCity][type].minprice + (dist - chanakya.cabrates.meru[chanakya.currentCity][type].minkm) * rates.meru(type);
+            if (dist <= chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].minkm)
+                return chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].minprice;
+            return chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].minprice + (dist - chanakya.cabrates.meru[chanakya.Map.getSourceCity()][type].minkm) * rates.meru(type);
         }
         var cheapest = function(dist) {
             var service = ["", 1000000];
@@ -682,6 +728,7 @@ window.chanakya = window.chanakya || {};
             auto: auto,
             ola: ola,
             tfs: tfs,
+            meru: meru,
             cheapest: cheapest
         };
     })();

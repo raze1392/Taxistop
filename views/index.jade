@@ -29,7 +29,11 @@ block content
         p.center-align.mask-image
           img(alt="!" src="https://cdn4.iconfinder.com/data/icons/miu/22/circle_info_more-information_detail-32.png")
         p.center-align No cabs available from {{cabs.selected}}
-      div.cab-details(ng-repeat='cab in cabs.estimate | filter:showFilter' ng-class='{all: "all" == cabs.selected.toLowerCase()}')
+      div.cab-details(
+        ng-repeat='cab in cabs.estimate | filter:showFilter' 
+        ng-class='{all: "all" == cabs.selected.toLowerCase()}'
+        ng-click='openApp(cab.type)'
+      )
         img.cab-image(ng-src="{{ getCabImg(cab.name) }}")
         img.cab-type-image(ng-src="{{ getCabTypeImg(cab.type) }}")
         p.right(ng-bind-html='getTravelCost(cab)')

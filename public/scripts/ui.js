@@ -274,6 +274,12 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
             chanakya.Map.Directions.clearDirections();
         }
 
+        $scope.openApp = function(type) {
+            if ($scope.isAndroidApp) {
+                Android.openApp(type);
+            }
+        }
+
         $scope.init = function() {
             $scope.isMobile = window.mobilecheck();
             $scope.isAndroidApp = window.androidAppCheck();
@@ -323,7 +329,6 @@ chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
                 lat: event.detail.lat,
                 lng: event.detail.lng
             };
-            window.chanakya.currentCity = _l(chanakya.Map.getSourceCity());
             $scope.getService($scope.cabs.selected);
             $scope.typingOn = false;
         }, false);
