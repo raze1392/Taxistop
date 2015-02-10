@@ -299,12 +299,11 @@
                 }
                 $interval(function() {
                     $scope.refreshTrue = true;
-                }, 5000);
+                }, 30000);
             };
 
             google.maps.event.addDomListener(w, 'load', function() {
                 if (w.androidAppCheck()) {
-                    console.log(Android.getUserLocation());
                     var androidLoc = Android.getUserLocation();
                     var location = {
                         latitude: 21.0000,
