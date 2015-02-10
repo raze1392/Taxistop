@@ -222,11 +222,10 @@
             }
 
             $scope.refreshTrue = false;
-            $scope.selectService = function(service, hard, silent) {
-                if (silent) return;
+            $scope.selectService = function(service, hard) {
                 if ($scope.refreshTrue) {
                     $scope.refreshTrue = false;
-                    $scope.getService(service);
+                    $scope.getService(service, true);
                 }
                 if ($scope.cabs.selected === service && !hard) return;
                 $scope.cabs.selected = service;
@@ -258,7 +257,7 @@
                 $scope.cabs.coordinates = data.cabs;
 
                 $scope.loading = false;
-                $scope.selectService(service, true, true);
+                if(!silent) $scope.selectService(service, true, true);
                 //setMapHeight($scope.availableTypes * 43);
                 setMapHeight(0);
             }
@@ -278,15 +277,14 @@
                 return $scope.availableTypes[$scope.cabs.selected] !== 0;
             };
 
-            $scope.getCabs = function(service) {
+            $scope.getCabs = function(service, silent) {
                 $http.get('cabs/all?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                    processData(service, data);
+                    processData(service, data, silent);
                 });
             };
 
-            $scope.getService = function(service) {
-                $scope.loading = true;
-                $scope.getCabs(service);
+            $scope.getService = function(service, silent) {
+                $scope.getCabs(service, silent);
             };
 
             $scope.init = function() {
