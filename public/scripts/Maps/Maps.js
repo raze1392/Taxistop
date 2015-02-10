@@ -83,11 +83,7 @@
                 zoom: 14,
                 disableDefaultUI: true,
                 mapTypeControl: false,
-                zoomControl: true,
-                zoomControlOptions: {
-                    style: google.maps.ZoomControlStyle.SMALL,
-                    position: google.maps.ControlPosition.RIGHT_CENTER
-                },
+                zoomControl: false,
                 scaleControl: false,
                 streetViewControl: false
             };
