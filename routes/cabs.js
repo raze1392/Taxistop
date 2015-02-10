@@ -53,8 +53,10 @@ function gatherGlobalResponse(response, result) {
     ALL_RESP.cabs[result.service] = result.cabs;
     ALL_RESP.cabsEstimate = ALL_RESP.cabsEstimate.concat(result.cabsEstimate);
     if (ALL_RESP.serviceAdded === totalCabServiceModules) {
-        ALL_RESP.serviceAdded = 0;
         sendResponse(response, ALL_RESP);
+        ALL_RESP.serviceAdded = 0;
+        ALL_RESP.cabsEstimate = [];
+        ALL_RESP.cabs = {};
     }
 }
 
