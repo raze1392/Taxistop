@@ -106,7 +106,7 @@
                     return "";
                 if ($scope.travelInfoLoadFailed) return "failed";
                 if ($scope.travelTime === 0) return "wait";
-                var totalTravelTime = cab.duration + $scope.travelTime;
+                var totalTravelTime = Math.floor(cab.duration) + $scope.travelTime;
                 return Math.floor(totalTravelTime) + " mins";
             };
 
