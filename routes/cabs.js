@@ -24,6 +24,7 @@ router.get('/:cab', function(request, response) {
         cabServiceModules[cabService].call(sendResponse, response, latitude, longitude, shouldParseData);
     } else if (cabService === 'all') {
         for (service in cabServiceModules) {
+            //console.log('Calling service ' + service);
             cabServiceModules[service].call(gatherGlobalResponse, response, latitude, longitude, shouldParseData);
         }
     }
@@ -47,11 +48,12 @@ function sendResponse(response, result) {
 }
 
 function gatherGlobalResponse(response, result) {
+    //console.log('Processing service ' + result.service);
     ALL_RESP.serviceAdded++;
     ALL_RESP.cabs[result.service] = result.cabs;
     ALL_RESP.cabsEstimate = ALL_RESP.cabsEstimate.concat(result.cabsEstimate);
     if (ALL_RESP.serviceAdded === totalCabServiceModules) {
-        delete ALL_RESP.serviceAdded;
+        ALL_RESP.serviceAdded = 0;
         sendResponse(response, ALL_RESP);
     }
 }

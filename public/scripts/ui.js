@@ -38,32 +38,32 @@
             var destination_container = document.getElementById('searchDestination');
 
             var CAB_TYPE = {
-                Mini: 'http://akush.github.io/taxistop/images/mini.png',
-                Hatchback: 'http://akush.github.io/taxistop/images/mini.png',
-                Genie: 'http://akush.github.io/taxistop/images/mini.png',
-                Nano: 'http://akush.github.io/taxistop/images/mini.png',
-                Sedan: 'http://akush.github.io/taxistop/images/sedan.png',
-                Meru: 'http://akush.github.io/taxistop/images/sedan.png',
-                Prime: 'http://akush.github.io/taxistop/images/prime.png',
-                Pink: 'http://akush.github.io/taxistop/images/prime.png',
-                Auto: 'http://akush.github.io/taxistop/images/auto.png',
-                'Kaali Peeli': 'http://akush.github.io/taxistop/images/mini.png',
-                uberX: 'http://akush.github.io/taxistop/images/mini.png',
-                UberBLACK: 'http://akush.github.io/taxistop/images/sedan.png'
+                Mini: w.CDN_IMAGE_PREFIX + '/images/mini.png',
+                Hatchback: w.CDN_IMAGE_PREFIX + '/images/mini.png',
+                Genie: w.CDN_IMAGE_PREFIX + '/images/mini.png',
+                Nano: w.CDN_IMAGE_PREFIX + '/images/mini.png',
+                Sedan: w.CDN_IMAGE_PREFIX + '/images/sedan.png',
+                Meru: w.CDN_IMAGE_PREFIX + '/images/sedan.png',
+                Prime: w.CDN_IMAGE_PREFIX + '/images/prime.png',
+                Pink: w.CDN_IMAGE_PREFIX + '/images/prime.png',
+                Auto: w.CDN_IMAGE_PREFIX + '/images/auto.png',
+                'Kaali Peeli': w.CDN_IMAGE_PREFIX + '/images/mini.png',
+                uberX: w.CDN_IMAGE_PREFIX + '/images/mini.png',
+                UberBLACK: w.CDN_IMAGE_PREFIX + '/images/sedan.png'
             };
 
             $scope.services = [{
                 name: "Ola",
-                icon: "http://akush.github.io/taxistop/images/ola-icon-50x50.png"
+                icon: w.CDN_IMAGE_PREFIX + "/images/ola-icon-50x50.png"
             }, {
                 name: "Uber",
-                icon: "http://akush.github.io/taxistop/images/uber-icon-50x50.png"
+                icon: w.CDN_IMAGE_PREFIX + "/images/uber-icon-50x50.png"
             }, {
                 name: "TFS",
-                icon: "http://akush.github.io/taxistop/images/tfs-icon-50x50.jpg"
+                icon: w.CDN_IMAGE_PREFIX + "/images/tfs-icon-50x50.jpg"
             }, {
                 name: "Meru",
-                icon: "http://akush.github.io/taxistop/images/meru-icon-50x50.jpg"
+                icon: w.CDN_IMAGE_PREFIX + "/images/meru-icon-50x50.jpg"
             }];
 
             $scope.mask = false;

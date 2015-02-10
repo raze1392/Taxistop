@@ -3,8 +3,12 @@
 clear
 cd /home/ubuntu/chanakya
 echo "=========================TAXI STOP========================"
-echo "Setting Port to 80"
+echo "Setting Port to 80 and Envt to Production"
 export PORT=80
+export NODE_ENV=production
+echo "...Done"
+echo "Building CSS and JS file..."
+gulp build
 echo "...Done"
 echo "Killing running Node Server..."
 killall node

@@ -5,3 +5,4 @@ node_modules/*
 public/scripts/.module-cache/*
 bin/www
 nohup*
+public/build/*
