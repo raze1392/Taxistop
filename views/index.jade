@@ -4,7 +4,7 @@ block content
   div#map-canvas
   div#content
     img.clear-dest(
-      src="images/close.png" 
+      src=url.cdnImagePrefix + "/images/close.png" 
       ng-show="destination && destination.lat" 
       ng-click="clearDestination()"
     )
