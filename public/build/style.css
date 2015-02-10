@@ -12,7 +12,7 @@ table{width:100%}
 #content input{width:100%;height:30px;border:none}
 #content input:active,#content input:focus,#content input:hover{border:none;outline:0}
 #cabdetails{position:absolute;width:330px;top:95px;left:10px;z-index:1;background:0 0}
-#details{background:#fff;height:215px;padding:2px 0;-webkit-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);-moz-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);overflow-y:scroll}
+#details{background:#fff;height:215px;padding:2px 0;-webkit-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);-moz-box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);box-shadow:2px 2px 2px 0 rgba(0,0,0,.5);overflow-y:auto}
 #details .cab-details{border-bottom:1px solid #ccc;padding:5px 5px 5px 35px;position:relative}
 #details .cab-details.all{padding-left:60px}
 #details .cab-details:last-child{border:none}
