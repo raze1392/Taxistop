@@ -22,6 +22,10 @@
         return str.toLowerCase();
     }
 
+    function _u(str) {
+        return str.toUpperCase();
+    }
+
     var chanakyaApp = angular.module('chanakyaApp', ['ngSanitize']);
 
     chanakyaApp.controller('ChanakyaCtrl', ['$scope', '$http', '$interval',
@@ -31,8 +35,10 @@
                 lng: undefined
             };
             $scope.cabs = {
-                selected: 'tfs'
+                selected: 'ola'
             };
+            $scope.loading = true;
+
             var map_container = document.getElementById('map-canvas');
             var source_container = document.getElementById('searchSource');
             var destination_container = document.getElementById('searchDestination');
@@ -53,122 +59,18 @@
             };
 
             $scope.services = [{
-                name: "Ola",
+                name: "ola",
                 icon: w.CDN_IMAGE_PREFIX + "/images/ola-icon-50x50.png"
             }, {
-                name: "Uber",
+                name: "uber",
                 icon: w.CDN_IMAGE_PREFIX + "/images/uber-icon-50x50.png"
             }, {
-                name: "TFS",
+                name: "tfs",
                 icon: w.CDN_IMAGE_PREFIX + "/images/tfs-icon-50x50.jpg"
             }, {
-                name: "Meru",
+                name: "meru",
                 icon: w.CDN_IMAGE_PREFIX + "/images/meru-icon-50x50.jpg"
             }];
-
-            $scope.mask = false;
-            $scope.availableTypes = 0;
-
-            function clearData() {
-                $scope.cabs.selected = "";
-                $scope.cabs.estimate = [];
-                $scope.cabs.coordinates = {};
-                $scope.availableTypes = 0;
-                mapNearByCabs($scope.cabs.coordinates, $scope.cabs.selected);
-            }
-
-            function processData(selected, data, all) {
-                if (all) {
-                    if (!data.cabsEstimate) return;
-                    console.log(selected, data);
-                    $scope.cabs.selected = "all";
-                    for (var i = 0; i < data.cabsEstimate.length; i++) {
-                        data.cabsEstimate[i].type = selected;
-                        if (data.cabsEstimate[i].available) $scope.availableTypes++;
-                    }
-                    $scope.cabs.estimate = $scope.cabs.estimate.concat(data.cabsEstimate);
-                    for (var cab in data.cabs) {
-                        $scope.cabs.coordinates[cab] = data.cabs[cab];
-                    }
-                    mapNearByCabs($scope.cabs.coordinates, $scope.cabs.selected);
-                    return;
-                }
-                if (!data.cabsEstimate) {
-                    $scope.mask = true;
-                    return;
-                }
-                $scope.mask = false;
-                $scope.availableTypes = 0;
-                for (var j = 0; j < data.cabsEstimate.length; j++) {
-                    data.cabsEstimate[j].type = selected;
-                    if (data.cabsEstimate[j].available) $scope.availableTypes++;
-                }
-                $scope.cabs.selected = selected;
-                $scope.cabs.estimate = data.cabsEstimate;
-                $scope.cabs.coordinates = data.cabs;
-                mapNearByCabs($scope.cabs.coordinates, $scope.cabs.selected);
-                setMapHeight($scope.availableTypes * 43);
-                //setMapHeight(0);
-            }
-
-            function setMapHeight(lessHeight) {
-                if ($scope.availableTypes === 0)
-                    map_container.style.height = ($scope.mapHeight - 25) + "px";
-                else
-                    map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
-                google.maps.event.trigger(w.chanakya.Map.getMap(), "resize");
-
-                if (w.chanakya.Map.existsSource() && w.chanakya.Map.existsDestination()) return;
-                w.chanakya.Map.getMap().setCenter(w.chanakya.Map.getSource().location);
-            }
-
-            $scope.showMask = function() {
-                if ($scope.isMobile) return $scope.availableTypes !== 0;
-                return $scope.cabs.estimate && $scope.cabs.estimate.length > 0;
-            };
-
-            $scope.getOla = function(all) {
-                $http.get('cabs/ola?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                    processData("ola", data, all);
-                });
-            };
-
-            $scope.getUber = function(all) {
-                $http.get('cabs/uber?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                    processData("uber", data, all);
-                });
-            };
-
-            $scope.getTfs = function(all) {
-                $http.get('cabs/tfs?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                    processData("tfs", data, all);
-                });
-            };
-
-            $scope.getMeru = function(all) {
-                $http.get('cabs/meru?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
-                    processData("meru", data, all);
-                });
-            };
-
-            $scope.getService = function(service) {
-                clearData();
-                $scope.cabs.selected = service;
-                if (_l(service) === 'all') {
-                    $scope.getOla(true);
-                    $scope.getUber(true);
-                    $scope.getTfs(true);
-                    $scope.getMeru(true);
-                } else if (_l(service) == 'ola') {
-                    $scope.getOla();
-                } else if (_l(service) == 'uber') {
-                    $scope.getUber();
-                } else if (_l(service) == 'tfs') {
-                    $scope.getTfs();
-                } else if (_l(service) == 'meru') {
-                    $scope.getMeru();
-                }
-            };
 
             $scope.getCabImg = function(name) {
                 return CAB_TYPE[name];
@@ -234,6 +136,10 @@
                     if ($scope.travelInfoLoadFailed) return "failed";
                     return "apx &#8377;" + Math.ceil(w.chanakya.cost.tfs($scope.travelDistance, cab.name.toLowerCase()));
                 }
+                if (_l(cab.type) == "meru") {
+                    if ($scope.travelInfoLoadFailed) return "failed";
+                    return "apx &#8377;" + Math.ceil(w.chanakya.cost.meru($scope.travelDistance, cab.name.toLowerCase()));
+                }
 
                 if (_l(cab.type) == "uber") {
                     if ($scope.uberCost[cab.name] === "") {
@@ -260,7 +166,11 @@
             };
 
             $scope.showFilter = function(cab) {
-                if ($scope.isMobile && !cab.available)
+                if (!cab.available)
+                    return false;
+                if ($scope.cabs.selected === "all")
+                    return true;
+                if (_l(cab.type) !== $scope.cabs.selected)
                     return false;
                 return true;
             };
@@ -282,6 +192,103 @@
                 }
             };
 
+            $scope.promoteApp = function(promotion) {
+                if ($scope.isAndroidApp && promotion) {
+                    Android.promoteTaxiStop(promotion);
+                }
+            };
+
+            $scope.mask = false;
+            $scope.availableTypes = {
+                ola: 0,
+                uber: 0,
+                tfs: 0,
+                meru: 0,
+                all: 0
+            };
+
+            function clearData() {
+                $scope.cabs.selected = "";
+                $scope.cabs.estimate = [];
+                $scope.cabs.coordinates = {};
+                $scope.availableTypes = {
+                    ola: 0,
+                    uber: 0,
+                    tfs: 0,
+                    meru: 0,
+                    all: 0
+                };
+                mapNearByCabs();
+            }
+
+            $scope.refreshTrue = false;
+            $scope.selectService = function(service, hard, silent) {
+                if (silent) return;
+                if ($scope.refreshTrue) {
+                    $scope.refreshTrue = false;
+                    $scope.getService(service);
+                }
+                if ($scope.cabs.selected === service && !hard) return;
+                $scope.cabs.selected = service;
+                mapNearByCabs();
+            };
+
+            function processData(service, data, silent) {
+                $scope.mask = false;
+                $scope.availableTypes = {
+                    ola: 0,
+                    uber: 0,
+                    tfs: 0,
+                    meru: 0,
+                    all: 0
+                };
+                if (!data.cabsEstimate) {
+                    $scope.mask = true;
+                    return;
+                }
+
+                for (var j = 0; j < data.cabsEstimate.length; j++) {
+                    if (data.cabsEstimate[j].available) {
+                        $scope.availableTypes[_l(data.cabsEstimate[j].type)] ++;
+                        $scope.availableTypes.all++;
+                    }
+                }
+
+                $scope.cabs.estimate = data.cabsEstimate;
+                $scope.cabs.coordinates = data.cabs;
+
+                $scope.loading = false;
+                $scope.selectService(service, true, true);
+                //setMapHeight($scope.availableTypes * 43);
+                setMapHeight(0);
+            }
+
+            function setMapHeight(lessHeight) {
+                if ($scope.availableTypes === 0)
+                    map_container.style.height = ($scope.mapHeight - 25) + "px";
+                else
+                    map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
+                google.maps.event.trigger(w.chanakya.Map.getMap(), "resize");
+
+                if (w.chanakya.Map.existsSource() && w.chanakya.Map.existsDestination()) return;
+                w.chanakya.Map.getMap().setCenter(w.chanakya.Map.getSource().location);
+            }
+
+            $scope.showMask = function() {
+                return $scope.availableTypes[$scope.cabs.selected] !== 0;
+            };
+
+            $scope.getCabs = function(service) {
+                $http.get('cabs/all?lat=' + $scope.source.lat + '&lng=' + $scope.source.lng).success(function(data) {
+                    processData(service, data);
+                });
+            };
+
+            $scope.getService = function(service) {
+                $scope.loading = true;
+                $scope.getCabs(service);
+            };
+
             $scope.init = function() {
                 $scope.isMobile = w.mobilecheck();
                 $scope.isAndroidApp = w.androidAppCheck();
@@ -292,19 +299,10 @@
                     $scope.mapHeight = screen.height - (78 + 70);
                     map_container.style.height = $scope.mapHeight + "px";
                 }
-                // $interval(function() {
-                //     $scope.callAtInterval();
-                // }, 60000);
+                $interval(function() {
+                    $scope.refreshTrue = true;
+                }, 5000);
             };
-
-            $scope.callAtInterval = function() {
-                $scope.getService($scope.cabs.selected);
-                if ($scope.destination && $scope.destination.lat) {
-                    $scope.setTravelInfo();
-                    $scope.getUberCost();
-                }
-            };
-
 
             google.maps.event.addDomListener(w, 'load', function() {
                 if (w.androidAppCheck()) {
@@ -372,9 +370,19 @@
                 return url;
             }
 
-            // TODO: change for all
-            function mapNearByCabs(cabs, service) {
-                w.chanakya.Map.clearMarkers('cabs');
+            function mapNearByCabs() {
+                if ($scope.cabs.selected !== 'all') {
+                    showNearByCabs($scope.cabs.coordinates[_u($scope.cabs.selected)], $scope.cabs.selected);
+                    return;
+                }
+                for (var i = 0; i < $scope.services.length; i++) {
+                    showNearByCabs($scope.cabs.coordinates[_u($scope.services[i].name)], $scope.services[i].name, true);
+                }
+
+            }
+
+            function showNearByCabs(cabs, service, persist) {
+                if (!persist) w.chanakya.Map.clearMarkers('cabs');
                 for (var cabType in cabs) {
                     var _cabs = cabs[cabType];
                     for (var i = 0; i < 2; i++) {

@@ -46,16 +46,19 @@ block content
       table
         tr
           td(ng-repeat='service in services')
-            div.service-div(ng-click='getService(service.name)' ng-class='{active: service.name.toLowerCase() == cabs.selected.toLowerCase()}')
+            div.service-div(
+              ng-click='selectService(service.name)' 
+              ng-class='{active: service.name.toLowerCase() == cabs.selected.toLowerCase()}'
+            )
               img(ng-src="{{ service.icon }}")
               span {{ service.name }}
           td
-            div.service-div(ng-click='getService("all")' ng-class='{active: "all" == cabs.selected.toLowerCase()}')
+            div.service-div(ng-click='selectService("all")' ng-class='{active: "all" == cabs.selected.toLowerCase()}')
               img(alt="ALL" src="https://cdn4.iconfinder.com/data/icons/sound-and-audio/32/black_2_audio_simple_repeat_all-48.png")
               span All
     div#types
   div#title
-    img(src=url.cdnImagePrefix + '/images/taxistop.png')
+    img(src=url.cdnImagePrefix + '/images/taxistop.png' ng-click="promoteApp('share')")
 
   if isProd
     script(src='build/app.js')
