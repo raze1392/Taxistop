@@ -188,7 +188,7 @@
 
             $scope.openApp = function(type) {
                 if ($scope.isAndroidApp) {
-                    Android.openApp(type);
+                    Android.openApp(_l(type));
                 }
             };
 
