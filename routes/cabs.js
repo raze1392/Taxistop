@@ -49,6 +49,7 @@ function sendResponse(response, result) {
 
 function gatherGlobalResponse(response, result) {
     //console.log('Processing service ' + result.service);
+    if (!result.service) return;
     ALL_RESP.serviceAdded++;
     ALL_RESP.cabs[result.service] = result.cabs;
     ALL_RESP.cabsEstimate = ALL_RESP.cabsEstimate.concat(result.cabsEstimate);
