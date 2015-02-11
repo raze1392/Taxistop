@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var globals = require('../modules/globals');
 
 var cabServiceModules = {
     ola: require('../modules/ola'),
@@ -7,12 +8,7 @@ var cabServiceModules = {
     uber: require('../modules/uber'),
     meru: require('../modules/meru'),
 }
-var totalCabServiceModules = 4;
-
-var ALL_RESP = {};
-ALL_RESP.cabs = {};
-ALL_RESP.cabsEstimate = [];
-ALL_RESP.serviceAdded = 0;
+var CAB_SERVICES = globals.getCabServices();
 
 router.get('/:cab', function(request, response) {
     var latitude = request.query.lat;
@@ -23,15 +19,19 @@ router.get('/:cab', function(request, response) {
     if (cabService && cabServiceModules[cabService]) {
         cabServiceModules[cabService].call(sendResponse, response, latitude, longitude, shouldParseData);
     } else if (cabService === 'all') {
-        for (service in cabServiceModules) {
-            //console.log('Calling service ' + service);
-            cabServiceModules[service].call(gatherGlobalResponse, response, latitude, longitude, shouldParseData);
-        }
+        var ALL_RESP = {};
+        ALL_RESP.cabs = {};
+        ALL_RESP.cabsEstimate = [];
+        ALL_RESP.serviceAdded = 0;
+        gatherGlobalResponse(ALL_RESP, response, latitude, longitude, shouldParseData);
+    } else {
+        var result = {error: 'Unidentified endpoint'}
+        sendResponse(response, result)
     }
 });
 
 router.get('/:cab/cost', function(request, response) {
-    var srcLatitude =  request.query.srcLat;
+    var srcLatitude = request.query.srcLat;
     var srcLongitude = request.query.srcLng;
     var destLatitude = request.query.destLat;
     var destLongitude = request.query.destLng;
@@ -47,17 +47,19 @@ function sendResponse(response, result) {
     response.json(result);
 }
 
-function gatherGlobalResponse(response, result) {
-    //console.log('Processing service ' + result.service);
-    if (!result) return;
-    ALL_RESP.serviceAdded++;
-    ALL_RESP.cabs[result.service] = result.cabs;
-    ALL_RESP.cabsEstimate = ALL_RESP.cabsEstimate.concat(result.cabsEstimate);
-    if (ALL_RESP.serviceAdded === totalCabServiceModules) {
-        sendResponse(response, ALL_RESP);
-        ALL_RESP.serviceAdded = 0;
-        ALL_RESP.cabsEstimate = [];
-        ALL_RESP.cabs = {};
+function gatherGlobalResponse(ALL_RESP, response, latitude, longitude, shouldParseData) {
+    for (service in cabServiceModules) {
+        //console.log('Calling service ' + service);
+        cabServiceModules[service].call(function(response, result) {
+            ALL_RESP.serviceAdded++;
+            if (result) {
+                ALL_RESP.cabs[result.service] = result.cabs;
+                ALL_RESP.cabsEstimate = ALL_RESP.cabsEstimate.concat(result.cabsEstimate);
+            }
+            if (ALL_RESP.serviceAdded === CAB_SERVICES.length) {
+                sendResponse(response, ALL_RESP);
+            }
+        }, response, latitude, longitude, shouldParseData);
     }
 }
 

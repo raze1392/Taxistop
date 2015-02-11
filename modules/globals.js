@@ -7,9 +7,16 @@ var GOOGLE_API_KEYS = [
     "AIzaSyA40uFvZXdxaVkmXiK6Rldo7NBcY-lKLOk"
 ];
 
+var CAB_SERVICES = ['ola', 'meru', 'uber', 'tfs'];
+
 exports.getGoogleAPIKeys = function(development) {
 	if (development) {
 		return ["AIzaSyBbAX5JrFJ8Y6YqLV84-ex52z9tBGJd92o"];
 	}
 	return GOOGLE_API_KEYS;
 }
+
+exports.getCabServices = function() {
+    return CAB_SERVICES;
+}
+
