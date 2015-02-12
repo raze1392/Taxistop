@@ -152,7 +152,7 @@ exports.call = function(responseHandler, data) {
                 }
             } else {
                 // Reset counter even if 1 API key is working
-                TIMEOUT_COUNTER = APIKeys.length;
+                TIMEOUT_COUNTER = globals.getGmapsAPIKeys().length;
                 if (data.service === 'meru') {
                     responseHandler(data.responseService, parseGoogleEstimateForMeru(responseToSend, result));
                 } else if (data.service === 'google') {
