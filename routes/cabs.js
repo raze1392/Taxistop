@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var globals = require('../modules/globals');
+var globals = require(__dirname + '/../modules/globals');
 
 var cabServiceModules = {
     ola: require('../modules/ola'),
@@ -14,19 +14,31 @@ router.get('/:cab', function(request, response) {
     var latitude = request.query.lat;
     var longitude = request.query.lng;
     var cabService = request.params.cab;
+    var validate = request.query.i;
     var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
 
-    if (cabService && cabServiceModules[cabService]) {
-        cabServiceModules[cabService].call(sendResponse, response, latitude, longitude, shouldParseData);
-    } else if (cabService === 'all') {
-        var ALL_RESP = {};
-        ALL_RESP.cabs = {};
-        ALL_RESP.cabsEstimate = [];
-        ALL_RESP.serviceAdded = 0;
-        gatherGlobalResponse(ALL_RESP, response, latitude, longitude, shouldParseData);
+    // Check that latitude and longitude are present and both are float
+    if (isNaN(parseFloat(latitude)) || isNaN(parseFloat(longitude))) {
+        var result = {
+            error: 'Latitude and Longitude not defined'
+        };
+        sendResponse(response, result);
     } else {
-        var result = {error: 'Unidentified endpoint'}
-        sendResponse(response, result)
+        // Check for cabservice and handle accordingly
+        if (cabService && cabServiceModules[cabService] && ((globals.getEnvironment() !== 'production') || validate)) {
+            cabServiceModules[cabService].call(sendResponse, response, latitude, longitude, shouldParseData);
+        } else if (cabService === 'all') {
+            var ALL_RESP = {};
+            ALL_RESP.cabs = {};
+            ALL_RESP.cabsEstimate = [];
+            ALL_RESP.serviceAdded = 0;
+            gatherGlobalResponse(ALL_RESP, response, latitude, longitude, shouldParseData);
+        } else {
+            var result = {
+                error: 'Unidentified endpoint/Not Allowed'
+            };
+            sendResponse(response, result);
+        }
     }
 });
 

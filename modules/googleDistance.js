@@ -1,5 +1,6 @@
-var request = require('../modules/request');
-var globals = require('../modules/globals');
+var request = require(__dirname + '/../modules/request');
+var logger = require(__dirname + '/../modules/log');
+var globals = require(__dirname + '/../modules/globals');
 
 var GOOGLE_DM = {};
 GOOGLE_DM.options = {
@@ -9,9 +10,7 @@ GOOGLE_DM.options = {
     path: ''
 };
 
-var APIKeys = globals.getGoogleAPIKeys();
-var API_INDEX = 0;
-var TIMEOUT_COUNTER = APIKeys.length;
+var TIMEOUT_COUNTER = globals.getGmapsAPIKeys().length;
 
 function buildGoogleDistanceMatrixURL(sourceLocations, destinationLocation, mode) {
     var url = "/maps/api/distancematrix/json";
@@ -26,8 +25,7 @@ function buildGoogleDistanceMatrixURL(sourceLocations, destinationLocation, mode
         url += '&mode=' + mode;
     }
 
-    url += (APIKeys[API_INDEX] === "" ? "" : ("&key=" + APIKeys[API_INDEX]));
-    API_INDEX = (API_INDEX + 1) % (APIKeys.length);
+    url += "&key=" + globals.getGmapsAPI();
 
     return url;
 }
@@ -93,7 +91,7 @@ function parseGoogleEstimateForMeru(responseToSend, result) {
             delete responseToSend.AddtoETA;
 
         } catch (er) {
-            console.log("Error in Meru Google Parser" + responseToSend);
+            logger.warn(ex.getMessage(), ex);
             responseToSend.cabsEstimate = [];
         }
 
@@ -120,6 +118,7 @@ function parseGoogleOutputForEstimate(responseToSend, result) {
             output.duration = result.rows[0].elements[0].duration;
         }
     } catch (ex) {
+        logger.warn(ex.getMessage(), ex);
         return output;
     }
 

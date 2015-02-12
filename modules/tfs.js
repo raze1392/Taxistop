@@ -1,4 +1,5 @@
-var request = require('../modules/request');
+var request = require(__dirname + '/../modules/request');
+var logger = require(__dirname + '/../modules/log');
 
 var TFS = {};
 TFS.options = {
@@ -91,7 +92,7 @@ function parseResponse(response, status) {
             }
         }
     } catch (ex) {
-        console.log("Error in TFS");
+        logger.warn(ex.getMessage(), ex);
         return output;
     }
 

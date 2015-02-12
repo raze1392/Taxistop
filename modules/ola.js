@@ -1,4 +1,5 @@
-var request = require('../modules/request');
+var request = require(__dirname + '/../modules/request');
+var logger = require(__dirname + '/../modules/log');
 
 var OLA = {};
 OLA.options = {
@@ -112,7 +113,7 @@ function parseResponse(type, response, status) {
                 }
             }
         } catch (ex) {
-            console.log("Error in OLA");
+            logger.warn(ex.getMessage(), ex);
             return output;
         }
     } else if (type === 'price') {

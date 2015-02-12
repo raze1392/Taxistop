@@ -1,11 +1,13 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var log = require('morgan');
+var logger = require(__dirname + "/modules/log");
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-//var browserify = require('browserify-middleware'); -- This is throwing errors on server start
+var browserify = require('browserify-middleware');
 
+var globals = require(__dirname + '/modules/globals');
 var routes = require('./routes/index');
 var cabs = require('./routes/cabs');
 var eta = require('./routes/eta');
@@ -18,9 +20,14 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+logger.debug("Overriding 'Express' logger");
+app.use(log({
+    "stream": logger.stream
+}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
@@ -44,6 +51,10 @@ if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
+            title: globals.getAppTitle(),
+            url: {
+                cdnImagePrefix: globals.getCDNUrlPrefix
+            },
             message: err.message,
             error: err
         });
@@ -55,6 +66,10 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
+        title: globals.getAppTitle(),
+        url: {
+            cdnImagePrefix: globals.getCDNUrlPrefix
+        },
         message: err.message,
         error: {}
     });

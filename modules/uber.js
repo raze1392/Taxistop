@@ -1,4 +1,5 @@
-var request = require('../modules/request');
+var request = require(__dirname + '/../modules/request');
+var logger = require(__dirname + '/../modules/log');
 
 var UBER = {};
 UBER.options = {
@@ -70,7 +71,7 @@ function parseResponse(type, response) {
             }
         }
     } catch (ex) {
-        console.log("Error in Uber");
+        logger.warn(ex.getMessage(), ex);
         return output;
     }
 
