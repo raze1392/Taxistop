@@ -4,6 +4,8 @@
  */
 var http = require("http");
 var https = require("https");
+var logger = require(__dirname + '/../modules/log');
+
 /**
  * getJSON: REST get request returning JSON object(s)
  * @param options: http options object
@@ -26,11 +28,17 @@ exports.getJSON = function(options, onResult, hack) {
                         output = output.substring(output.indexOf('>{') + 1, output.lastIndexOf('}<') + 1);
                     }
 
-                    var obj = eval("(" + output + ")");
+                    var obj = null;
+                    try {
+                        obj = eval("(" + output + ")");
+                    } catch (ex) {
+                        logger.error(ex.getMessage, ex);
+                    }
+
                     onResult(res.statusCode, obj);
                 });
             } catch (ex) {
-                console.log("Error in parsing request : " + ex);
+                logger.warn(ex.getMessage, ex);
                 var output = {success: false};
                 onResult(res.statusCode, output);
             }

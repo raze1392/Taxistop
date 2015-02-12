@@ -1,5 +1,6 @@
-var request = require('../modules/request');
-var googleDistance = require('../modules/googleDistance');
+var request = require(__dirname + '/../modules/request');
+var logger = require(__dirname + '/../modules/log');
+var googleDistance = require(__dirname + '/../modules/googleDistance');
 
 var MERU = {};
 MERU.options = {
@@ -76,7 +77,7 @@ function parseResponse(responseHandler, responseService, location, response) {
             }
         }
     } catch (ex) {
-        console.log("Error in Meru");
+        logger.warn(ex.getMessage(), ex);
         return output;
     }
 

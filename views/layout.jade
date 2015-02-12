@@ -8,16 +8,15 @@ html(ng-app='chanakyaApp')
     
     title=title
 
-    link(rel="shortcut icon", href="http://akush.github.io/taxistop/images/favicon.ico", type="image/x-icon")
+    link(rel="shortcut icon", href=url.cdnImagePrefix + "/images/favicon.ico", type="image/x-icon")
     if isProd
         link(rel='stylesheet', href='/build/style.css')
     else
         link(rel='stylesheet', href='/stylesheets/style.css')
-    
 
     script.
       window.CDN_IMAGE_PREFIX = '#{url.cdnImagePrefix}';
-    script(src='https://maps.googleapis.com/maps/api/js?libraries=places' + url.gMapsAPI)
+    script(src='https://maps.googleapis.com/maps/api/js?libraries=places&key=' + url.gMapsAPI)
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js')
