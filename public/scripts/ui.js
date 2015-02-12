@@ -38,6 +38,7 @@
                 selected: 'ola'
             };
             $scope.loading = true;
+            $scope.loadingMsg = "loading...";
 
             var map_container = document.getElementById('map-canvas');
             var source_container = document.getElementById('searchSource');
@@ -181,8 +182,15 @@
                 return !$scope.typingOn;
             };
 
+            $scope.clearSource = function() {
+                $scope.source = undefined;
+                w.chanakya.Map.clearSource();
+                w.chanakya.Map.Directions.clearDirections();
+            };
+
             $scope.clearDestination = function() {
                 $scope.destination = undefined;
+                w.chanakya.Map.clearDestination();
                 w.chanakya.Map.Directions.clearDirections();
             };
 
@@ -257,7 +265,7 @@
                 $scope.cabs.coordinates = data.cabs;
 
                 $scope.loading = false;
-                if(!silent) $scope.selectService(service, true, true);
+                if (!silent) $scope.selectService(service, true, true);
                 //setMapHeight($scope.availableTypes * 43);
                 setMapHeight(0);
             }
@@ -274,7 +282,7 @@
             }
 
             $scope.showMask = function() {
-                return $scope.availableTypes[$scope.cabs.selected] !== 0;
+                return $scope.loading || $scope.availableTypes[$scope.cabs.selected] === 0;
             };
 
             $scope.getCabs = function(service, silent) {
@@ -316,11 +324,10 @@
                             longitude: androidLoc[1]
                         };
                     }
-                    w.chanakya.Map.intializeGmaps(map_container, source_container, destination_container, location,
-                        function() {
-                            w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
-                            w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
-                        });
+                    w.chanakya.Map.intializeGmaps(map_container, source_container, destination_container, location, function() {
+                        w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
+                        w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
+                    });
                 } else {
                     w.chanakya.Map.intializeGmapsUsingNavigator(map_container, source_container, destination_container, function() {
                         w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
@@ -328,6 +335,45 @@
                     });
                 }
             });
+
+            $scope.setSourceUserLocation = function() {
+                $scope.loading = true;
+                w.chanakya.Map.clearMarkers('cabs');
+                if (w.androidAppCheck()) {
+                    var androidLoc = Android.getUserLocation();
+                    var location = {
+                        latitude: 21.0000,
+                        longitude: 78.0000
+                    };
+                    if (androidLoc) {
+                        androidLoc = androidLoc.split('|');
+                        location = {
+                            latitude: androidLoc[0],
+                            longitude: androidLoc[1]
+                        };
+                    }
+                    if (location.latitude == $scope.source.lat) {
+                        mapNearByCabs();
+                        $scope.loading = false;
+                        return;
+                    }
+                    w.chanakya.Map.setSource(w.chanakya.Map.convertLatLngToLocation(location.latitude, location.longitude));
+                } else {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            if (position.coords.latitude == $scope.source.lat) {
+                                mapNearByCabs();
+                                $scope.loading = false;
+                                return;
+                            }
+                            var location = w.chanakya.Map.convertLatLngToLocation(position.coords.latitude, position.coords.longitude);
+                            w.chanakya.Map.setSource(location);
+                            return true;
+                        });
+                    }
+                    return false;
+                }
+            }
 
             source_container.addEventListener('sourceLocationChanged', function(event) {
                 $scope.source = {

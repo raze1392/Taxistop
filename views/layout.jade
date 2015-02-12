@@ -9,7 +9,11 @@ html(ng-app='chanakyaApp')
     title=title
 
     link(rel="shortcut icon", href="http://akush.github.io/taxistop/images/favicon.ico", type="image/x-icon")
-    link(rel='stylesheet', href='/build/style.css')
+    if isProd
+        link(rel='stylesheet', href='/build/style.css')
+    else
+        link(rel='stylesheet', href='/stylesheets/style.css')
+    
 
     script.
       window.CDN_IMAGE_PREFIX = '#{url.cdnImagePrefix}';

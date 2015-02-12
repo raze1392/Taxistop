@@ -4,17 +4,6 @@
  */
 (function(w) {
 
-    // get city http://maps.googleapis.com/maps/api/geocode/json?latlng=12.9667,77.5667
-    // chanakya.Map.Details.source
-    //  var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=12.9667,77.5667';
-    //  $.ajax({
-    //    type: 'GET',
-    //    url: url,
-    //    async: false,
-    //    contentType: "application/json",
-    //    dataType: 'jsonp'
-    //  });
-    //
     w.chanakya = w.chanakya || {};
     w.chanakya.cabrates = {
         auto: {

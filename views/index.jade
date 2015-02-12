@@ -3,7 +3,12 @@ extends layout
 block content
   div#map-canvas
   div#content
-    img.clear-dest(
+    img.input-action.src(
+      src=url.cdnImagePrefix + "/images/close.png" 
+      ng-show="source && source.lat" 
+      ng-click="clearSource()"
+    )
+    img.input-action.dest(
       src=url.cdnImagePrefix + "/images/close.png" 
       ng-show="destination && destination.lat" 
       ng-click="clearDestination()"
@@ -25,14 +30,20 @@ block content
          )
   div#cabdetails(ng-show="isShownDetails()" ng-cloak)
     div#details
-      div.cab-details(ng-hide="showMask()")
-        p.center-align.mask-image
-          img(alt="!" src="https://cdn4.iconfinder.com/data/icons/miu/22/circle_info_more-information_detail-32.png")
-        p.center-align No cabs available from {{cabs.selected}}
+      div.cab-details.mask(ng-show="showMask()")
+        div.loading(ng-show="loading")
+          p.center-align 
+            img(alt="" src=url.cdnImagePrefix + "images/loading.gif")
+            {{ loadingMsg }}
+        div.info(ng-hide="loading")
+          p.center-align.mask-image
+            img(alt="!" src="https://cdn4.iconfinder.com/data/icons/miu/22/circle_info_more-information_detail-32.png")
+          p.center-align No cabs available from {{cabs.selected}}
       div.cab-details(
         ng-repeat='cab in cabs.estimate | filter:showFilter' 
         ng-class='{all: "all" == cabs.selected.toLowerCase()}'
         ng-click='openApp(cab.type)'
+        ng-hide="loading"
       )
         img.cab-image(ng-src="{{ getCabImg(cab.name) }}")
         img.cab-type-image(ng-src="{{ getCabTypeImg(cab.type) }}")
@@ -59,6 +70,11 @@ block content
     div#types
   div#title
     img(src=url.cdnImagePrefix + '/images/taxistop.png' ng-click="promoteApp('share')")
+  div#gps
+    img(
+      src="https://cdn1.iconfinder.com/data/icons/material-device/22/gps-fixed-24.png" 
+      ng-click="setSourceUserLocation()"
+    )
 
   if isProd
     script(src='build/app.js')
