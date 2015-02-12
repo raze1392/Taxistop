@@ -8,7 +8,7 @@ var router = express.Router();
 router.get('/', function(req, res) {
     var url = {
         cdnImagePrefix: globals.getCDNUrlPrefix(),
-        gMapsAPI: globals.getGMapsAPI()
+        gMapsAPI: globals.getGmapsAPI()
     };
     var isEnvtProd = (globals.getEnvironment() === 'production') ? true : false;
 
