@@ -364,16 +364,15 @@
                             if (position.coords.latitude == $scope.source.lat) {
                                 mapNearByCabs();
                                 $scope.loading = false;
-                                return;
+                                return false;
                             }
                             var location = w.chanakya.Map.convertLatLngToLocation(position.coords.latitude, position.coords.longitude);
                             w.chanakya.Map.setSource(location);
                             return true;
                         });
                     }
-                    return false;
                 }
-            }
+            };
 
             source_container.addEventListener('sourceLocationChanged', function(event) {
                 $scope.source = {
