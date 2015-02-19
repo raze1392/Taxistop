@@ -118,9 +118,11 @@
             };
 
             $scope.uberCost = {
+                uberGO: "",
                 uberX: "",
                 UberBLACK: "",
                 multipliers: {
+                    uberGO: 1,
                     uberX: 1,
                     UberBLACK: 1
                 }
@@ -236,6 +238,8 @@
                     $scope.getService(service, true);
                 }
                 if ($scope.cabs.selected === service && !hard) return;
+                if (!hard)
+                    setMapHeight(($scope.availableTypes[service] > 5 ? 5 : $scope.availableTypes[service]) * 43);
                 $scope.cabs.selected = service;
                 mapNearByCabs();
             };
@@ -265,13 +269,15 @@
                 $scope.cabs.coordinates = data.cabs;
 
                 $scope.loading = false;
-                if (!silent) $scope.selectService(service, true, true);
-                //setMapHeight($scope.availableTypes * 43);
-                setMapHeight(0);
+                if (!silent) $scope.selectService(service, true);
+                setMapHeight(($scope.availableTypes[$scope.cabs.selected] > 5 ? 5 : $scope.availableTypes[$scope.cabs.selected]) * 43);
+                //setMapHeight(0);
             }
 
             function setMapHeight(lessHeight) {
-                if ($scope.availableTypes === 0)
+                if (!$scope.isMobile) 
+                    map_container.style.height = document.body.clientHeight;
+                else if ($scope.availableTypes[$scope.cabs.selected] === 0)
                     map_container.style.height = ($scope.mapHeight - 25) + "px";
                 else
                     map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
@@ -364,16 +370,15 @@
                             if (position.coords.latitude == $scope.source.lat) {
                                 mapNearByCabs();
                                 $scope.loading = false;
-                                return;
+                                return false;
                             }
                             var location = w.chanakya.Map.convertLatLngToLocation(position.coords.latitude, position.coords.longitude);
                             w.chanakya.Map.setSource(location);
                             return true;
                         });
                     }
-                    return false;
                 }
-            }
+            };
 
             source_container.addEventListener('sourceLocationChanged', function(event) {
                 $scope.source = {

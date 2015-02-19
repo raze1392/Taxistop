@@ -192,6 +192,7 @@ table {
     border-radius: 50%;
     margin: 0 auto;
     background-color: #efefef;
+    outline: none;
 }
 #services table tr td div:active {} #services table tr td div.active {
     background-color: #aaa;
@@ -218,23 +219,28 @@ table {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 60px;
-    height: 60px;
     cursor: pointer;
+    box-shadow: 3px 2px 10px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    padding: 0;
+    margin: 0;
 }
 #title img {
     height: 60px;
+    margin: -5px;
 }
 #gps {
     position: absolute;
-    right: 43px;
+    right: 36px;
     bottom: 100px;
     padding: 5px 5px 2px;
     background: #efefef;
     border-radius: 50%;
-    border: 2px solid #000;
+    border: 1px solid #777;
     width: 24px;
     cursor: pointer;
+    box-shadow: 1px 1px 5px;
 }
 hr {
     display: block;
@@ -250,10 +256,9 @@ hr {
         top: 78px;
     }
     #title {
-        top: 90px;
-        right: 0;
+        top: 95px;
+        right: 24px;
         bottom: auto;
-        height: 40px;
     }
     #title img {
         height: 40px;
@@ -261,8 +266,8 @@ hr {
     #gps {
         bottom: auto;
         width: 20px;
-        right: 22px;
-        top: 135px;
+        right: 23px;
+        top: 140px;
         padding: 5px 5px 2px;
     }
     #gps img {

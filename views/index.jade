@@ -33,7 +33,7 @@ block content
       div.cab-details.mask(ng-show="showMask()")
         div.loading(ng-show="loading")
           p.center-align 
-            img(alt="" src=url.cdnImagePrefix + "images/loading.gif")
+            img(alt="" src=url.cdnImagePrefix + "/images/loading.gif")
             {{ loadingMsg }}
         div.info(ng-hide="loading")
           p.center-align.mask-image
@@ -70,7 +70,7 @@ block content
     div#types
   div#title
     img(src=url.cdnImagePrefix + '/images/taxistop.png' ng-click="promoteApp('share')")
-  div#gps
+  div#gps(ng-cloak)
     img(
       src="https://cdn1.iconfinder.com/data/icons/material-device/22/gps-fixed-24.png" 
       ng-click="setSourceUserLocation()"
