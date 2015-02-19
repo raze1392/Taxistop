@@ -57,7 +57,7 @@ function buildPriceURL(userId) {
     return url;
 }
 
-function parseResponse(type, response, status) {
+function parseCabsResponse(type, response, status) {
     var output = {
         status: response ? "success" : "failure",
         service: 'OLA',
@@ -123,13 +123,13 @@ function parseResponse(type, response, status) {
     return output;
 }
 
-exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
+exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     OLA.options.path = buildCabsURL(latitude, longitude, userId);
 
     request.getJSON(OLA.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
-            result = parseResponse('cabs', result, result.status);
+            result = parseCabsResponse('cabs', result, result.status);
         }
         responseHandler(response, result);
     });
@@ -141,7 +141,7 @@ exports.price = function(responseHandler, response, srcLatitude, srcLongitude, d
 
     request.getJSON(OLA.options, function(statusCode, result) {
         if (shouldParseData && result) {
-            result = parseResponse('price', result, result.status);
+            result = parseCabsResponse('price', result, result.status);
         }
         responseHandler(response, result);
     });

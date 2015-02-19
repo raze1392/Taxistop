@@ -44,6 +44,7 @@ exports.getAppTitle = function() {
     return APP_TITLE;
 }
 
-exports.getEnvironment = function() {
-    return ENV;
+exports.isEnvironmentProduction = function() {
+    if (!ENV) return false;
+    else return (ENV.toLowerCase() === 'production') ? true : false;
 }

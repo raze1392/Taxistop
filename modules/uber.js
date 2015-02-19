@@ -32,7 +32,7 @@ function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, u
     return url;
 }
 
-function parseResponse(type, response) {
+function parseCabsResponse(type, response) {
     var output = {
         status: response ? "success" : "failure",
         service: 'UBER',
@@ -78,12 +78,12 @@ function parseResponse(type, response) {
     return output;
 }
 
-exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
+exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     UBER.options.path = buildEstimateURL(latitude, longitude, userId);
 
     request.getJSON(UBER.options, function(statusCode, result) {
         if (shouldParseData) {
-            result = parseResponse('estimate', result);
+            result = parseCabsResponse('estimate', result);
         }
         responseHandler(response, result);
     });
@@ -94,7 +94,7 @@ exports.price = function(responseHandler, response, srcLatitude, srcLongitude, d
 
     request.getJSON(UBER.options, function(statusCode, result) {
         if (shouldParseData && result) {
-            result = parseResponse('price', result);
+            result = parseCabsResponse('price', result);
         }
         responseHandler(response, result);
     });

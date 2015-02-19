@@ -26,7 +26,7 @@ function buildURL(latitude, longitude, userId) {
     return url;
 }
 
-function parseResponse(response, status) {
+function parseCabsResponse(response, status) {
     var output = {
         status: response ? "success" : "failure",
         service: 'TFS',
@@ -99,13 +99,13 @@ function parseResponse(response, status) {
     return output;
 }
 
-exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
+exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     TFS.options.path = buildURL(latitude, longitude, userId);
 
     request.getJSON(TFS.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
-            result = parseResponse(result.response_data, result.status);
+            result = parseCabsResponse(result.response_data, result.status);
         }
         responseHandler(response, result);
     });

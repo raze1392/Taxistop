@@ -15,7 +15,7 @@ exports.getJSON = function(options, onResult, hack) {
     var prot = options.port == 443 ? https : http;
     var req = prot.request(options, function(res) {
         var output = '';
-        console.log(options.host + ':' + res.statusCode);
+        logger.info('Outgoing Request: ' + options.host + ' | Status Code:' + res.statusCode);
         if (res.statusCode == 200 || res.statusCode == 304) {
             try {
                 res.setEncoding('utf8');
