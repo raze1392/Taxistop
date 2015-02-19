@@ -11,6 +11,7 @@ var globals = require(__dirname + '/modules/globals');
 var routes = require('./routes/index');
 var cabs = require('./routes/cabs');
 var eta = require('./routes/eta');
+var booking = require('./routes/booking');
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use('/', routes);
 app.use('/cabs', cabs);
 app.use('/eta', eta);
+app.use('/booking', booking);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
