@@ -111,7 +111,7 @@
                             map.uid = authData.uid;
                         }
                         if (authData[authData.provider].displayName) {
-                            map.displayName = authData[authData.provider].displayName;
+                            map.name = authData[authData.provider].displayName;
                         }
                         if (authData[authData.provider].email) {
                             map.email = authData[authData.provider].email;
