@@ -1,10 +1,116 @@
+/* HTML5 display-role reset for older browsers */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+/* CSS Animations */
+
+@keyframes "login" {
+    0% {
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+        filter: alpha(opacity=0);
+        opacity: 0;
+        margin-top: -80px;
+    }
+    100% {
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+        filter: alpha(opacity=100);
+        opacity: 1;
+        margin-top: -120px;
+    }
+}
+@-moz-keyframes login {
+    0% {
+        filter: alpha(opacity=0);
+        opacity: 0;
+        margin-top: -80px;
+    }
+    100% {
+        filter: alpha(opacity=100);
+        opacity: 1;
+        margin-top: -120px;
+    }
+}
+@-webkit-keyframes "login" {
+    0% {
+        filter: alpha(opacity=0);
+        opacity: 0;
+        margin-top: -80px;
+    }
+    100% {
+        filter: alpha(opacity=100);
+        opacity: 1;
+        margin-top: -120px;
+    }
+}
+@-ms-keyframes "login" {
+    0% {
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+        filter: alpha(opacity=0);
+        opacity: 0;
+        margin-top: -80px;
+    }
+    100% {
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+        filter: alpha(opacity=100);
+        opacity: 1;
+        margin-top: -120px;
+    }
+}
+@-o-keyframes "login" {
+    0% {
+        filter: alpha(opacity=0);
+        opacity: 0;
+        margin-top: -50px;
+    }
+    100% {
+        filter: alpha(opacity=100);
+        opacity: 1;
+        margin-top: -120px;
+    }
+}
+/* main css */
+
 html, body, #map-canvas {
     height: 100%;
     margin: 0;
     padding: 0;
-}
-body {
     font: 14px"Lucida Grande", Helvetica, Arial, sans-serif;
+}
+#container {
+    height: 100%;
+    width: 100%;
+}
+#login-background {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -99;
+    background-color: #323B55;
+    background-image: -webkit-linear-gradient(bottom, #323B55 0%, #424F71 100%);
+    background-image: -moz-linear-gradient(bottom, #323B55 0%, #424F71 100%);
+    background-image: -o-linear-gradient(bottom, #323B55 0%, #424F71 100%);
+    background-image: -ms-linear-gradient(bottom, #323B55 0%, #424F71 100%);
+    background-image: linear-gradient(bottom, #323B55 0%, #424F71 100%);
 }
 a {
     color: #00B7FF;
@@ -14,6 +120,35 @@ table {
 }
 .right {
     float: right
+}
+:focus {
+    outline-color: transparent;
+    outline-style: none;
+}
+#page-spinner {
+    margin-top: -40px;
+    font-size: 40px;
+    color: white;
+}
+#login {
+    width: 220px;
+    height: 220px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -110px;
+    margin-top: -120px;
+    text-align: center;
+    -webkit-animation: login 1s ease-in-out;
+    -moz-animation: login 1s ease-in-out;
+    -ms-animation: login 1s ease-in-out;
+    -o-animation: login 1s ease-in-out;
+    animation: login 1s ease-in-out;
+}
+#login h2 {
+    margin-top: 5px;
+    color: white;
+    margin-bottom: 50px;
 }
 #map-canvas {
     position: fixed;
@@ -46,7 +181,7 @@ table {
 }
 #content {
     position: absolute;
-    width: 320px;
+    width: 330px;
     top: 10px;
     left: 10px;
     z-index: 1;
@@ -193,6 +328,8 @@ table {
     margin: 0 auto;
     background-color: #efefef;
     outline: none;
+    height: 50px;
+    width: 50px;
 }
 #services table tr td div:active {} #services table tr td div.active {
     background-color: #aaa;
@@ -230,15 +367,30 @@ table {
     height: 60px;
     margin: -5px;
 }
+#action-icons {
+    position: absolute;
+    bottom: 43px;
+    right: 85px;
+    font-size: 18px;
+}
+#action-icons i::before {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #777;
+    margin-right: 5px;
+    border-radius: 50%;
+    background: #eee;
+}
 #gps {
     position: absolute;
     right: 36px;
-    bottom: 100px;
+    bottom: 90px;
     padding: 5px 5px 2px;
     background: #efefef;
     border-radius: 50%;
     border: 1px solid #777;
-    width: 24px;
+    width: 35px;
+    height: 35px;
     cursor: pointer;
     box-shadow: 1px 1px 5px;
 }

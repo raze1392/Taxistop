@@ -1,0 +1,11 @@
+div#login-background
+div#login.social-buttons
+  img(src=url.cdnImagePrefix + '/images/taxistop.png' style='height:60px')
+  h2 TaxiStop
+  i#page-spinner.fa.fa-cog.fa-spin(ng-hide="loaded")
+  a.btn.btn-block.btn-social.btn-google-plus(ng-click="login('google')" ng-show="loaded")
+    i.fa.fa-google-plus 
+    span Sign in with Google
+  a.btn.btn-block.btn-social.btn-facebook(ng-click="login('facebook')" ng-show="loaded")
+    i.fa.fa-facebook 
+    span Sign in with facebook
