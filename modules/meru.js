@@ -25,7 +25,7 @@ function buildURL(latitude, longitude, userId) {
     return url;
 }
 
-function parseResponse(responseHandler, responseService, location, response) {
+function parseCabsResponse(responseHandler, responseService, location, response) {
     var output = {
         status: response ? "success" : "failure",
         service: 'MERU',
@@ -85,7 +85,7 @@ function parseResponse(responseHandler, responseService, location, response) {
 }
 
 
-exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
+exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     MERU.options.path = buildURL(latitude, longitude, userId);
 
     request.getJSON(MERU.options, function(statusCode, result) {
@@ -96,7 +96,7 @@ exports.call = function(responseHandler, response, latitude, longitude, shouldPa
                 lat: latitude,
                 lng: longitude
             }
-            result = parseResponse(responseHandler, response, location, result);
+            result = parseCabsResponse(responseHandler, response, location, result);
         } else {
             responseHandler(response, result);
         }

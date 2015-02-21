@@ -25,8 +25,8 @@ router.get('/:cab', function(request, response) {
         sendResponse(response, result);
     } else {
         // Check for cabservice and handle accordingly
-        if (cabService && cabServiceModules[cabService] && ((globals.getEnvironment() !== 'production') || validate)) {
-            cabServiceModules[cabService].call(sendResponse, response, latitude, longitude, shouldParseData);
+        if (cabService && cabServiceModules[cabService] && (!globals.isEnvironmentProduction() || validate)) {
+            cabServiceModules[cabService].cabs(sendResponse, response, latitude, longitude, shouldParseData);
         } else if (cabService === 'all') {
             var ALL_RESP = {};
             ALL_RESP.cabs = {};
@@ -62,7 +62,7 @@ function sendResponse(response, result) {
 function gatherGlobalResponse(ALL_RESP, response, latitude, longitude, shouldParseData) {
     for (service in cabServiceModules) {
         //console.log('Calling service ' + service);
-        cabServiceModules[service].call(function(response, result) {
+        cabServiceModules[service].cabs(function(response, result) {
             ALL_RESP.serviceAdded++;
             if (result) {
                 ALL_RESP.cabs[result.service] = result.cabs;

@@ -10,10 +10,9 @@ router.get('/', function(req, res) {
         cdnImagePrefix: globals.getCDNUrlPrefix(),
         gMapsAPI: globals.getGmapsAPI()
     };
-    var isEnvtProd = (globals.getEnvironment() === 'production') ? true : false;
 
     res.render('index', {
-        isProd: isEnvtProd,
+        isProd: globals.isEnvironmentProduction(),
         title: 'TaxiStop',
         url: url
     });

@@ -57,7 +57,44 @@ function buildPriceURL(userId) {
     return url;
 }
 
-function parseResponse(type, response, status) {
+function buildBookingURL(userId, latitude, longitude, address, carType) {
+    var url = '/v3/booking/create?enable_auto=true&accuracy=10.0&speed=0.0&altitude=0.0&pickup_mode=NOW&location_type=CUSTOM';
+    url += '&user_id=' + userId;
+    url += '&lat=' + latitude + '&lng=' + longitude
+    url += '&fix_time=' + new Date().getTime();
+    for (key in OLA.Taxi_Name_Map) {
+        if (OLA.Taxi_Name_Map[key].toLowerCase() == carType) {
+            url += '&category_id=' + key;
+            break;
+        }
+    }
+    url += 'address=' + address;
+
+    return url;
+}
+
+function buildTrackingURL(userId) {
+    var url = '/v3/cab/info?enable_new_state=true&enable_auto=true';
+    url += '&user_id=' + userId;
+
+    return url;
+}
+
+function buildCancelBookingURL(userId, bookingId, reason) {
+    var url = '/v3/booking/cancel?enable_auto=true';
+    url += '&user_id=' + userId;
+    url += '&booking_id=' + bookingId;
+
+    if (reason) {
+        url += '&reason=' + reason;
+    } else {
+        url += '&reason=Changed+my+mind';
+    }
+
+    return url;
+}
+
+function parseCabsResponse(type, response, status) {
     var output = {
         status: response ? "success" : "failure",
         service: 'OLA',
@@ -123,13 +160,38 @@ function parseResponse(type, response, status) {
     return output;
 }
 
-exports.call = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
+function parseBookingResponse(type, response, status) {
+    var output = {
+        status: response ? "success" : "failure",
+        service: 'OLA'
+    };
+
+    if (type == 'create') {
+        try {
+            //Stub
+        } catch (ex) {
+            logger.warn(ex.getMessage(), ex);
+            return output;
+        }
+    } else if (type == 'cancel') {
+        try {
+            //Stub
+        } catch (ex) {
+            logger.warn(ex.getMessage(), ex);
+            return output;
+        }
+    }
+
+    return output;
+}
+
+exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     OLA.options.path = buildCabsURL(latitude, longitude, userId);
 
     request.getJSON(OLA.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
-            result = parseResponse('cabs', result, result.status);
+            result = parseCabsResponse('cabs', result, result.status);
         }
         responseHandler(response, result);
     });
@@ -141,7 +203,43 @@ exports.price = function(responseHandler, response, srcLatitude, srcLongitude, d
 
     request.getJSON(OLA.options, function(statusCode, result) {
         if (shouldParseData && result) {
-            result = parseResponse('price', result, result.status);
+            result = parseCabsResponse('price', result, result.status);
+        }
+        responseHandler(response, result);
+    });
+}
+
+exports.createBooking = function(responseHandler, response, userId, latitude, longitude, address, carType, shouldParseData) {
+    OLA.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+
+    request.getJSON(OLA.options, function(statusCode, result) {
+        //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
+        if (shouldParseData && result) {
+            result = parseBookingResponse('create', result, result.status);
+        }
+        responseHandler(response, result);
+    });
+}
+
+exports.trackCab = function(responseHandler, response, userId, shouldParseData) {
+    OLA.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+
+    request.getJSON(OLA.options, function(statusCode, result) {
+        //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
+        if (shouldParseData && result) {
+            result = parseBookingResponse(result, result.status);
+        }
+        responseHandler(response, result);
+    });
+}
+
+exports.cancelBooking = function(responseHandler, response, userId, bookingId, shouldParseData, reason) {
+    OLA.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+
+    request.getJSON(OLA.options, function(statusCode, result) {
+        //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
+        if (shouldParseData && result) {
+            result = parseBookingResponse('cancel', result, result.status);
         }
         responseHandler(response, result);
     });

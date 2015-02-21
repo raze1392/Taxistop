@@ -11,6 +11,7 @@ var globals = require(__dirname + '/modules/globals');
 var routes = require('./routes/index');
 var cabs = require('./routes/cabs');
 var eta = require('./routes/eta');
+var booking = require('./routes/booking');
 
 var app = express();
 
@@ -21,9 +22,7 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 logger.debug("Overriding 'Express' logger");
-app.use(log({
-    "stream": logger.stream
-}));
+app.use(log('dev'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
@@ -35,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use('/', routes);
 app.use('/cabs', cabs);
 app.use('/eta', eta);
+app.use('/booking', booking);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
