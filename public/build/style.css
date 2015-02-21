@@ -66,7 +66,8 @@ hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:.1em 0;pad
 @media screen and (max-width:480px){#map-canvas{position:fixed;top:78px}
 #title{top:95px;right:24px;bottom:auto}
 #title img{height:40px}
-#gps{bottom:auto;width:20px;right:23px;top:140px;padding:5px 5px 2px}
+#action-icons{top:100px;right:60px;bottom:auto}
+#gps{bottom:auto;width:32px;right:23px;top:140px;padding:5px 5px 2px;height:32px}
 #gps img{height:20px}
 #content{width:auto;top:0;left:0;right:0}
 #cabdetails{width:auto;top:auto;bottom:0;left:0;right:0;z-index:1}

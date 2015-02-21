@@ -415,12 +415,18 @@ hr {
     #title img {
         height: 40px;
     }
+    #action-icons {
+        top: 100px;
+        right: 60px;
+        bottom: auto;
+    }
     #gps {
         bottom: auto;
-        width: 20px;
+        width: 32px;
         right: 23px;
         top: 140px;
         padding: 5px 5px 2px;
+        height: 32px;
     }
     #gps img {
         height: 20px;
