@@ -23,10 +23,9 @@ router.get('/login.html', function(req, res) {
         cdnImagePrefix: globals.getCDNUrlPrefix(),
         gMapsAPI: globals.getGmapsAPI()
     };
-    var isEnvtProd = (globals.getEnvironment() === 'production') ? true : false;
 
     res.render('login', {
-        isProd: isEnvtProd,
+        isProd: globals.isEnvironmentProduction(),
         title: 'TaxiStop',
         url: url
     });
@@ -37,10 +36,9 @@ router.get('/content.html', function(req, res) {
         cdnImagePrefix: globals.getCDNUrlPrefix(),
         gMapsAPI: globals.getGmapsAPI()
     };
-    var isEnvtProd = (globals.getEnvironment() === 'production') ? true : false;
 
     res.render('content', {
-        isProd: isEnvtProd,
+        isProd: globals.isEnvironmentProduction(),
         title: 'TaxiStop',
         url: url
     });
