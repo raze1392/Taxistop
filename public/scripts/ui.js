@@ -125,7 +125,7 @@
 
                         w.chanakya.cookie.create('user', hash, 30);
                         fire.child("users").child(hash).child('timestamp').set((new Date()).getTime());
-                        fire.child("users").child(hash).child(authData.uid).set({
+                        fire.child("users").child(hash).child(authData.provider).set({
                             uid: authData.uid
                         });
                         $location.path('/app');
@@ -268,7 +268,7 @@
 
             $scope.sortNowList = function(cab) {
                 return cab.cheapest ? 0 : (cab.closest ? 1 : (cab.recommended ? 2 : 3));
-            }
+            };
 
             $scope.typingOn = false;
             $scope.isShownDetails = function() {
