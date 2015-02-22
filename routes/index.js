@@ -6,6 +6,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
+	var session = req.session;
+	
     var url = {
         cdnImagePrefix: globals.getCDNUrlPrefix(),
         gMapsAPI: globals.getGmapsAPI()

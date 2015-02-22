@@ -1,5 +1,8 @@
 var request = require(__dirname + '/../modules/request');
 var logger = require(__dirname + '/../modules/log');
+var CryptoJS = require("crypto-js")
+var crypto = require("crypto")
+var AES = require("crypto-js/aes");
 
 var OLA = {};
 OLA.options = {
@@ -10,8 +13,9 @@ OLA.options = {
         'api-key': '@ndro1d',
         'Host': 'mapi.olacabs.com',
         'client': 'android',
-        'device_id': 911380450341890,
-        'enable_auto': true
+        'device_id': '911380450341890',
+        'enable_auto': 'true',
+        'install_id': '5f48380f-46c8-4df5-a565-2ab650bc19fd'
     },
     path: ''
 };
@@ -45,7 +49,7 @@ function buildCabsURL(latitude, longitude, userId) {
 }
 
 function buildPriceURL(userId) {
-    var url = '/v3/info/fare_breakup?&enable_auto=true';
+    var url = '/v3/info/fare_breakup?enable_auto=true';
 
     if (userId) {
         url += '&user_id=' + userId;
@@ -90,6 +94,21 @@ function buildCancelBookingURL(userId, bookingId, reason) {
     } else {
         url += '&reason=Changed+my+mind';
     }
+
+    return url;
+}
+
+function buildLoginURL(email, password) {
+    var url = '/v3/user/login?device_id=911380450341890&lat=29.3794796&lng=79.4637102';
+    url += '&email=' + encodeURIComponent(email);
+
+    password += '|';
+    var cipher = crypto.createCipher('aes-128-ecb', "PRODKEYPRODKEY12");
+    cipher.setAutoPadding(true); // did our own padding, to match mcrypt_encrypt
+    var encrypted = cipher.update(password, 'utf8', 'base64');
+    encrypted += cipher.final('base64');
+
+    url += '&password=' + encrypted;
 
     return url;
 }
@@ -238,6 +257,18 @@ exports.cancelBooking = function(responseHandler, response, userId, bookingId, s
 
     request.getJSON(OLA.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
+        if (shouldParseData && result) {
+            result = parseBookingResponse('cancel', result, result.status);
+        }
+        responseHandler(response, result);
+    });
+}
+
+exports.login = function(responseHandler, response, email, password, shouldParseData) {
+    OLA.options.path = buildLoginURL(email, password);
+    console.log(OLA.options.path);
+    request.getJSON(OLA.options, function(statusCode, result) {
+        console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('cancel', result, result.status);
         }

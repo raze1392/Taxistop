@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var log = require('morgan');
@@ -12,6 +13,7 @@ var routes = require('./routes/index');
 var cabs = require('./routes/cabs');
 var eta = require('./routes/eta');
 var booking = require('./routes/booking');
+var login = require('./routes/login');
 
 var app = express();
 
@@ -23,6 +25,9 @@ app.set('view engine', 'jade');
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 logger.debug("Overriding 'Express' logger");
 app.use(log('dev'))
+app.use(session({
+    secret: 'TaxiStop@Ch@n@ky@'
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
@@ -35,6 +40,7 @@ app.use('/', routes);
 app.use('/cabs', cabs);
 app.use('/eta', eta);
 app.use('/booking', booking);
+app.use('/login', login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

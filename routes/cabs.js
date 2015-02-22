@@ -10,7 +10,10 @@ var cabServiceModules = {
 }
 var CAB_SERVICES = globals.getCabServices();
 
+// Route to get cab list
 router.get('/:cab', function(request, response) {
+    var session = request.session;
+
     var latitude = request.query.lat;
     var longitude = request.query.lng;
     var cabService = request.params.cab;
@@ -42,7 +45,11 @@ router.get('/:cab', function(request, response) {
     }
 });
 
+
+// Route to get cab cost
 router.get('/:cab/cost', function(request, response) {
+    var session = request.session;
+
     var srcLatitude = request.query.srcLat;
     var srcLongitude = request.query.srcLng;
     var destLatitude = request.query.destLat;

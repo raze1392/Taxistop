@@ -440,31 +440,29 @@
                     $scope.refreshTrue = true;
                 }, 30000);
 
-                google.maps.event.addDomListener(w, 'load', function() {
-                    if (w.androidAppCheck()) {
-                        var androidLoc = Android.getUserLocation();
-                        var location = {
-                            latitude: 21.0000,
-                            longitude: 78.0000
+                if (w.androidAppCheck()) {
+                    var androidLoc = Android.getUserLocation();
+                    var location = {
+                        latitude: 21.0000,
+                        longitude: 78.0000
+                    };
+                    if (androidLoc) {
+                        androidLoc = androidLoc.split('|');
+                        location = {
+                            latitude: androidLoc[0],
+                            longitude: androidLoc[1]
                         };
-                        if (androidLoc) {
-                            androidLoc = androidLoc.split('|');
-                            location = {
-                                latitude: androidLoc[0],
-                                longitude: androidLoc[1]
-                            };
-                        }
-                        w.chanakya.Map.intializeGmaps(map_container, source_container, destination_container, location, function() {
-                            w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
-                            w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
-                        });
-                    } else {
-                        w.chanakya.Map.intializeGmapsUsingNavigator(map_container, source_container, destination_container, function() {
-                            w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
-                            w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
-                        });
                     }
-                });
+                    w.chanakya.Map.intializeGmaps(map_container, source_container, destination_container, location, function() {
+                        w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
+                        w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
+                    });
+                } else {
+                    w.chanakya.Map.intializeGmapsUsingNavigator(map_container, source_container, destination_container, function() {
+                        w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
+                        w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
+                    });
+                }
 
             };
 
