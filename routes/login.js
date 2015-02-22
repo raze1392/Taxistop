@@ -1,5 +1,6 @@
 var express = require('express');
 var Firebase = require("firebase");
+var FirebaseTokenGenerator = require("firebase-token-generator");
 var globals = require(__dirname + '/../modules/globals');
 var logger = require(__dirname + '/../modules/log');
 
@@ -27,18 +28,64 @@ router.get('/service/:serviceName', function(request, response) {
 
     var userCookie = request.cookies.user;
 
-    if (serviceName && cabServiceModules[serviceName]) {
-        cabServiceModules[serviceName].login(sendResponse, response, userCookie, email, encPassword, shouldParseData, saveCredentials);
+    if (!userCookie) {
+        failedResponse(response, 'user not logged in');
+    } else {
+        var ref = new Firebase("https://vivid-inferno-8339.firebaseio.com/users/" + userCookie + "/timestamp");
+        var tokenGenerator = new FirebaseTokenGenerator("4fbWFdEsKHSwkNG6xDikveNBMnSBbYGPlkn4QSNG");
+        var token = tokenGenerator.createToken({
+            uid: "1",
+            taxistopService: true
+        }, {
+            admin: true
+        });
+        ref.authWithCustomToken(token, function(error, authData) {
+            if (!error) {
+                ref.on("value", function(timestamp) {
+                    if (timestamp.val()) {
+                        if (serviceName && cabServiceModules[serviceName]) {
+                            cabServiceModules[serviceName].login(sendResponse, response, userCookie, email, encPassword, shouldParseData, saveCredentials);
+                        }
+                    } else {
+                        failedResponse(response, 'invalid user');
+                    }
+                }, function(errorObject) {
+                    failedResponse(response, 'invalid user');
+                });
+            }
+        });
     }
 });
+
+function failedResponse(response, msg) {
+    sendResponse(response, {
+        success: false,
+        message: msg
+    });
+}
 
 function sendResponse(response, result) {
     response.json(result);
 }
 
-function saveCredentials(userCookie, service, result) {
+function saveCredentials(userCookie, email, encPassword, service, result) {
+    var data = result;
+    result.email = email;
+    result.encPassword = encPassword;
+    result.timestamp = (new Date()).getTime();
     var ref = new Firebase("https://flickering-inferno-5036.firebaseio.com/");
-    ref.child(userCookie).child(service).set(result);
+    var tokenGenerator = new FirebaseTokenGenerator("QbJrI593zkc2pvfQnHNIXsrNfgIUSR8MlOGVpRIq");
+    var token = tokenGenerator.createToken({
+        uid: "1",
+        taxistopService: true
+    }, {
+        admin: true
+    });
+    ref.authWithCustomToken(token, function(error, authData) {
+        if (!error) {
+            ref.child(userCookie).child(service).set(data);
+        }
+    });
 }
 
 module.exports = router;

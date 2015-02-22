@@ -228,14 +228,14 @@ table {
 #cabdetails {
     position: absolute;
     width: 330px;
-    top: 95px;
+    bottom: 10px;
     left: 10px;
     z-index: 1;
     background: transparent;
 }
 #details {
     background: white;
-    height: 215px;
+    max-height: 215px;
     padding: 2px 0;
     -webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
@@ -247,6 +247,10 @@ table {
     padding: 5px 5px 5px 5px;
     position: relative;
     padding-left: 35px;
+}
+#details .cab-details.mask {
+    padding-left: 5px !important;
+    border-bottom: none !important;
 }
 #details .cab-details.all {
     padding-left: 60px;
@@ -274,10 +278,6 @@ table {
 }
 #details p {
     margin: 0;
-}
-.mask {
-    padding-top: 50px !important;
-    border-bottom: none !important;
 }
 .loading img {
     height: 14px;

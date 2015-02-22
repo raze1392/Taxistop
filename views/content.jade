@@ -37,7 +37,7 @@ div#cabdetails(ng-show="isShownDetails()" ng-cloak)
           img(alt="!" src="https://cdn4.iconfinder.com/data/icons/miu/22/circle_info_more-information_detail-32.png")
         p.center-align No cabs available from {{cabs.selected}}
     div.cab-details(
-      ng-repeat='cab in cabs.estimate | filter:showFilter' 
+      ng-repeat='cab in cabs.estimate | filter:showFilter | orderBy:sortNowList'
       ng-class='{all: "all" == cabs.selected.toLowerCase()}'
       ng-click='openApp(cab.type)'
       ng-hide="loading"

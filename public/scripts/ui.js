@@ -266,6 +266,10 @@
                 return true;
             };
 
+            $scope.sortNowList = function(cab) {
+                return cab.cheapest ? 0 : (cab.closest ? 1 : (cab.recommended ? 2 : 3));
+            }
+
             $scope.typingOn = false;
             $scope.isShownDetails = function() {
                 if (!$scope.isMobile) return true;
@@ -353,15 +357,16 @@
                     return;
                 }
 
-                for (var j = 0; j < data.cabsEstimate.length; j++) {
-                    if (data.cabsEstimate[j].available) {
+                $scope.cabs.estimate = data.cabsEstimate;
+                $scope.cabs.coordinates = data.cabs;
+
+                for (var j = 0; j < $scope.cabs.estimate.length; j++) {
+                    if ($scope.cabs.estimate[j].available) {
+                        $scope.cabs.estimate[j].recommended = _l($scope.cabs.estimate[j].type) == "tfs" ? true : false;
                         $scope.availableTypes[_l(data.cabsEstimate[j].type)] ++;
                         $scope.availableTypes.all++;
                     }
                 }
-
-                $scope.cabs.estimate = data.cabsEstimate;
-                $scope.cabs.coordinates = data.cabs;
 
                 $scope.loading = false;
                 if (!silent) $scope.selectService(service, true);

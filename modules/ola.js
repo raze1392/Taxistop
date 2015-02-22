@@ -290,7 +290,7 @@ exports.login = function(responseHandler, response, userCookie, email, encPasswo
     OLA.options.path = buildLoginURL(email, encPassword);
 console.log(OLA.options.path);
     request.getJSON(OLA.options, function(statusCode, result) {
-        saveCredentials(userCookie, 'ola', result);
+        saveCredentials(userCookie, email, encPassword, 'ola', result);
         if (shouldParseData && result) {
             result = parseLoginResponse(result, result.status, userCookie);
         }
