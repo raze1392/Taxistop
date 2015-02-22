@@ -110,7 +110,7 @@ function buildLoginURL(email, encPassword) {
     // var encryptedString = chunks.join('');
     url += '&password=' + encPassword;
 
-return url;
+    return url;
 }
 
 function parseCabsResponse(type, response, status) {
@@ -204,6 +204,24 @@ function parseBookingResponse(type, response, status) {
     return output;
 }
 
+function parseLoginResponse(response, status) {
+    var output = {
+        status: response ? ((status.toLowerCase() != 'failure') ? "success" : "failure") : "failure",
+        service: 'OLA'
+    };
+
+    try {
+        output.userId = response.user_id;
+        output.referralCode = response.referral_code;
+        output.olaMoney = response.ola_money_balance;
+    } catch (ex) {
+        logger.warn(ex.getMessage(), ex);
+        return output;
+    }
+
+    return output;
+}
+
 exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
     OLA.options.path = buildCabsURL(latitude, longitude, userId);
 
@@ -269,7 +287,7 @@ exports.login = function(responseHandler, response, email, encPassword, shouldPa
 
     request.getJSON(OLA.options, function(statusCode, result) {
         if (shouldParseData && result) {
-            result = parseBookingResponse('cancel', result, result.status);
+            result = parseLoginResponse(result, result.status);
         }
         responseHandler(response, result);
     });
