@@ -106,27 +106,28 @@
                     $scope.authObj.$authWithOAuthPopup(options.provider, {
                         scope: "email"
                     }).then(function(authData) {
-                        var map = {};
-                        if (authData.uid) {
-                            map.uid = authData.uid;
+                        var hash = crypto.SHA1(authData[authData.provider].email).toString();
+                        if (authData[authData.provider]) {
+                            fire.child("users").child(hash).child('uid').set(authData.uid);
                         }
                         if (authData[authData.provider].displayName) {
-                            map.name = authData[authData.provider].displayName;
+                            fire.child("users").child(hash).child('name').set(authData[authData.provider].displayName);
                         }
                         if (authData[authData.provider].email) {
-                            map.email = authData[authData.provider].email;
+                            fire.child("users").child(hash).child('email').set(authData[authData.provider].email);
                         }
                         if (authData[authData.provider].cachedUserProfile.picture) {
                             if (authData.provider === 'google')
-                                map.picture = authData[authData.provider].cachedUserProfile.picture;
+                                fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture);
                             else
-                                map.picture = authData[authData.provider].cachedUserProfile.picture.data.url;
+                                fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture.data.url);
                         }
-                        map.timestamp = (new Date()).getTime();
 
-                        var hash = crypto.SHA1(map.email).toString();
                         w.chanakya.cookie.create('user', hash, 30);
-                        fire.child("users").child(authData.uid).set(map);
+                        fire.child("users").child(hash).child('timestamp').set((new Date()).getTime());
+                        fire.child("users").child(hash).child(authData.uid).set({
+                            uid: authData.uid
+                        });
                         $location.path('/app');
                     }).catch(function(error) {
                         console.error("Authentication failed:", error);
@@ -200,24 +201,6 @@
                 if (_l(type) == 'meru') return $scope.services[3].icon;
             };
 
-            $scope.travelTime = 0;
-            $scope.travelDistance = 0;
-            $scope.travelInfoLoadFailed = false;
-            $scope.setTravelInfo = function() {
-                if (!$scope.destination || !$scope.destination.lat) return;
-                var url = 'eta?srcLat=' + $scope.source.lat + '&srcLng=' + $scope.source.lng;
-                url += '&destLat=' + $scope.destination.lat + '&destLng=' + $scope.destination.lng;
-                $http.get(url).success(function(data) {
-                    if (data.success) {
-                        $scope.travelInfoLoadFailed = false;
-                        $scope.travelTime = Math.ceil(data.duration.value / 60);
-                        $scope.travelDistance = data.distance.value / 1000;
-                    } else {
-                        $scope.travelInfoLoadFailed = true;
-                    }
-                });
-            };
-
             $scope.getTravelTime = function(cab) {
                 if (!w.chanakya.Map.existsDestination() || !cab.available)
                     return "";
@@ -271,17 +254,6 @@
                     return multiplier + " &#8377;" + $scope.uberCost[cab.name];
                 }
 
-            };
-            $scope.getUberCost = function() {
-                $http.get('cabs/uber/cost?srcLat=' + $scope.source.lat + '&srcLng=' + $scope.source.lng + '&destLat=' + $scope.destination.lat + '&destLng=' + $scope.destination.lng).success(function(data) {
-                    for (var item in data.prices) {
-                        if (data.prices[item].low_estimate == data.prices[item].high_estimate)
-                            $scope.uberCost[data.prices[item].name] = data.prices[item].low_estimate;
-                        else
-                            $scope.uberCost[data.prices[item].name] = data.prices[item].low_estimate + "-" + data.prices[item].high_estimate;
-                        $scope.uberCost.multipliers[data.prices[item].name] = data.prices[item].multiplier;
-                    }
-                });
             };
 
             $scope.showFilter = function(cab) {
@@ -517,19 +489,58 @@
 
             source_container.addEventListener('sourceLocationChanged', function(event) {
                 $scope.typingOn = false;
-                if ($scope.source.lat == event.detail.lat && event.detail.lng == $scope.source.lng) return;
                 $scope.source = {
                     lat: event.detail.lat,
                     lng: event.detail.lng
                 };
                 $scope.getService($scope.cabs.selected);
+                calculateDistance();
+                getUberCost();
             }, false);
 
             destination_container.addEventListener('destinationLocationChanged', function(event) {
+                $scope.typingOn = false;
                 $scope.destination = {
                     lat: event.detail.lat,
                     lng: event.detail.lng
                 };
+                calculateDistance();
+                getUberCost();
+            }, false);
+
+            function calculateDistance() {
+                if (!$scope.destination || !$scope.destination.lat) return;
+                var origin = new google.maps.LatLng($scope.source.lat, $scope.source.lng);
+                var destination = new google.maps.LatLng($scope.destination.lat, $scope.destination.lng);
+
+                var service = new google.maps.DistanceMatrixService();
+                service.getDistanceMatrix({
+                    origins: [origin],
+                    destinations: [destination],
+                    travelMode: google.maps.TravelMode.DRIVING,
+                    unitSystem: google.maps.UnitSystem.METRIC,
+                    durationInTraffic: false,
+                    avoidHighways: false,
+                    avoidTolls: false,
+                }, setDistanceCallback);
+            }
+
+            $scope.travelTime = 0;
+            $scope.travelDistance = 0;
+            $scope.travelInfoLoadFailed = false;
+
+            function setDistanceCallback(response, status) {
+                if (response.rows[0].elements[0].distance.value) {
+                    $scope.travelInfoLoadFailed = false;
+                    $scope.travelTime = Math.ceil(response.rows[0].elements[0].duration.value / 60);
+                    $scope.travelDistance = response.rows[0].elements[0].distance.value / 1000;
+                } else {
+                    $scope.travelInfoLoadFailed = true;
+                }
+            }
+
+            function getUberCost() {
+                if (!$scope.destination || !$scope.destination.lat) return;
                 $scope.uberCost = {
                     uberX: "",
                     UberBLACK: "",
@@ -538,10 +549,16 @@
                         UberBLACK: 1
                     }
                 };
-                $scope.setTravelInfo();
-                $scope.getUberCost();
-                $scope.typingOn = false;
-            }, false);
+                $http.get('cabs/uber/cost?srcLat=' + $scope.source.lat + '&srcLng=' + $scope.source.lng + '&destLat=' + $scope.destination.lat + '&destLng=' + $scope.destination.lng).success(function(data) {
+                    for (var item in data.prices) {
+                        if (data.prices[item].low_estimate == data.prices[item].high_estimate)
+                            $scope.uberCost[data.prices[item].name] = data.prices[item].low_estimate;
+                        else
+                            $scope.uberCost[data.prices[item].name] = data.prices[item].low_estimate + "-" + data.prices[item].high_estimate;
+                        $scope.uberCost.multipliers[data.prices[item].name] = data.prices[item].multiplier;
+                    }
+                });
+            }
 
             function mapNearByCabs() {
                 w.chanakya.Map.clearMarkers('cabs');
