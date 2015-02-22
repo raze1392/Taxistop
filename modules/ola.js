@@ -1,8 +1,7 @@
 var request = require(__dirname + '/../modules/request');
 var logger = require(__dirname + '/../modules/log');
-var CryptoJS = require("crypto-js")
-var crypto = require("crypto")
-var AES = require("crypto-js/aes");
+// var crypto = require("crypto");
+// var Buffer = require('buffer').Buffer;
 
 var OLA = {};
 OLA.options = {
@@ -98,19 +97,20 @@ function buildCancelBookingURL(userId, bookingId, reason) {
     return url;
 }
 
-function buildLoginURL(email, password) {
+function buildLoginURL(email, encPassword) {
     var url = '/v3/user/login?device_id=911380450341890&lat=29.3794796&lng=79.4637102';
     url += '&email=' + encodeURIComponent(email);
+    // password += '|';
+    // var iv = new Buffer('');
+    // var key = new Buffer('PRODKEYPRODKEY12', 'utf8');
+    // var cipher = crypto.createCipheriv('aes-128-ecb', key, iv);
+    // var chunks = [];
+    // chunks.push(cipher.update(new Buffer(password, 'utf8'), 'buffer', 'base64'));
+    // chunks.push(cipher.final('base64'));
+    // var encryptedString = chunks.join('');
+    url += '&password=' + encPassword;
 
-    password += '|';
-    var cipher = crypto.createCipher('aes-128-ecb', "PRODKEYPRODKEY12");
-    cipher.setAutoPadding(true); // did our own padding, to match mcrypt_encrypt
-    var encrypted = cipher.update(password, 'utf8', 'base64');
-    encrypted += cipher.final('base64');
-
-    url += '&password=' + encrypted;
-
-    return url;
+return url;
 }
 
 function parseCabsResponse(type, response, status) {
@@ -264,11 +264,10 @@ exports.cancelBooking = function(responseHandler, response, userId, bookingId, s
     });
 }
 
-exports.login = function(responseHandler, response, email, password, shouldParseData) {
-    OLA.options.path = buildLoginURL(email, password);
-    console.log(OLA.options.path);
+exports.login = function(responseHandler, response, email, encPassword, shouldParseData) {
+    OLA.options.path = buildLoginURL(email, encPassword);
+
     request.getJSON(OLA.options, function(statusCode, result) {
-        console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('cancel', result, result.status);
         }
