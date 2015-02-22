@@ -1,5 +1,6 @@
 var request = require(__dirname + '/../modules/request');
 var logger = require(__dirname + '/../modules/log');
+var Firebase = require("firebase");
 // var crypto = require("crypto");
 // var Buffer = require('buffer').Buffer;
 
@@ -100,14 +101,14 @@ function buildCancelBookingURL(userId, bookingId, reason) {
 function buildLoginURL(email, encPassword) {
     var url = '/v3/user/login?device_id=911380450341890&lat=29.3794796&lng=79.4637102';
     url += '&email=' + encodeURIComponent(email);
-    // password += '|';
+    // encPassword += '|';
     // var iv = new Buffer('');
     // var key = new Buffer('PRODKEYPRODKEY12', 'utf8');
     // var cipher = crypto.createCipheriv('aes-128-ecb', key, iv);
     // var chunks = [];
-    // chunks.push(cipher.update(new Buffer(password, 'utf8'), 'buffer', 'base64'));
+    // chunks.push(cipher.update(new Buffer(encPassword, 'utf8'), 'buffer', 'base64'));
     // chunks.push(cipher.final('base64'));
-    // var encryptedString = chunks.join('');
+    // encPassword = chunks.join('');
     url += '&password=' + encPassword;
 
     return url;
@@ -204,7 +205,7 @@ function parseBookingResponse(type, response, status) {
     return output;
 }
 
-function parseLoginResponse(response, status) {
+function parseLoginResponse(response, status, userCookie) {
     var output = {
         status: response ? ((status.toLowerCase() != 'failure') ? "success" : "failure") : "failure",
         service: 'OLA'
@@ -214,6 +215,9 @@ function parseLoginResponse(response, status) {
         output.userId = response.user_id;
         output.referralCode = response.referral_code;
         output.olaMoney = response.ola_money_balance;
+
+        var ref = new Firebase('https://flickering-inferno-5036.firebaseio.com');
+        
     } catch (ex) {
         logger.warn(ex.getMessage(), ex);
         return output;
@@ -282,12 +286,12 @@ exports.cancelBooking = function(responseHandler, response, userId, bookingId, s
     });
 }
 
-exports.login = function(responseHandler, response, email, encPassword, shouldParseData) {
+exports.login = function(responseHandler, response, userCookie, email, encPassword, shouldParseData) {
     OLA.options.path = buildLoginURL(email, encPassword);
-
+console.log(OLA.options.path);
     request.getJSON(OLA.options, function(statusCode, result) {
         if (shouldParseData && result) {
-            result = parseLoginResponse(result, result.status);
+            result = parseLoginResponse(result, result.status, userCookie);
         }
         responseHandler(response, result);
     });

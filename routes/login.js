@@ -21,11 +21,13 @@ router.get('/service/:serviceName', function(request, response) {
     var session = request.session;
     var serviceName = request.params.serviceName;
     var email = request.query.email;
-    var password = request.query.password;
+    var encPassword = request.query.password;
     var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
 
+    var userCookie = request.cookies.user;
+
     if (serviceName && cabServiceModules[serviceName]) {
-    	cabServiceModules[serviceName].login(sendResponse, response, email, password, shouldParseData);
+    	cabServiceModules[serviceName].login(sendResponse, response, userCookie, email, encPassword, shouldParseData);
     }
 });
 
