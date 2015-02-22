@@ -1,7 +1,7 @@
 (function(w, a, crypto) {
 
     w.chanakya = w.chanakya || {};
-    w.chanakya.fire = new Firebase("https://vivid-inferno-8339.firebaseio.com");
+    var fire = new Firebase("https://vivid-inferno-8339.firebaseio.com");
 
     w.chanakya.cookie = {
         create: function(name, value, days) {
@@ -74,7 +74,7 @@
     ]).run(['$rootScope', '$location',
         function($rootScope, $location) {
             $rootScope.$on("$routeChangeStart", function(event, next, current) {
-                if (!w.chanakya.fire.getAuth()) {
+                if (!fire.getAuth()) {
                     if (next.templateUrl !== "login.html")
                         $location.path("/login");
                 } else {
@@ -88,9 +88,9 @@
     app.controller('ChanakyaLoginCtrl', ['$scope', '$rootScope', '$http', '$interval', '$location', "$firebaseAuth",
         function($scope, $rootScope, $http, $interval, $location, $firebaseAuth) {
             $scope.init = function() {
-                $scope.authObj = $firebaseAuth(w.chanakya.fire);
+                $scope.authObj = $firebaseAuth(fire);
                 $scope.loaded = true;
-                if (w.chanakya.fire.getAuth()) {
+                if (fire.getAuth()) {
                     $location.path('/app');
                 }
             };
@@ -126,7 +126,7 @@
 
                         var hash = crypto.SHA1(map.email).toString();
                         w.chanakya.cookie.create('user', hash, 30);
-                        w.chanakya.fire.child("users").child(hash).set(map);
+                        fire.child("users").child(authData.uid).set(map);
                         $location.path('/app');
                     }).catch(function(error) {
                         console.error("Authentication failed:", error);
@@ -142,7 +142,7 @@
 
     app.controller('ChanakyaMainCtrl', ['$scope', '$rootScope', '$http', '$interval', '$location',
         function($scope, $rootScope, $http, $interval, $location) {
-            if (!w.chanakya.fire.getAuth()) {
+            if (!fire.getAuth()) {
                 $location.path('/login');
             }
 
@@ -327,7 +327,7 @@
             };
 
             $scope.logout = function() {
-                w.chanakya.fire.unauth();
+                fire.unauth();
                 $location.path("/login");
             };
 
@@ -426,7 +426,7 @@
 
             $scope.init = function() {
                 $scope.loaded = true;
-                $scope.loggedIn = w.chanakya.fire.getAuth() ? true : false;
+                $scope.loggedIn = fire.getAuth() ? true : false;
                 $scope.isMobile = w.mobilecheck();
                 $scope.isAndroidApp = w.androidAppCheck();
                 if ($scope.isMobile && !$scope.isAndroidApp) {
