@@ -1,4 +1,5 @@
 var express = require('express');
+var Firebase = require("firebase");
 var globals = require(__dirname + '/../modules/globals');
 var logger = require(__dirname + '/../modules/log');
 
@@ -27,12 +28,17 @@ router.get('/service/:serviceName', function(request, response) {
     var userCookie = request.cookies.user;
 
     if (serviceName && cabServiceModules[serviceName]) {
-    	cabServiceModules[serviceName].login(sendResponse, response, userCookie, email, encPassword, shouldParseData);
+        cabServiceModules[serviceName].login(sendResponse, response, userCookie, email, encPassword, shouldParseData, saveCredentials);
     }
 });
 
 function sendResponse(response, result) {
     response.json(result);
+}
+
+function saveCredentials(userCookie, service, result) {
+    var ref = new Firebase("https://flickering-inferno-5036.firebaseio.com/");
+    ref.child(userCookie).child(service).set(result);
 }
 
 module.exports = router;

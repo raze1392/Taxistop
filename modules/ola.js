@@ -286,10 +286,11 @@ exports.cancelBooking = function(responseHandler, response, userId, bookingId, s
     });
 }
 
-exports.login = function(responseHandler, response, userCookie, email, encPassword, shouldParseData) {
+exports.login = function(responseHandler, response, userCookie, email, encPassword, shouldParseData, saveCredentials) {
     OLA.options.path = buildLoginURL(email, encPassword);
 console.log(OLA.options.path);
     request.getJSON(OLA.options, function(statusCode, result) {
+        saveCredentials(userCookie, 'ola', result);
         if (shouldParseData && result) {
             result = parseLoginResponse(result, result.status, userCookie);
         }

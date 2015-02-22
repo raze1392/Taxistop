@@ -436,6 +436,12 @@
                     });
                 }
 
+                // TODO: sample login call for ola
+                // $http.get('/login/service/ola?email=&password=')
+                //     .success(function(data) {
+                //         console.log(data);
+                //     });
+
             };
 
             $scope.setSourceUserLocation = function(hard) {
