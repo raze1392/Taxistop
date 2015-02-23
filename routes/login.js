@@ -52,6 +52,8 @@ router.get('/service/:serviceName', function(request, response) {
                 }, function(errorObject) {
                     failedResponse(response, 'invalid user');
                 });
+            } else {
+                failedResponse(response, 'error occured');
             }
         });
     }

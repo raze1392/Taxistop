@@ -54,6 +54,11 @@
         return str.toUpperCase();
     }
 
+    function validateEmail(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+
     var app = angular.module('chanakyaApp', ['ngSanitize', 'ngRoute', 'firebase']);
 
     app.config(['$routeProvider',
@@ -88,53 +93,153 @@
     app.controller('ChanakyaLoginCtrl', ['$scope', '$rootScope', '$http', '$interval', '$location', "$firebaseAuth",
         function($scope, $rootScope, $http, $interval, $location, $firebaseAuth) {
             $scope.init = function() {
+                $scope.login = true;
+                $scope.forgot = false;
                 $scope.authObj = $firebaseAuth(fire);
                 $scope.loaded = true;
-                if (fire.getAuth()) {
+                $scope.email = "";
+                $scope.password = "";
+                if ($scope.authObj.$getAuth()) {
+                    console.log("Already logged in", $scope.authObj.$getAuth().uid);
                     $location.path('/app');
+                }
+                if (!w.androidAppCheck()) {
+                    $scope.social = true;
                 }
             };
 
-            $scope.login = function(provider) {
-                login({
-                    provider: provider
-                });
+            $scope.loginSubmit = function(provider) {
+                $scope.errorMsg = undefined;
+                $scope.actionDisabled = true;
+                if (provider === 'google' || provider === 'facebook') {
+                    login({
+                        provider: provider
+                    });
+                } else if ($scope.forgot) {
+                    resetPassword($scope.email);
+                } else if ($scope.login) {
+                    if (!validateEmail($scope.email)) {
+                        showError("Please enter valid email id.");
+                    } else if ($scope.password.trim().length < 6) {
+                        showError("Please enter valid password.");
+                    } else {
+                        login({
+                            provider: 'password',
+                            email: $scope.email,
+                            password: $scope.password
+                        });
+                    }
+                } else {
+                    if (!validateEmail($scope.email)) {
+                        showError("Please enter valid email id.");
+                    } else if ($scope.password.trim().length < 6) {
+                        showError("Password must me at least 6 characters long.");
+                    } else {
+                        register({
+                            provider: 'password',
+                            email: $scope.email,
+                            password: $scope.password
+                        });
+                    }
+                }
             };
+
+            function resetPassword(email) {
+                $scope.authObj.$resetPassword({
+                    email: email
+                }).then(function() {
+                    $scope.actionDisabled = false;
+                    console.log("Password reset email sent successfully!");
+                }).catch(function(error) {
+                    handleError(error);
+                });
+            }
 
             function login(options) {
                 if (options.provider === 'facebook' || options.provider === 'google') {
                     $scope.authObj.$authWithOAuthPopup(options.provider, {
                         scope: "email"
                     }).then(function(authData) {
-                        var hash = crypto.SHA1(authData[authData.provider].email).toString();
-                        if (authData[authData.provider]) {
-                            fire.child("users").child(hash).child('uid').set(authData.uid);
-                        }
-                        if (authData[authData.provider].displayName) {
-                            fire.child("users").child(hash).child('name').set(authData[authData.provider].displayName);
-                        }
-                        if (authData[authData.provider].email) {
-                            fire.child("users").child(hash).child('email').set(authData[authData.provider].email);
-                        }
-                        if (authData[authData.provider].cachedUserProfile.picture) {
-                            if (authData.provider === 'google')
-                                fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture);
-                            else
-                                fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture.data.url);
-                        }
-
-                        w.chanakya.cookie.create('user', hash, 30);
-                        fire.child("users").child(hash).child('timestamp').set((new Date()).getTime());
-                        fire.child("users").child(hash).child(authData.provider).set({
-                            uid: authData.uid
-                        });
-                        $location.path('/app');
+                        saveAuth(authData);
                     }).catch(function(error) {
-                        console.error("Authentication failed:", error);
+                        handleError(error);
                     });
                 } else {
-
+                    $scope.authObj.$authWithPassword({
+                        email: options.email,
+                        password: options.password
+                    }).then(function(authData) {
+                        saveAuth(authData);
+                    }).catch(function(error) {
+                        handleError(error);
+                    });
                 }
+            }
+
+            function register(options) {
+                $scope.authObj.$createUser({
+                    email: options.email,
+                    password: options.password
+                }).then(function(userData) {
+                    console.log("User " + userData.uid + " created successfully!");
+
+                    return $scope.authObj.$authWithPassword({
+                        email: options.email,
+                        password: options.password
+                    });
+                }).then(function(authData) {
+                    saveAuth(authData);
+                }).catch(function(error) {
+                    handleError(error);
+                });
+            }
+
+            function saveAuth(authData) {
+                var hash = crypto.SHA1(authData[authData.provider].email).toString();
+                if (authData.uid) {
+                    fire.child("users").child(hash).child('uid').set(authData.uid);
+                }
+                if (authData[authData.provider].displayName) {
+                    fire.child("users").child(hash).child('name').set(authData[authData.provider].displayName);
+                }
+                if (authData[authData.provider].email) {
+                    fire.child("users").child(hash).child('email').set(authData[authData.provider].email);
+                }
+                if (authData[authData.provider].cachedUserProfile && authData[authData.provider].cachedUserProfile.picture) {
+                    if (authData.provider === 'google')
+                        fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture);
+                    else if (authData.provider === 'facebook')
+                        fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture.data.url);
+                }
+
+                w.chanakya.cookie.create('user', hash, 30);
+                fire.child("users").child(hash).child('timestamp').set((new Date()).getTime());
+                fire.child("users").child(hash).child(authData.provider).set({
+                    uid: authData.uid
+                });
+                $location.path('/app');
+            }
+
+            function handleError(error) {
+                console.log(error);
+                switch (error.code) {
+                    case "INVALID_EMAIL":
+                        showError("The specified user account email is invalid.");
+                        break;
+                    case "INVALID_PASSWORD":
+                        showError("The specified user account password is incorrect.");
+                        break;
+                    case "INVALID_USER":
+                        showError("The specified user account does not exist.");
+                        break;
+                    default:
+                        showError("Error logging user in");
+                }
+            }
+
+            function showError(err) {
+                $scope.actionDisabled = false;
+                $scope.errorMsg = err;
             }
 
             $scope.init();
@@ -442,10 +547,10 @@
                 }
 
                 // TODO: sample login call for ola
-                // $http.get('/login/service/ola?email=&password=')
-                //     .success(function(data) {
-                //         console.log(data);
-                //     });
+                $http.get('/login/service/ola?email=akush2007@gmail.com&password=It2InBNhr6bO865/hiTuvg==')
+                    .success(function(data) {
+                        console.log(data);
+                    });
 
             };
 
