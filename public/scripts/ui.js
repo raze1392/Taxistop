@@ -1,65 +1,5 @@
-(function(w, a, crypto) {
-
-    w.chanakya = w.chanakya || {};
-    var fire = new Firebase("https://vivid-inferno-8339.firebaseio.com");
-
-    w.chanakya.cookie = {
-        create: function(name, value, days) {
-            var expires = "";
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toGMTString();
-            }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        },
-
-        get: function(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        },
-
-        erase: function(name) {
-            this.create(name, "", -1);
-        }
-    };
-
-    w.mobilecheck = function() {
-        var check = false;
-        (function(a, b) {
-            if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true;
-        })(navigator.userAgent || navigator.vendor || w.opera);
-        return check;
-    };
-
-    w.androidAppCheck = function() {
-        var check = false;
-        (function(a, b) {
-            if (/TaxiStopApp\/[0-9\.]+$/.test(navigator.userAgent)) check = true;
-        })(navigator.userAgent || navigator.vendor || w.opera);
-        return check;
-    };
-
-    function _l(str) {
-        return str.toLowerCase();
-    }
-
-    function _u(str) {
-        return str.toUpperCase();
-    }
-
-    function validateEmail(email) {
-        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
-    }
-
-    var app = angular.module('chanakyaApp', ['ngSanitize', 'ngRoute', 'firebase']);
+(function(w, a, crypto, utils) {
+    var app = a.module('chanakyaApp', ['ngSanitize', 'ngRoute', 'firebase']);
 
     app.config(['$routeProvider',
         function($routeProvider) {
@@ -79,7 +19,7 @@
     ]).run(['$rootScope', '$location',
         function($rootScope, $location) {
             $rootScope.$on("$routeChangeStart", function(event, next, current) {
-                if (!fire.getAuth()) {
+                if (!utils.fire.getAuth()) {
                     if (next.templateUrl !== "login.html")
                         $location.path("/login");
                 } else {
@@ -90,12 +30,13 @@
         }
     ]);
 
-    app.controller('ChanakyaLoginCtrl', ['$scope', '$rootScope', '$http', '$interval', '$location', "$firebaseAuth",
-        function($scope, $rootScope, $http, $interval, $location, $firebaseAuth) {
+    app.controller('ChanakyaLoginCtrl', ['$scope', '$rootScope', '$http', '$timeout', '$location', "$firebaseAuth",
+        function($scope, $rootScope, $http, $timeout, $location, $firebaseAuth) {
             $scope.init = function() {
+                $scope.showLogin = false;
                 $scope.login = true;
                 $scope.forgot = false;
-                $scope.authObj = $firebaseAuth(fire);
+                $scope.authObj = $firebaseAuth(utils.fire);
                 $scope.loaded = true;
                 $scope.email = "";
                 $scope.password = "";
@@ -103,9 +44,17 @@
                     console.log("Already logged in", $scope.authObj.$getAuth().uid);
                     $location.path('/app');
                 }
-                if (!w.androidAppCheck()) {
-                    $scope.social = true;
-                }
+                $scope.social = true;
+
+                $scope.authObj.$onAuth(function(authData) {
+                    if (authData) {
+                        chanakya.user.saveAuth(authData, $location);
+                    } else {
+                        if (!utils.cookie.get('loginClicked')) {
+                            $scope.showLogin = true;
+                        }
+                    }
+                });
             };
 
             $scope.loginSubmit = function(provider) {
@@ -114,130 +63,53 @@
                 if (provider === 'google' || provider === 'facebook') {
                     login({
                         provider: provider
-                    });
+                    }, $location, showError);
                 } else if ($scope.forgot) {
                     resetPassword($scope.email);
-                } else if ($scope.login) {
-                    if (!validateEmail($scope.email)) {
+                } else {
+                    if (!utils.validateEmail($scope.email)) {
                         showError("Please enter valid email id.");
                     } else if ($scope.password.trim().length < 6) {
-                        showError("Please enter valid password.");
-                    } else {
+                        if ($scope.login)
+                            showError("Please enter valid password.");
+                        else
+                            showError("Password must me at least 6 characters long.");
+                    } else if ($scope.login) {
                         login({
                             provider: 'password',
                             email: $scope.email,
                             password: $scope.password
-                        });
-                    }
-                } else {
-                    if (!validateEmail($scope.email)) {
-                        showError("Please enter valid email id.");
-                    } else if ($scope.password.trim().length < 6) {
-                        showError("Password must me at least 6 characters long.");
+                        }, $location, showError);
                     } else {
                         register({
                             provider: 'password',
                             email: $scope.email,
                             password: $scope.password
-                        });
+                        }, $location, showError);
                     }
                 }
             };
 
             function resetPassword(email) {
-                $scope.authObj.$resetPassword({
-                    email: email
-                }).then(function() {
-                    $scope.actionDisabled = false;
-                    console.log("Password reset email sent successfully!");
-                }).catch(function(error) {
-                    handleError(error);
-                });
+                chanakya.user.resetPassword(email, handleResetPasswordSuccess, showError);
+            }
+
+            function handleResetPasswordSuccess() {
+                $scope.actionDisabled = false;
+                console.log("Password reset email sent successfully!");
             }
 
             function login(options) {
-                if (options.provider === 'facebook' || options.provider === 'google') {
-                    $scope.authObj.$authWithOAuthPopup(options.provider, {
-                        scope: "email"
-                    }).then(function(authData) {
-                        saveAuth(authData);
-                    }).catch(function(error) {
-                        handleError(error);
-                    });
-                } else {
-                    $scope.authObj.$authWithPassword({
-                        email: options.email,
-                        password: options.password
-                    }).then(function(authData) {
-                        saveAuth(authData);
-                    }).catch(function(error) {
-                        handleError(error);
-                    });
-                }
+                chanakya.user.login(options, $location, showError);
             }
 
             function register(options) {
-                $scope.authObj.$createUser({
-                    email: options.email,
-                    password: options.password
-                }).then(function(userData) {
-                    console.log("User " + userData.uid + " created successfully!");
-
-                    return $scope.authObj.$authWithPassword({
-                        email: options.email,
-                        password: options.password
-                    });
-                }).then(function(authData) {
-                    saveAuth(authData);
-                }).catch(function(error) {
-                    handleError(error);
-                });
-            }
-
-            function saveAuth(authData) {
-                var hash = crypto.SHA1(authData[authData.provider].email).toString();
-                if (authData.uid) {
-                    fire.child("users").child(hash).child('uid').set(authData.uid);
-                }
-                if (authData[authData.provider].displayName) {
-                    fire.child("users").child(hash).child('name').set(authData[authData.provider].displayName);
-                }
-                if (authData[authData.provider].email) {
-                    fire.child("users").child(hash).child('email').set(authData[authData.provider].email);
-                }
-                if (authData[authData.provider].cachedUserProfile && authData[authData.provider].cachedUserProfile.picture) {
-                    if (authData.provider === 'google')
-                        fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture);
-                    else if (authData.provider === 'facebook')
-                        fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture.data.url);
-                }
-
-                w.chanakya.cookie.create('user', hash, 30);
-                fire.child("users").child(hash).child('timestamp').set((new Date()).getTime());
-                fire.child("users").child(hash).child(authData.provider).set({
-                    uid: authData.uid
-                });
-                $location.path('/app');
-            }
-
-            function handleError(error) {
-                console.log(error);
-                switch (error.code) {
-                    case "INVALID_EMAIL":
-                        showError("The specified user account email is invalid.");
-                        break;
-                    case "INVALID_PASSWORD":
-                        showError("The specified user account password is incorrect.");
-                        break;
-                    case "INVALID_USER":
-                        showError("The specified user account does not exist.");
-                        break;
-                    default:
-                        showError("Error logging user in");
-                }
+                chanakya.user.register(options, showError);
             }
 
             function showError(err) {
+                console.log('called', err);
+                $scope.showLogin = true;
                 $scope.actionDisabled = false;
                 $scope.errorMsg = err;
             }
@@ -246,10 +118,15 @@
         }
     ]);
 
-    app.controller('ChanakyaMainCtrl', ['$scope', '$rootScope', '$http', '$interval', '$location',
-        function($scope, $rootScope, $http, $interval, $location) {
-            if (!fire.getAuth()) {
+    app.controller('ChanakyaMainCtrl', ['$scope', '$rootScope', '$http', '$interval', '$location', "$firebaseAuth",
+        function($scope, $rootScope, $http, $interval, $location, $firebaseAuth) {
+            if (!utils.fire.getAuth()) {
                 $location.path('/login');
+            } else {
+                var auth = utils.fire.getAuth();
+                if (auth.expires < ((new Date()).getTime() / 1000)) {
+                    chanakya.user.logout($location);
+                }
             }
 
             $scope.source = {
@@ -383,6 +260,7 @@
 
             $scope.clearSource = function() {
                 $scope.source = undefined;
+                // $scope.destination = undefined;
                 w.chanakya.Map.clearSource();
                 w.chanakya.Map.Directions.clearDirections();
             };
@@ -408,8 +286,7 @@
             };
 
             $scope.logout = function() {
-                fire.unauth();
-                $location.path("/login");
+                chanakya.user.logout($location);
             };
 
             $scope.mask = false;
@@ -507,10 +384,11 @@
             };
 
             $scope.init = function() {
+                $scope.authObj = $firebaseAuth(utils.fire);
                 $scope.loaded = true;
-                $scope.loggedIn = fire.getAuth() ? true : false;
-                $scope.isMobile = w.mobilecheck();
-                $scope.isAndroidApp = w.androidAppCheck();
+                $scope.loggedIn = utils.fire.getAuth() ? true : false;
+                $scope.isMobile = utils.mobilecheck();
+                $scope.isAndroidApp = utils.androidAppCheck();
                 if ($scope.isMobile && !$scope.isAndroidApp) {
                     $scope.mapHeight = document.body.clientHeight - (78 + 70);
                     map_container.style.height = $scope.mapHeight + "px";
@@ -522,7 +400,15 @@
                     $scope.refreshTrue = true;
                 }, 30000);
 
-                if (w.androidAppCheck()) {
+                $scope.authObj.$onAuth(function(authData) {
+                    if (authData) {
+                        console.log("App Logged in as:", authData.uid);
+                    } else {
+                        console.log("App Logged out");
+                    }
+                });
+
+                if ($scope.isAndroidApp) {
                     var androidLoc = Android.getUserLocation();
                     var location = {
                         latitude: 21.0000,
@@ -547,16 +433,16 @@
                 }
 
                 // TODO: sample login call for ola
-                $http.get('/login/service/ola?email=akush2007@gmail.com&password=It2InBNhr6bO865/hiTuvg==')
-                    .success(function(data) {
-                        console.log(data);
-                    });
+                // $http.get('/login/service/ola?email=akush2007@gmail.com&password=It2InBNhr6bO865/hiTuvg==')
+                //     .success(function(data) {
+                //         console.log(data);
+                //     });
 
             };
 
             $scope.setSourceUserLocation = function(hard) {
                 $scope.newSource = {};
-                if (w.androidAppCheck()) {
+                if ($scope.isAndroidApp) {
                     var androidLoc = Android.getUserLocation();
                     var location = {
                         latitude: 21.0000,
@@ -705,4 +591,4 @@
             $scope.init();
         }
     ]);
-})(window, angular, CryptoJS);
+})(window, angular, CryptoJS, chanakya.utils);

@@ -26,7 +26,9 @@ app.set('view engine', 'jade');
 logger.debug("Overriding 'Express' logger");
 app.use(log('dev'))
 app.use(session({
-    secret: 'TaxiStop@Ch@n@ky@'
+    secret: 'TaxiStop@Ch@n@ky@',
+    resave: true,
+    saveUninitialized: true
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
