@@ -1,6 +1,6 @@
 var express = require('express');
-var globals = require(__dirname + '/../modules/globals');
-var logger = require(__dirname + '/../modules/log');
+var globals = require(__dirname + '/../modules/helpers/globals');
+var logger = require(__dirname + '/../modules/helpers/log');
 
 var router = express.Router();
 

@@ -1,18 +1,7 @@
-var request = require(__dirname + '/../modules/request');
-var logger = require(__dirname + '/../modules/log');
-var googleDistance = require(__dirname + '/../modules/googleDistance');
-
-var MERU = {};
-MERU.options = {
-    host: 'mobileapp.merucabs.com',
-    port: 80,
-    method: 'GET',
-    path: ''
-};
-MERU.Taxi_Name_Map = {
-    genie: 'Genie',
-    meru: 'Meru',
-}
+var request = require(__dirname + '/../helpers/request');
+var logger = require(__dirname + '/../helpers/log');
+var googleDistance = require(__dirname + '/../helpers/googleDistance');
+var MERU = require(__dirname + '/../common/meru');
 
 function buildURL(latitude, longitude, userId) {
     var url = '/NearByCab_ETA/GetNearByCabs.svc/rest/nearby?SuggestedRadiusMeters=5000&CabMaxCount=10';
@@ -25,7 +14,7 @@ function buildURL(latitude, longitude, userId) {
     return url;
 }
 
-function parseCabsResponse(responseHandler, responseService, location, response) {
+function parseResponse(responseHandler, responseService, location, response) {
     var output = {
         status: response ? "success" : "failure",
         service: 'MERU',
@@ -96,7 +85,7 @@ exports.cabs = function(responseHandler, response, latitude, longitude, shouldPa
                 lat: latitude,
                 lng: longitude
             }
-            result = parseCabsResponse(responseHandler, response, location, result);
+            result = parseResponse(responseHandler, response, location, result);
         } else {
             responseHandler(response, result);
         }

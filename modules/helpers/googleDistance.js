@@ -1,6 +1,6 @@
-var request = require(__dirname + '/../modules/request');
-var logger = require(__dirname + '/../modules/log');
-var globals = require(__dirname + '/../modules/globals');
+var request = require(__dirname + '/../helpers/request');
+var logger = require(__dirname + '/../helpers/log');
+var globals = require(__dirname + '/../helpers/globals');
 
 var GOOGLE_DM = {};
 GOOGLE_DM.options = {

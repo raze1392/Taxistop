@@ -1,12 +1,18 @@
 var express = require('express');
 var router = express.Router();
-var globals = require(__dirname + '/../modules/globals');
+var globals = require(__dirname + '/../modules/helpers/globals');
 
 var cabServiceModules = {
-    ola: require('../modules/ola'),
-    tfs: require('../modules/tfs'),
-    uber: require('../modules/uber'),
-    meru: require('../modules/meru'),
+    ola: require('../modules/cabs/ola'),
+    tfs: require('../modules/cabs/tfs'),
+    uber: require('../modules/cabs/uber'),
+    meru: require('../modules/cabs/meru'),
+}
+var cabCostModules = {
+    ola: require('../modules/pricing/ola'),
+    tfs: require('../modules/pricing/tfs'),
+    uber: require('../modules/pricing/uber'),
+    meru: require('../modules/pricing/meru'),
 }
 var CAB_SERVICES = globals.getCabServices();
 
@@ -57,8 +63,8 @@ router.get('/:cab/cost', function(request, response) {
     var cabService = request.params.cab;
     var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
 
-    if (cabService && cabServiceModules[cabService]) {
-        cabServiceModules[cabService].price(sendResponse, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData);
+    if (cabService && cabCostModules[cabService]) {
+        cabCostModules[cabService].price(sendResponse, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData);
     }
 });
 

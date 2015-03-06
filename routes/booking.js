@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var globals = require(__dirname + '/../modules/globals');
+var globals = require(__dirname + '/../modules/helpers/globals');
 
 var cabServiceModules = {
-    ola: require('../modules/ola'),
-    tfs: require('../modules/tfs'),
-    uber: require('../modules/uber'),
-    meru: require('../modules/meru'),
+    ola: require('../modules/booking/ola'),
+    tfs: require('../modules/booking/tfs'),
+    uber: require('../modules/booking/uber'),
+    meru: require('../modules/booking/meru'),
 }
 var CAB_SERVICES = globals.getCabServices();
 

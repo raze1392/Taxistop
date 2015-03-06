@@ -1,19 +1,6 @@
-var request = require(__dirname + '/../modules/request');
-var logger = require(__dirname + '/../modules/log');
-
-var TFS = {};
-TFS.options = {
-    host: 'iospush.taxiforsure.com',
-    port: 80,
-    method: 'GET',
-    path: ''
-};
-TFS.Taxi_Name_Map = {
-    hatchback: 'Hatchback',
-    sedan: 'Sedan',
-    auto: 'Auto',
-    nano: 'Nano'
-}
+var request = require(__dirname + '/../helpers/request');
+var logger = require(__dirname + '/../helpers/log');
+var TFS = require(__dirname + '/../common/tfs');
 
 function buildURL(latitude, longitude, userId) {
     var url = '/getNearestDriversForApp/?density=320&appVersion=4.1.1';
@@ -26,7 +13,7 @@ function buildURL(latitude, longitude, userId) {
     return url;
 }
 
-function parseCabsResponse(response, status) {
+function parseResponse(response, status) {
     var output = {
         status: response ? "success" : "failure",
         service: 'TFS',
@@ -105,7 +92,7 @@ exports.cabs = function(responseHandler, response, latitude, longitude, shouldPa
     request.getJSON(TFS.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
-            result = parseCabsResponse(result.response_data, result.status);
+            result = parseResponse(result.response_data, result.status);
         }
         responseHandler(response, result);
     });

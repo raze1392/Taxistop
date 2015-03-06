@@ -3,12 +3,12 @@ var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var log = require('morgan');
-var logger = require(__dirname + "/modules/log");
+var logger = require(__dirname + "/modules/helpers/log");
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var browserify = require('browserify-middleware');
 
-var globals = require(__dirname + '/modules/globals');
+var globals = require(__dirname + '/modules/helpers/globals');
 var routes = require('./routes/index');
 var cabs = require('./routes/cabs');
 var eta = require('./routes/eta');
