@@ -10,8 +10,9 @@ var scriptOrder = [
   'public/scripts/Maps/Maps.js',
   'public/scripts/Maps/MapSearch.js',
   'public/scripts/Maps/MapDirections.js',
-  'public/scripts/*.js',
-  'public/scripts/ui.js'
+  'public/scripts/Utils.js',
+  'public/scripts/user.js',
+  'public/scripts/*.js'
 ];
 gulp.task('js', function () {
    return gulp.src(scriptOrder)

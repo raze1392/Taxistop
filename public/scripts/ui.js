@@ -1,4 +1,4 @@
-(function(w, a, crypto, utils) {
+(function(w, a, crypto, utils, map, user) {
     var app = a.module('chanakyaApp', ['ngSanitize', 'ngRoute', 'firebase']);
 
     app.config(['$routeProvider',
@@ -48,7 +48,7 @@
 
                 $scope.authObj.$onAuth(function(authData) {
                     if (authData) {
-                        chanakya.user.saveAuth(authData, $location);
+                        user.saveAuth(authData, $location);
                     } else {
                         if (!utils.cookie.get('loginClicked')) {
                             $scope.showLogin = true;
@@ -91,7 +91,7 @@
             };
 
             function resetPassword(email) {
-                chanakya.user.resetPassword(email, handleResetPasswordSuccess, showError);
+                user.resetPassword(email, handleResetPasswordSuccess, showError);
             }
 
             function handleResetPasswordSuccess() {
@@ -100,11 +100,11 @@
             }
 
             function login(options) {
-                chanakya.user.login(options, $location, showError);
+                user.login(options, $location, showError);
             }
 
             function register(options) {
-                chanakya.user.register(options, showError);
+                user.register(options, showError);
             }
 
             function showError(err) {
@@ -125,9 +125,11 @@
             } else {
                 var auth = utils.fire.getAuth();
                 if (auth.expires < ((new Date()).getTime() / 1000)) {
-                    chanakya.user.logout($location);
+                    user.logout($location);
                 }
             }
+            user.setUserInfo(utils.cookie.get('user'));
+            console.log(user.info());
 
             $scope.source = {
                 lat: undefined,
@@ -142,21 +144,6 @@
             var map_container = document.getElementById('map-canvas');
             var source_container = document.getElementById('searchSource');
             var destination_container = document.getElementById('searchDestination');
-
-            var CAB_TYPE = {
-                Mini: w.CDN_IMAGE_PREFIX + '/images/mini.png',
-                Hatchback: w.CDN_IMAGE_PREFIX + '/images/mini.png',
-                Genie: w.CDN_IMAGE_PREFIX + '/images/mini.png',
-                Nano: w.CDN_IMAGE_PREFIX + '/images/mini.png',
-                Sedan: w.CDN_IMAGE_PREFIX + '/images/sedan.png',
-                Meru: w.CDN_IMAGE_PREFIX + '/images/sedan.png',
-                Prime: w.CDN_IMAGE_PREFIX + '/images/prime.png',
-                Pink: w.CDN_IMAGE_PREFIX + '/images/prime.png',
-                Auto: w.CDN_IMAGE_PREFIX + '/images/auto.png',
-                'Kaali Peeli': w.CDN_IMAGE_PREFIX + '/images/mini.png',
-                uberX: w.CDN_IMAGE_PREFIX + '/images/mini.png',
-                UberBLACK: w.CDN_IMAGE_PREFIX + '/images/sedan.png'
-            };
 
             $scope.services = [{
                 name: "ola",
@@ -173,7 +160,15 @@
             }];
 
             $scope.getCabImg = function(name) {
-                return CAB_TYPE[name];
+                name = _l(name);
+                if (name == 'auto')
+                    return w.CDN_IMAGE_PREFIX + '/images/auto.png';
+                else if (name == 'mini' || name == 'hatchback' || name == 'genie' || name == 'nano' || name == 'kaali peeli' || name == 'uberx')
+                    return w.CDN_IMAGE_PREFIX + '/images/mini.png';
+                else if (name == 'sedan' || name == 'meru' || name == 'uberblack')
+                    return w.CDN_IMAGE_PREFIX + '/images/sedan.png';
+                else
+                    return w.CDN_IMAGE_PREFIX + '/images/prime.png';
             };
 
             $scope.getCabTypeImg = function(type) {
@@ -184,7 +179,7 @@
             };
 
             $scope.getTravelTime = function(cab) {
-                if (!w.chanakya.Map.existsDestination() || !cab.available)
+                if (!map.existsDestination() || !cab.available)
                     return "";
                 if ($scope.travelInfoLoadFailed) return "failed";
                 if ($scope.travelTime === 0) return "wait";
@@ -209,22 +204,13 @@
                 }
             };
             $scope.getTravelCost = function(cab) {
-                if (!w.chanakya.Map.existsDestination() || !cab.available)
+                if (!map.existsDestination() || !cab.available)
                     return "";
                 if ($scope.travelDistance === 0) return "calculating";
-                if (_l(cab.type) == "ola") {
+                if (_l(cab.type) == "ola" || _l(cab.type) == "tfs" || _l(cab.type) == "meru") {
                     if ($scope.travelInfoLoadFailed) return "failed";
-                    return "apx &#8377;" + Math.ceil(w.chanakya.cost.ola($scope.travelDistance, cab.name.toLowerCase()));
+                    return "apx &#8377;" + Math.ceil(w.chanakya.cost.calculate(cab.type, cab.name, $scope.travelDistance));
                 }
-                if (_l(cab.type) == "tfs") {
-                    if ($scope.travelInfoLoadFailed) return "failed";
-                    return "apx &#8377;" + Math.ceil(w.chanakya.cost.tfs($scope.travelDistance, cab.name.toLowerCase()));
-                }
-                if (_l(cab.type) == "meru") {
-                    if ($scope.travelInfoLoadFailed) return "failed";
-                    return "apx &#8377;" + Math.ceil(w.chanakya.cost.meru($scope.travelDistance, cab.name.toLowerCase()));
-                }
-
                 if (_l(cab.type) == "uber") {
                     if ($scope.uberCost[cab.name] === "") {
                         return "calculating";
@@ -261,14 +247,14 @@
             $scope.clearSource = function() {
                 $scope.source = undefined;
                 // $scope.destination = undefined;
-                w.chanakya.Map.clearSource();
-                w.chanakya.Map.Directions.clearDirections();
+                map.clearSource();
+                map.Directions.clearDirections();
             };
 
             $scope.clearDestination = function() {
                 $scope.destination = undefined;
-                w.chanakya.Map.clearDestination();
-                w.chanakya.Map.Directions.clearDirections();
+                map.clearDestination();
+                map.Directions.clearDirections();
             };
 
             $scope.openApp = function(type) {
@@ -286,7 +272,7 @@
             };
 
             $scope.logout = function() {
-                chanakya.user.logout($location);
+                user.logout($location);
             };
 
             $scope.mask = false;
@@ -363,10 +349,10 @@
                     map_container.style.height = ($scope.mapHeight - 25) + "px";
                 else
                     map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
-                google.maps.event.trigger(w.chanakya.Map.getMap(), "resize");
+                google.maps.event.trigger(map.getMap(), "resize");
 
-                if (w.chanakya.Map.existsSource() && w.chanakya.Map.existsDestination()) return;
-                w.chanakya.Map.getMap().setCenter(w.chanakya.Map.getSource().location);
+                if (map.existsSource() && map.existsDestination()) return;
+                map.getMap().setCenter(map.getSource().location);
             }
 
             $scope.showMask = function() {
@@ -421,14 +407,14 @@
                             longitude: androidLoc[1]
                         };
                     }
-                    w.chanakya.Map.intializeGmaps(map_container, source_container, destination_container, location, function() {
-                        w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
-                        w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
+                    map.intializeGmaps(map_container, source_container, destination_container, location, function() {
+                        map.Search.initializeAutocompleteSourceBox(source_container);
+                        map.Search.initializeAutocompleteDestinationBox(destination_container);
                     });
                 } else {
-                    w.chanakya.Map.intializeGmapsUsingNavigator(map_container, source_container, destination_container, function() {
-                        w.chanakya.Map.Search.initializeAutocompleteSourceBox(source_container);
-                        w.chanakya.Map.Search.initializeAutocompleteDestinationBox(destination_container);
+                    map.intializeGmapsUsingNavigator(map_container, source_container, destination_container, function() {
+                        map.Search.initializeAutocompleteSourceBox(source_container);
+                        map.Search.initializeAutocompleteDestinationBox(destination_container);
                     });
                 }
 
@@ -485,7 +471,7 @@
 
             function setSourceCallback(response, status) {
                 if (response.rows[0].elements[0].distance.value > 50 && $scope.newSource.latitude) {
-                    w.chanakya.Map.setSource(w.chanakya.Map.convertLatLngToLocation($scope.newSource.latitude, $scope.newSource.longitude));
+                    map.setSource(map.convertLatLngToLocation($scope.newSource.latitude, $scope.newSource.longitude));
                 }
             }
 
@@ -563,7 +549,7 @@
             }
 
             function mapNearByCabs() {
-                w.chanakya.Map.clearMarkers('cabs');
+                map.clearMarkers('cabs');
                 if ($scope.cabs.selected !== 'all') {
                     showNearByCabs($scope.cabs.coordinates[_u($scope.cabs.selected)], $scope.cabs.selected);
                     return;
@@ -575,14 +561,14 @@
             }
 
             function showNearByCabs(cabs, service, persist) {
-                if (!persist) w.chanakya.Map.clearMarkers('cabs');
+                if (!persist) map.clearMarkers('cabs');
                 for (var cabType in cabs) {
                     var _cabs = cabs[cabType];
                     for (var i = 0; i < 2; i++) {
                         var _c = cabs[cabType][i];
                         if (_c) {
-                            var location = w.chanakya.Map.convertLatLngToLocation(_c.lat, _c.lng);
-                            w.chanakya.Map.setMarker(location, service.toUpperCase() + ' ' + cabType, CAB_TYPE[cabType]);
+                            var location = map.convertLatLngToLocation(_c.lat, _c.lng);
+                            map.setMarker(location, service.toUpperCase() + ' ' + cabType, $scope.getCabImg(cabType));
                         }
                     }
                 }
@@ -591,4 +577,4 @@
             $scope.init();
         }
     ]);
-})(window, angular, CryptoJS, chanakya.utils);
+})(window, angular, CryptoJS, window.chanakya.utils, window.chanakya.Map, window.chanakya.user);

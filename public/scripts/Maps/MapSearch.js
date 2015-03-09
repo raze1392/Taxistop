@@ -6,32 +6,30 @@
  *   initializeAutocompleteSourceBox: initializes the Autocompletebox to set source,
  *   initializeAutocompleteDestinationBox: initializes the Autocompletebox to set destination
  */
-(function(w) {
-    w.chanakya = w.chanakya || {};
-    w.chanakya.Map = w.chanakya.Map || {};
-    w.chanakya.Map.Search = (function() {
+(function(w, map) {
+    map.Search = (function() {
         var initializeAutocompleteSourceBox = function(element) {
-            chanakya.Map._Details.Autocomplete.source = new google.maps.places.Autocomplete(element, {});
-            google.maps.event.addListener(chanakya.Map._Details.Autocomplete.source, 'place_changed', function() {
+            map._Details.Autocomplete.source = new google.maps.places.Autocomplete(element, {});
+            google.maps.event.addListener(map._Details.Autocomplete.source, 'place_changed', function() {
                 onPlaceChanged(element, "source");
             });
         };
 
         var initializeAutocompleteDestinationBox = function(element) {
-            chanakya.Map._Details.Autocomplete.destination = new google.maps.places.Autocomplete(element, {});
-            google.maps.event.addListener(chanakya.Map._Details.Autocomplete.destination, 'place_changed', function() {
+            map._Details.Autocomplete.destination = new google.maps.places.Autocomplete(element, {});
+            google.maps.event.addListener(map._Details.Autocomplete.destination, 'place_changed', function() {
                 onPlaceChanged(element, "destination");
             });
         };
 
         var search = function() {
             var search = {
-                bounds: chanakya.Map._Details.map.getBounds()
+                bounds: map._Details.map.getBounds()
             };
-            chanakya.Map._Details.places.nearbySearch(search, function(results, status) {
+            map._Details.places.nearbySearch(search, function(results, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     for (var i = 0; i < results.length; i++) {
-                        chanakya.Map._Details.Autocomplete.results.push(results[i]);
+                        map._Details.Autocomplete.results.push(results[i]);
                         //console.log(results[i]);
                     }
                 }
@@ -54,18 +52,18 @@
                 };
             }
 
-            var place = chanakya.Map._Details.Autocomplete[placeDetails.type].getPlace();
+            var place = map._Details.Autocomplete[placeDetails.type].getPlace();
             if (place.geometry) {
-                chanakya.Map._Details.map.panTo(place.geometry.location);
-                chanakya.Map["clear" + placeDetails.title]();
-                chanakya.Map["set" + placeDetails.title](place.geometry.location);
+                map._Details.map.panTo(place.geometry.location);
+                map["clear" + placeDetails.title]();
+                map["set" + placeDetails.title](place.geometry.location);
             } else {
                 element.placeholder = 'Enter a place';
             }
 
             // If both Source and Destination is selected, then show the route
-            if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) {
-                chanakya.Map.Directions.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
+            if (map.existsSource() && map.existsDestination()) {
+                map.Directions.getDirections(map.getSource().location, map.getDestination().location);
             }
         };
 
@@ -75,4 +73,4 @@
         };
 
     }());
-})(window);
+})(window, window.chanakya.Map);

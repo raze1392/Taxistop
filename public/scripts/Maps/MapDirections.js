@@ -11,25 +11,22 @@
  *   setUnitSystem: sets the UnitSystem to use,
  *   getUnitSystem: gets the currently selected UnitSystem
  */
-(function(w) {
-    w.chanakya = w.chanakya || {};
-    w.chanakya.Map = w.chanakya.Map || {};
-
-    w.chanakya.Map.Directions = (function() {
+(function(w, map) {
+    map.Directions = (function() {
         var getDirections = function(source, destination) {
             var request = {
                 origin: source,
                 destination: destination,
-                travelMode: chanakya.Map.Directions.getTravelMode(),
-                provideRouteAlternatives: chanakya.Map.Directions.getRouteAlternatives(),
-                unitSystem: chanakya.Map.Directions.getUnitSystem()
+                travelMode: map.Directions.getTravelMode(),
+                provideRouteAlternatives: map.Directions.getRouteAlternatives(),
+                unitSystem: map.Directions.getUnitSystem()
             };
 
-            chanakya.Map._Details.directionsService.route(request, function(response, status) {
+            map._Details.directionsService.route(request, function(response, status) {
                 if (status == google.maps.DirectionsStatus.OK) {
-                    chanakya.Map.clearMarkers();
-                    chanakya.Map._Details.directionsDisplay.setMap(chanakya.Map._Details.map);
-                    chanakya.Map._Details.directionsDisplay.setDirections(response);
+                    map.clearMarkers();
+                    map._Details.directionsDisplay.setMap(map._Details.map);
+                    map._Details.directionsDisplay.setDirections(response);
                     $('.centerMarker').hide();
                 }
             });
@@ -37,54 +34,54 @@
 
         var setTravelMode = function(travelMode) {
             travelMode = travelMode.toLowerCase();
-            if (chanakya.Map._Details.Directions.TravelMode[travelMode]) {
-                chanakya.Map._Details.Directions.travelModeSelected = chanakya.Map._Details.Directions.TravelMode[travelMode];
+            if (map._Details.Directions.TravelMode[travelMode]) {
+                map._Details.Directions.travelModeSelected = map._Details.Directions.TravelMode[travelMode];
             } else {
-                chanakya.Map._Details.Directions.travelModeSelected = chanakya.Map._Details.Directions.TravelMode.driving;
+                map._Details.Directions.travelModeSelected = map._Details.Directions.TravelMode.driving;
             }
 
             // If both Source and Destination is selected, then show the route
-            if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) {
-                chanakya.Map.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
+            if (map.existsSource() && map.existsDestination()) {
+                map.getDirections(map.getSource().location, map.getDestination().location);
             }
         };
 
         var getTravelMode = function() {
-            return chanakya.Map._Details.Directions.travelModeSelected;
+            return map._Details.Directions.travelModeSelected;
         };
 
         var setRouteAlternatives = function(arg) {
-            if (typeof arg === "boolean") chanakya.Map._Details.Directions.routeAlternatives = arg;
-            else chanakya.Map._Details.Directions.routeAlternatives = false;
+            if (typeof arg === "boolean") map._Details.Directions.routeAlternatives = arg;
+            else map._Details.Directions.routeAlternatives = false;
         };
 
         var getRouteAlternatives = function(arg) {
-            return chanakya.Map._Details.Directions.routeAlternatives;
+            return map._Details.Directions.routeAlternatives;
         };
 
         var setUnitSystem = function(unit) {
             unit = unit.toLowerCase();
-            if (chanakya.Map._Details.Directions.UnitSystem[unit]) {
-                chanakya.Map._Details.Directions.unitSystemSelected = chanakya.Map._Details.Directions.UnitSystem[unit];
+            if (map._Details.Directions.UnitSystem[unit]) {
+                map._Details.Directions.unitSystemSelected = map._Details.Directions.UnitSystem[unit];
             } else {
-                chanakya.Map._Details.Directions.unitSystemSelected = chanakya.Map._Details.Directions.UnitSystem.metric;
+                map._Details.Directions.unitSystemSelected = map._Details.Directions.UnitSystem.metric;
             }
 
             // If both Source and Destination is selected, then show the route
-            if (chanakya.Map.existsSource() && chanakya.Map.existsDestination()) {
-                chanakya.Map.getDirections(chanakya.Map.getSource().location, chanakya.Map.getDestination().location);
+            if (map.existsSource() && map.existsDestination()) {
+                map.getDirections(map.getSource().location, map.getDestination().location);
             }
         };
 
         var getUnitSystem = function() {
-            return chanakya.Map._Details.Directions.unitSystemSelected;
+            return map._Details.Directions.unitSystemSelected;
         };
 
         var clearDirections = function() {
-            chanakya.Map._Details.directionsDisplay.setMap(null);
-            chanakya.Map.clearDestination();
-            if (chanakya.Map.existsSource()) {
-                chanakya.Map._Details.map.setCenter(chanakya.Map.getSource().location);
+            map._Details.directionsDisplay.setMap(null);
+            map.clearDestination();
+            if (map.existsSource()) {
+                map._Details.map.setCenter(map.getSource().location);
             }
             $('.centerMarker').show();
         };
@@ -101,4 +98,4 @@
         };
 
     }());
-})(window);
+})(window, window.chanakya.Map);

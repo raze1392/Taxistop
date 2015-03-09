@@ -1,7 +1,61 @@
 (function(w, a, crypto, utils) {
     w.chanakya = w.chanakya || {};
     w.chanakya.user = (function() {
-        
+
+        var userInfo;
+
+        var setUserInfo = function(hash) {
+            utils.fire.child("users").child(hash).on("value", function(user) {
+                var info = user.val();
+                if (info.ratesauth && (info.ratesauth.expires > ((new Date()).getTime() / 1000))) {
+                    userInfo = info;
+                } else {
+                    var ratesAuth = utils.ratesfire.getAuth(),
+                        token = utils.ratesfire.getAuth().token,
+                        expires = utils.ratesfire.getAuth().expires;
+                    if (ratesAuth && (expires > ((new Date()).getTime() / 1000))) {
+                        setUserInfoObject(hash, info, ratesAuth);
+                    } else {
+                        getRatesAuth(hash, info);
+                    }
+                }
+            }, function(errorObject) {
+                userInfo = undefined;
+            });
+        }
+
+        var ratesFailed = 0;
+        var getRatesAuth = function(hash, info) {
+            utils.ratesfire.authAnonymously(function(error, ratesAuth) {
+                console.log("Authenticating for rates");
+                if (error) {
+                    if (ratesFailed > 5) {
+                        console.log("Authenticating for rates has failed 5 time. Reload or try again.");
+                    } else {
+                        ratesFailed++;
+                        getRatesAuth(info);
+                        console.log("Rates Login Failed!", error);
+                    }
+                } else {
+                    setUserInfoObject(hash, info, ratesAuth);
+                }
+            });
+        }
+
+        function setUserInfoObject(hash, info, ratesAuth) {
+            userInfo = info;
+            userInfo.ratesauth = {
+                token: ratesAuth.token,
+                expires: ratesAuth.expires
+            };
+            utils.fire.child("users").child(hash).child('ratesauth').child('token').set(ratesAuth.token);
+            utils.fire.child("users").child(hash).child('ratesauth').child('expires').set(ratesAuth.expires);
+        }
+
+        var getUserInfo = function() {
+            return userInfo;
+        }
+
         function getName(authData) {
             switch (authData.provider) {
                 case 'password':
@@ -44,6 +98,7 @@
             utils.fire.child("users").child(hash).child(authData.provider).set({
                 uid: authData.uid
             });
+            setUserInfo(hash);
             location.path('/app');
         };
 
@@ -156,6 +211,8 @@
             }
         };
         return {
+            info: getUserInfo,
+            setUserInfo: setUserInfo,
             saveAuth: saveAuth,
             register: register,
             login: login,

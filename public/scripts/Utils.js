@@ -1,17 +1,17 @@
-(function(w, a, crypto) {
+(function(w, crypto) {
     w.chanakya = w.chanakya || {};
     w.chanakya.utils = (function() {
 
         var encryptOLAPassword = function(password) {
             password += '|';
 
-            var key = CryptoJS.enc.Utf8.parse("PRODKEYPRODKEY12");
-            var iv = CryptoJS.enc.Utf8.parse("");
-            var encrypted = CryptoJS.AES.encrypt(password, key, {
+            var key = crypto.enc.Utf8.parse("PRODKEYPRODKEY12");
+            var iv = crypto.enc.Utf8.parse("");
+            var encrypted = crypto.AES.encrypt(password, key, {
                 iv: iv
             });
 
-            return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+            return encrypted.ciphertext.toString(crypto.enc.Base64);
         };
 
         var mobilecheck = function() {
@@ -82,6 +82,7 @@
 
         return {
             fire: new Firebase("https://vivid-inferno-8339.firebaseio.com"),
+            ratesfire: new Firebase("https://taxistop-rates.firebaseio.com"),
             cookie: cookie,
             encryptOLAPassword: encryptOLAPassword,
             mobilecheck: mobilecheck,
@@ -89,7 +90,7 @@
             validateEmail: validateEmail
         };
     }());
-})(window, angular, CryptoJS);
+})(window, CryptoJS);
 
 function _l(str) {
     return str.toLowerCase();
