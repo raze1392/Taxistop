@@ -1,16 +1,16 @@
 var express = require('express');
 var Firebase = require("firebase");
 var FirebaseTokenGenerator = require("firebase-token-generator");
-var globals = require(__dirname + '/../modules/globals');
-var logger = require(__dirname + '/../modules/log');
+var globals = require(__dirname + '/../modules/helpers/globals');
+var logger = require(__dirname + '/../modules/helpers/log');
 
 var router = express.Router();
 
 var cabServiceModules = {
-    ola: require('../modules/ola'),
-    tfs: require('../modules/tfs'),
-    uber: require('../modules/uber'),
-    meru: require('../modules/meru'),
+    ola: require('../modules/login/ola'),
+    tfs: require('../modules/login/tfs'),
+    uber: require('../modules/login/uber'),
+    meru: require('../modules/login/meru'),
 }
 
 router.post('/', function(request, response) {

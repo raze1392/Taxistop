@@ -1,24 +1,6 @@
-var request = require(__dirname + '/../modules/request');
-var logger = require(__dirname + '/../modules/log');
-
-var UBER = {};
-UBER.options = {
-    host: 'api.uber.com',
-    port: 443,
-    method: 'GET',
-    path: ''
-};
-
-function buildEstimateURL(latitude, longitude, userId) {
-    var url = '/v1/estimates/time?server_token=RQ28hrjOR39zq2w5sof9xiTHolQ_z9t4n5T2etHP';
-
-    if (latitude && longitude) {
-        url += '&start_latitude=' + latitude + '&start_longitude=' + longitude
-    }
-
-    //console.log('UBER Estimate API url :: ' + UBER.options.host + url);
-    return url;
-}
+var request = require(__dirname + '/../helpers/request');
+var logger = require(__dirname + '/../helpers/log');
+var UBER = require(__dirname + '/../common/uber');
 
 function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId) {
     var url = '/v1/estimates/price?server_token=RQ28hrjOR39zq2w5sof9xiTHolQ_z9t4n5T2etHP';
@@ -32,7 +14,7 @@ function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, u
     return url;
 }
 
-function parseCabsResponse(type, response) {
+function parseResponse(response) {
     var output = {
         status: response ? "success" : "failure",
         service: 'UBER',
@@ -41,20 +23,7 @@ function parseCabsResponse(type, response) {
     }
 
     try {
-        if (type === 'estimate' && response && response.times) {
-            output.cabsEstimate = [];
-
-            for (var i = 0; i < response.times.length; i++) {
-                var _cEst = {
-                    name: response.times[i].localized_display_name,
-                    available: true,
-                    duration: parseFloat(response.times[i].estimate / 60).toFixed(2),
-                    distance: null,
-                    type: 'UBER'
-                }
-                output.cabsEstimate.push(_cEst);
-            }
-        } else if (type === 'price' && response.prices) {
+        if (response.prices) {
             output.prices = [];
 
             for (var i = 0; i < response.prices.length; i++) {
@@ -78,23 +47,12 @@ function parseCabsResponse(type, response) {
     return output;
 }
 
-exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
-    UBER.options.path = buildEstimateURL(latitude, longitude, userId);
-
-    request.getJSON(UBER.options, function(statusCode, result) {
-        if (shouldParseData) {
-            result = parseCabsResponse('estimate', result);
-        }
-        responseHandler(response, result);
-    });
-}
-
 exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData, userId) {
     UBER.options.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
 
     request.getJSON(UBER.options, function(statusCode, result) {
         if (shouldParseData && result) {
-            result = parseCabsResponse('price', result);
+            result = parseResponse(result);
         }
         responseHandler(response, result);
     });

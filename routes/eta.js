@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var googleDistance = require('../modules/googleDistance');
+var googleDistance = require('../modules/helpers/googleDistance');
 
 router.get('/', function(request, response) {
     var srcLocation = {

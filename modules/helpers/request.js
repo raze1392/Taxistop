@@ -4,7 +4,7 @@
  */
 var http = require("http");
 var https = require("https");
-var logger = require(__dirname + '/../modules/log');
+var logger = require(__dirname + '/../helpers/log');
 
 /**
  * getJSON: REST get request returning JSON object(s)
