@@ -1,4 +1,4 @@
-(function(w, a, crypto, utils) {
+(function(w, a, crypto, utils, undefined) {
     w.chanakya = w.chanakya || {};
     w.chanakya.user = (function() {
 
@@ -146,6 +146,7 @@
         };
 
         var logout = function(location) {
+            userInfo = undefined;
             utils.fire.unauth();
             utils.cookie.erase('user');
             utils.cookie.erase('loginClicked');

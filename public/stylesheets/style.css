@@ -5,6 +5,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 body {
     line-height: 1;
+    background-color: #323B55;
+    background-image: -webkit-linear-gradient(bottom, #323B55 0%, #424F71 100%);
+    background-image: -moz-linear-gradient(bottom, #323B55 0%, #424F71 100%);
+    background-image: -o-linear-gradient(bottom, #323B55 0%, #424F71 100%);
+    background-image: -ms-linear-gradient(bottom, #323B55 0%, #424F71 100%);
+    background-image: linear-gradient(bottom, #323B55 0%, #424F71 100%);
 }
 ol, ul {
     list-style: none;
@@ -161,20 +167,6 @@ html, body, #map-canvas {
 #container {
     height: 100%;
     width: 100%;
-}
-#login-background {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -99;
-    background-color: #323B55;
-    background-image: -webkit-linear-gradient(bottom, #323B55 0%, #424F71 100%);
-    background-image: -moz-linear-gradient(bottom, #323B55 0%, #424F71 100%);
-    background-image: -o-linear-gradient(bottom, #323B55 0%, #424F71 100%);
-    background-image: -ms-linear-gradient(bottom, #323B55 0%, #424F71 100%);
-    background-image: linear-gradient(bottom, #323B55 0%, #424F71 100%);
 }
 a {
     color: #00B7FF;

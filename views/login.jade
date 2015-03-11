@@ -2,6 +2,7 @@ div#login-background
 div
   i#page-spinner.fa.fa-cog.fa-spin(ng-hide="!showLogin ? false : loaded && !actionDisabled")
 div#login(
+  ng-controller="ChanakyaLoginCtrl"
   ng-class="{'social': false && social}" 
   ng-hide="!showLogin ? true : !loaded || actionDisabled"
 )

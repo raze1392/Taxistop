@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  div#container(ng-view)
+  div#container(ui-view)
 
   if isProd
     script(src='build/app.js' defer)

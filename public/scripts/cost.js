@@ -2,7 +2,7 @@
  * @Author: Abhinav Kushwaha <akush2007@gmail.com>
  *
  */
-(function(w, $, crypto) {
+(function(w, $, crypto, undefined) {
     w.chanakya = w.chanakya || {};
     w.chanakya.cost = (function() {
         var rates = {};

@@ -1,22 +1,42 @@
-(function(w, a, crypto, utils, map, user) {
-    var app = a.module('chanakyaApp', ['ngSanitize', 'ngRoute', 'firebase']);
+(function(w, a, crypto, utils, map, user, undefined) {
+    var app = a.module('chanakyaApp', ['ngSanitize', 'ui.router', 'firebase']);
 
-    app.config(['$routeProvider',
-        function($routeProvider) {
-            $routeProvider.
-            when('/login', {
-                templateUrl: 'login.html',
-                controller: 'ChanakyaLoginCtrl'
-            }).
-            when('/app', {
-                templateUrl: 'content.html',
-                controller: 'ChanakyaMainCtrl'
-            }).
-            otherwise({
-                redirectTo: '/app'
+    app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise("/app/now");
+        $urlRouterProvider.when("/app", "/app/now");
+
+        $stateProvider
+            .state('login', {
+                url: "/login",
+                templateUrl: "login.html"
+            })
+            .state('app', {
+                url: "/app",
+                templateUrl: "content.html",
+                abstract: true,
+                data: {
+                    selectedTab: 'sent'
+                }
+            })
+            .state('app.profile', {
+                url: "/profile",
+                data: {
+                    selectedTab: 'profile'
+                }
+            })
+            .state('app.now', {
+                url: "/now",
+                data: {
+                    selectedTab: 'now'
+                }
+            })
+            .state('app.later', {
+                url: "/later",
+                data: {
+                    selectedTab: 'later'
+                }
             });
-        }
-    ]).run(['$rootScope', '$location',
+    }]).run(['$rootScope', '$location',
         function($rootScope, $location) {
             $rootScope.$on("$routeChangeStart", function(event, next, current) {
                 if (!utils.fire.getAuth()) {
@@ -129,7 +149,6 @@
                 }
             }
             user.setUserInfo(utils.cookie.get('user'));
-            console.log(user.info());
 
             $scope.source = {
                 lat: undefined,
