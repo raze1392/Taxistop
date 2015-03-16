@@ -36,7 +36,7 @@
         };
 
         var Storage = (function() {
-            var store = (typeof(Storage) !== "undefined") ? "localStorage" : "cookie"
+            var store = (typeof(Storage) !== "undefined") ? "localStorage" : "cookie";
             var set = function(key, value) {
                 if (typeof(value) !== "string" || typeof(value) !== "number")
                     value = JSON.stringify(value);

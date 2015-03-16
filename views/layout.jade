@@ -14,6 +14,9 @@ html(ng-app='chanakyaApp')
     link(rel='stylesheet', href='//akush.github.io/taxistop/styles/social-btn.css')
     if isProd
         link(rel='stylesheet', href='/build/style.css')
+        script.
+            window.console = {};
+            console.log = console.debug = console.error = function(){};
     else
         link(rel='stylesheet', href='/stylesheets/style.css')
 

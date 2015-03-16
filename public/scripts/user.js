@@ -23,7 +23,7 @@
             }, function(errorObject) {
                 userInfo = undefined;
             });
-        }
+        };
 
         var ratesFailed = 0;
         var getRatesAuth = function(hash, info) {
@@ -41,7 +41,7 @@
                     setUserInfoObject(hash, info, ratesAuth);
                 }
             });
-        }
+        };
 
         function setUserInfoObject(hash, info, ratesAuth) {
             userInfo = info;
@@ -65,7 +65,7 @@
 
         var getUserInfo = function() {
             return userInfo;
-        }
+        };
 
         function getName(authData) {
             switch (authData.provider) {

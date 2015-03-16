@@ -186,7 +186,7 @@
             $scope.optionAction = function(option) {
                 option.open = true;
                 option.action();
-            }
+            };
 
             $scope.source = {
                 lat: undefined,

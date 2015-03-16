@@ -335,12 +335,12 @@
         };
 
         var resizeMap = function(height) {
-            var height = (parseInt(height) ? height : (height.split('px')[0] ? height.split('px')[0] : -1));
+            height = (parseInt(height) ? height : (height.split('px')[0] ? height.split('px')[0] : -1));
             chanakya.Map._Details.map_container.style.height = ((height == -1) ? "100%" : height + "px");
             // map canvas hick since it was getting a position of relative which was causing the div to collapse;
             chanakya.Map._Details.map_container.style.position = "fixed";
             google.maps.event.trigger(chanakya.Map.getMap(), "resize");
-        }
+        };
 
         return {
             _Details: Details,

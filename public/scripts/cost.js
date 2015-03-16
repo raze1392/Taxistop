@@ -23,7 +23,7 @@
                 url: "https://taxistop-rates.firebaseio.com/cities/" + city + ".json?auth=" + token,
                 jsonp: "updateCity",
                 success: function(cityCode) {
-                    if (cityCode == null) {
+                    if (cityCode === null) {
                         console.log("City not supported.");
                     } else if (rates.hasOwnProperty(cityCode)) {
                         console.log('Already fetched.');
@@ -55,7 +55,7 @@
 
         var getRates = function() {
             return currentCity ? rates[cityCodes[currentCity]] : {};
-        }
+        };
 
         return {
             calculate: calculate,
