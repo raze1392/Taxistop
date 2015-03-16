@@ -10,7 +10,8 @@ router.get('/', function(req, res) {
 	
     var url = {
         cdnImagePrefix: globals.getCDNUrlPrefix(),
-        gMapsAPI: globals.getGmapsAPI()
+        gMapsAPI: globals.getGmapsAPI(),
+        firebase: globals.getFirebaseUrls()
     };
 
     res.render('index', {

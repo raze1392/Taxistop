@@ -38,8 +38,8 @@ exports.getGmapsAPI = function() {
 exports.getGmapsAPIKeys = function() {
     return GOOGLE_API_KEYS;
 }
-// ================ GMaps APIs =================
 
+// ================ ENV APIs =================
 exports.getAppTitle = function() {
     return APP_TITLE;
 }
@@ -47,4 +47,16 @@ exports.getAppTitle = function() {
 exports.isEnvironmentProduction = function() {
     if (!ENV) return false;
     else return (ENV.toLowerCase() === 'production') ? true : false;
+}
+
+//  ================ Firebase URLs =================
+exports.getFirebaseUrls = function() {
+    var urls = {
+        app: 'https://vivid-inferno-8339.firebaseio.com',
+        rates: 'https://taxistop-rates.firebaseio.com'
+    }
+    if (ENV === 'production') {
+        urls.app = 'https://taxistop.firebaseio.com';
+    }
+    return urls;
 }

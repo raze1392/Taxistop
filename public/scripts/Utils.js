@@ -35,6 +35,50 @@
             return re.test(email);
         };
 
+        var Storage = (function() {
+            var store = (typeof(Storage) !== "undefined") ? "localStorage" : "cookie"
+            var set = function(key, value) {
+                if (typeof(value) !== "string" || typeof(value) !== "number")
+                    value = JSON.stringify(value);
+                if (store === "cookie") {
+                    cookie.create({
+                        name: "chanakya:" + key,
+                        value: value,
+                        days: 365
+                    });
+                } else {
+                    window.localStorage.setItem("chanakya:" + key, value);
+                }
+            };
+
+            var get = function(key) {
+                var value = "";
+                if (store === "cookie")
+                    value = cookie.get("chanakya:" + key);
+                else
+                    value = window.localStorage.getItem("chanakya:" + key);
+                try {
+                    value = JSON.parse(value);
+                } catch (err) {
+                    console.log("Error while parsing:", err);
+                }
+                return value;
+            };
+
+            var remove = function(key) {
+                if (store === "cookie")
+                    value = cookie.erase("chanakya:" + key);
+                else
+                    value = window.localStorage.removeItem("chanakya:" + key);
+            };
+
+            return {
+                set: set,
+                get: get,
+                remove: remove
+            };
+        }());
+
         var cookie = (function() {
             var create = function(options) {
                 // name, value, days, hrs, mins, secs
@@ -49,7 +93,7 @@
                     date.setTime(date.getTime() + (options.mins * 60 * 1000));
                 if (options.secs)
                     date.setTime(date.getTime() + (options.secs * 1000));
-                if (now != date.getTime)
+                if (now != date.getTime())
                     expires = "; expires=" + date.toGMTString();
                 document.cookie = options.name + "=" + options.value + expires + "; path=/";
             };
@@ -81,8 +125,9 @@
         }());
 
         return {
-            fire: new Firebase("https://vivid-inferno-8339.firebaseio.com"),
-            ratesfire: new Firebase("https://taxistop-rates.firebaseio.com"),
+            fire: new Firebase(w.FIREBASE_URLS.app),
+            ratesfire: new Firebase(w.FIREBASE_URLS.rates),
+            Storage: Storage,
             cookie: cookie,
             encryptOLAPassword: encryptOLAPassword,
             mobilecheck: mobilecheck,

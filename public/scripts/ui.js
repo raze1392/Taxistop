@@ -1,5 +1,5 @@
 (function(w, a, crypto, utils, map, user, undefined) {
-    var app = a.module('chanakyaApp', ['ngSanitize', 'ui.router', 'firebase']);
+    var app = a.module('chanakyaApp', ['ngSanitize', 'ui.router', 'ui.bootstrap', 'ui.bootstrap.buttons', 'firebase']);
 
     app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise("/app/now");
@@ -13,10 +13,7 @@
             .state('app', {
                 url: "/app",
                 templateUrl: "content.html",
-                abstract: true,
-                data: {
-                    selectedTab: 'sent'
-                }
+                abstract: true
             })
             .state('app.profile', {
                 url: "/profile",
@@ -35,20 +32,14 @@
                 data: {
                     selectedTab: 'later'
                 }
-            });
-    }]).run(['$rootScope', '$location',
-        function($rootScope, $location) {
-            $rootScope.$on("$routeChangeStart", function(event, next, current) {
-                if (!utils.fire.getAuth()) {
-                    if (next.templateUrl !== "login.html")
-                        $location.path("/login");
-                } else {
-                    if (next.templateUrl !== "content.html")
-                        $location.path("/app");
+            })
+            .state('app.options', {
+                url: "/options",
+                data: {
+                    selectedTab: 'options'
                 }
             });
-        }
-    ]);
+    }]);
 
     app.controller('ChanakyaLoginCtrl', ['$scope', '$rootScope', '$http', '$timeout', '$location', "$firebaseAuth",
         function($scope, $rootScope, $http, $timeout, $location, $firebaseAuth) {
@@ -150,12 +141,25 @@
             }
             user.setUserInfo(utils.cookie.get('user'));
 
+            $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+                // toState.name, toState.data.selectedTab
+                if (toState.data.selectedTab)
+                    $scope.serviceRadio = toState.data.selectedTab;
+            });
+
+            $scope.serviceRadio = window.location.hash.split('/')[2];
+            $scope.$watch('serviceRadio', function(newValue, oldValue) {
+                if (newValue != oldValue) {
+                    $location.path('/app/' + newValue);
+                }
+            });
+
             $scope.source = {
                 lat: undefined,
                 lng: undefined
             };
             $scope.cabs = {
-                selected: 'ola'
+                selected: 'all'
             };
             $scope.loading = true;
             $scope.loadingMsg = "loading...";
@@ -260,7 +264,7 @@
             $scope.typingOn = false;
             $scope.isShownDetails = function() {
                 if (!$scope.isMobile) return true;
-                return !$scope.typingOn;
+                return $scope.serviceRadio != 'now' || !$scope.typingOn;
             };
 
             $scope.clearSource = function() {
@@ -325,7 +329,7 @@
                 }
                 if ($scope.cabs.selected === service && !hard) return;
                 if (!hard)
-                    setMapHeight(($scope.availableTypes[service] > 5 ? 5 : $scope.availableTypes[service]) * 43);
+                    setMapHeight(($scope.availableTypes[service] > 5 ? 5 : $scope.availableTypes[service]) * 43 - 20);
                 $scope.cabs.selected = service;
                 mapNearByCabs();
             };
@@ -357,7 +361,7 @@
 
                 $scope.loading = false;
                 if (!silent) $scope.selectService(service, true);
-                setMapHeight(($scope.availableTypes[$scope.cabs.selected] > 5 ? 5 : $scope.availableTypes[$scope.cabs.selected]) * 43);
+                setMapHeight(($scope.availableTypes[$scope.cabs.selected] > 5 ? 5 : $scope.availableTypes[$scope.cabs.selected]) * 43 - 20);
                 //setMapHeight(0);
             }
 
@@ -365,7 +369,7 @@
                 if (!$scope.isMobile)
                     map_container.style.height = document.body.clientHeight;
                 else if ($scope.availableTypes[$scope.cabs.selected] === 0)
-                    map_container.style.height = ($scope.mapHeight - 25) + "px";
+                    map_container.style.height = ($scope.mapHeight - 20) + "px";
                 else
                     map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
                 google.maps.event.trigger(map.getMap(), "resize");
@@ -394,6 +398,11 @@
                 $scope.loggedIn = utils.fire.getAuth() ? true : false;
                 $scope.isMobile = utils.mobilecheck();
                 $scope.isAndroidApp = utils.androidAppCheck();
+                if (!user.info()) {
+                    user.setUserInfo(utils.cookie.get('user'));
+                } else {
+                    $scope.userInfo = user.info();
+                }
                 if ($scope.isMobile && !$scope.isAndroidApp) {
                     $scope.mapHeight = document.body.clientHeight - (78 + 70);
                     map_container.style.height = $scope.mapHeight + "px";
@@ -493,6 +502,11 @@
                     map.setSource(map.convertLatLngToLocation($scope.newSource.latitude, $scope.newSource.longitude));
                 }
             }
+
+            w.addEventListener('userInfoChanged', function(info) {
+                console.log('setting info');
+                $scope.userInfo = utils.Storage.get('user.info');
+            }, false);
 
             source_container.addEventListener('sourceLocationChanged', function(event) {
                 $scope.typingOn = false;

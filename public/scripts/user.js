@@ -9,10 +9,11 @@
                 var info = user.val();
                 if (info.ratesauth && (info.ratesauth.expires > ((new Date()).getTime() / 1000))) {
                     userInfo = info;
+                    saveUserInfo(userInfo);
                 } else {
                     var ratesAuth = utils.ratesfire.getAuth(),
-                        token = utils.ratesfire.getAuth().token,
-                        expires = utils.ratesfire.getAuth().expires;
+                        token = ratesAuth ? utils.ratesfire.getAuth().token : "",
+                        expires = ratesAuth ? utils.ratesfire.getAuth().expires : 0;
                     if (ratesAuth && (expires > ((new Date()).getTime() / 1000))) {
                         setUserInfoObject(hash, info, ratesAuth);
                     } else {
@@ -50,6 +51,16 @@
             };
             utils.fire.child("users").child(hash).child('ratesauth').child('token').set(ratesAuth.token);
             utils.fire.child("users").child(hash).child('ratesauth').child('expires').set(ratesAuth.expires);
+            saveUserInfo(userInfo);
+        }
+
+        function saveUserInfo(info) {
+            console.log('registering info event');
+            utils.Storage.set("user.info", userInfo);
+            var userInfoChangedEvent = new CustomEvent('userInfoChanged', {
+                details: userInfo
+            });
+            w.dispatchEvent(userInfoChangedEvent);
         }
 
         var getUserInfo = function() {

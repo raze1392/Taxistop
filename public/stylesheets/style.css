@@ -190,7 +190,7 @@ table {
     font-size: 50px;
     color: white;
     left: 50%;
-    top:50%;
+    top: 50%;
     margin-top: -25px;
     margin-left: -25px;
 }
@@ -312,11 +312,10 @@ table {
     -webkit-box-shadow: inset 0px 1px 0px #93a9e9;
     box-shadow: inset 0px 1px 0px #93a9e9;
 }
-#login .alert{
+#login .alert {
     margin-top: 45px;
 }
-
-#login.social .alert{
+#login.social .alert {
     margin-top: 10px;
 }
 #map-canvas {
@@ -473,53 +472,54 @@ table {
     background-color: #f0ad4e;
     margin-right: 5px;
 }
+.full-page {
+    padding: 5px;
+    top: 10px;
+    position: fixed;
+    bottom: 70px;
+    left: 10px;
+    right: auto;
+    background-color: #f7f7f7;
+    width: 330px;
+    display: flex;
+}
+.full-page.show-inputs {
+    top: 90px;
+}
+.page-section {
+    padding: 13px 24px 0px;
+    width: 100%;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+.page-section .avatar {
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.page-section .avatar img {
+    width: 120px;
+    border-radius: 50%;
+}
+.page-section .info {
+    margin-left: auto;
+    margin-right: auto;
+}
 #services {
+    padding: 10px;
     background: white;
     -webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
     box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
 }
-#services table tr td {
-    text-align: center;
-    padding: 8px 2px;
+.btn {
+    outline: none !important;
 }
-#services hr {
-    position: absolute;
-    top: 50%;
-}
-#services table tr td div {
-    cursor: pointer;
-    border: 1px solid #aaa;
-    padding: 5px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin: 0 auto;
-    background-color: #efefef;
-    outline: none;
-    height: 50px;
-    width: 50px;
-}
-#services table tr td div:active {} #services table tr td div.active {
-    background-color: #aaa;
-}
-#services table tr td div img {
-    display: block;
-    margin: 4px auto;
-    height: 30px;
-    margin-bottom: -4px;
-    border-radius: 5px;
-}
-#services table tr td div span {
-    font-size: 10px;
-    display: none;
-}
-#types {
-    border-top: 1px solid #ccc;
-}
-#types {
-    display: none;
-    height: 40px;
+.btn-circle {
+    border-radius: 50px;
 }
 #title {
     position: fixed;
@@ -554,7 +554,7 @@ table {
     position: absolute;
     right: 36px;
     bottom: 90px;
-    padding: 5px 5px 2px;
+    padding: 2px 2px 2px 6px;
     background: #efefef;
     border-radius: 50%;
     border: 1px solid #777;
@@ -562,6 +562,21 @@ table {
     height: 35px;
     cursor: pointer;
     box-shadow: 1px 1px 5px;
+    font-size: 25px;
+}
+#refresh {
+    position: absolute;
+    right: 36px;
+    bottom: 130px;
+    padding: 2px 2px 2px 6px;
+    background: #efefef;
+    border-radius: 50%;
+    border: 1px solid #777;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    box-shadow: 1px 1px 5px;
+    font-size: 25px;
 }
 hr {
     display: block;
@@ -571,10 +586,37 @@ hr {
     margin: 0.1em 0;
     padding: 0;
 }
+/* Fix for Bootstrap 3 with Angular UI Bootstrap */
+
+.modal {
+    display: block;
+}
+/* Custom dialog/modal headers */
+
+.dialog-header-error {
+    background-color: #d2322d;
+}
+.dialog-header-wait {
+    background-color: #428bca;
+}
+.dialog-header-notify {
+    background-color: #eeeeee;
+}
+.dialog-header-confirm {
+    background-color: #333333;
+}
+.dialog-header-error span, .dialog-header-error h4, .dialog-header-wait span, .dialog-header-wait h4, .dialog-header-confirm span, .dialog-header-confirm h4 {
+    color: #ffffff;
+}
+/* Ease Display */
+
+.pad {
+    padding: 25px;
+}
 @media screen and (max-width: 480px) {
     #map-canvas {
         position: fixed;
-        top: 78px;
+        top: 75px;
     }
     #title {
         top: 95px;
@@ -594,8 +636,18 @@ hr {
         width: 32px;
         right: 23px;
         top: 140px;
-        padding: 5px 5px 2px;
+        padding: 3px 6px 2px;
         height: 32px;
+        font-size: 21px;
+    }
+    #refresh {
+        bottom: auto;
+        width: 32px;
+        right: 23px;
+        top: 182px;
+        padding: 3px 6px 2px;
+        height: 32px;
+        font-size: 21px;
     }
     #gps img {
         height: 20px;
@@ -616,10 +668,24 @@ hr {
     }
     #details {
         margin-bottom: -5px;
-        border-bottom: 1px solid #aaa;
         padding: 0;
         height: auto;
         max-height: 215px;
+        border-top: 1px solid #aaa;
+    }
+    #services {
+        border-top: 1px solid #aaa;
+    }
+    .full-page {
+        top: 0;
+        bottom: 55px;
+        left: 0;
+        right: 0;
+        width: auto;
+    }
+    .full-page.show-inputs {
+        top: 75px;
+        border-top: 1px solid #aaa;
     }
     .mask-image {
         display: none !important;
