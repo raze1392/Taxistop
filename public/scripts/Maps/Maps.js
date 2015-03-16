@@ -33,6 +33,7 @@
     w.chanakya.Map = (function() {
         var Details = {
             map: null,
+            map_container: null,
             places: null,
             infoWindow: null,
             directionsService: null,
@@ -77,6 +78,8 @@
         };
 
         var initializeMaps = function(element, sourceElem, destinationElem, location) {
+            chanakya.Map._Details.map_container = element;
+
             // Initializing Maps, Place and Direction Services
             var mapOptions = {
                 center: location,
@@ -331,6 +334,14 @@
             return chanakya.Map._Details.map;
         };
 
+        var resizeMap = function(height) {
+            var height = (parseInt(height) ? height : (height.split('px')[0] ? height.split('px')[0] : -1));
+            chanakya.Map._Details.map_container.style.height = ((height == -1) ? "100%" : height + "px");
+            // map canvas hick since it was getting a position of relative which was causing the div to collapse;
+            chanakya.Map._Details.map_container.style.position = "fixed";
+            google.maps.event.trigger(chanakya.Map.getMap(), "resize");
+        }
+
         return {
             _Details: Details,
             getMap: getMap,
@@ -356,7 +367,8 @@
             clearResults: clearResults,
             getSourceLatitude: getSourceLatitude,
             getSourceLongitude: getSourceLongitude,
-            convertLatLngToLocation: convertLatLngToLocation
+            convertLatLngToLocation: convertLatLngToLocation,
+            resize: resizeMap
         };
 
     }());

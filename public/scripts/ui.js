@@ -401,12 +401,11 @@
 
             function setMapHeight(lessHeight) {
                 if (!$scope.isMobile)
-                    map_container.style.height = document.body.clientHeight;
+                    map.resize(document.body.clientHeight);
                 else if ($scope.availableTypes[$scope.cabs.selected] === 0)
-                    map_container.style.height = ($scope.mapHeight - 20) + "px";
+                    map.resize($scope.mapHeight - 20);
                 else
-                    map_container.style.height = ($scope.mapHeight - lessHeight) + "px";
-                google.maps.event.trigger(map.getMap(), "resize");
+                    map.resize($scope.mapHeight - lessHeight);
 
                 if (map.existsSource() && map.existsDestination()) return;
                 map.getMap().setCenter(map.getSource().location);
