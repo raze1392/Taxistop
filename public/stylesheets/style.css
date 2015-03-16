@@ -318,6 +318,66 @@ table {
 #login.social .alert {
     margin-top: 10px;
 }
+.full-page {
+    padding: 5px;
+    top: 10px;
+    position: fixed;
+    bottom: 70px;
+    left: 10px;
+    right: auto;
+    background-color: #f7f7f7;
+    width: 330px;
+    display: flex;
+}
+.full-page.show-inputs {
+    top: 90px;
+}
+#options {
+    padding: 0;
+    padding-top: 55px;
+}
+.navbar-header {
+    background-color: #2e6da4;
+}
+.navbar-default .navbar-brand {
+    padding: 7px;
+}
+.navbar-brand>img {
+    height: 2em;
+    float: left;
+}
+.navbar-brand>h4 {
+    float: left;
+    color: white;
+    padding-left: 10px;
+    font-size: 1.25em;
+    margin-top: 5px;
+    font-weight: bold;
+}
+#options accordion {
+    width: 100%;
+}
+#options .panel {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+}
+#options .panel-group .panel {
+    border-radius: 0;
+}
+#options .panel-group .panel+.panel {
+    margin-top: 0;
+}
+#options .panel-default>.panel-heading {
+    cursor: pointer;
+}
+#options .panel-title>a:hover, .panel-title>a:active, .panel-title>a:focus {
+    text-decoration: none !important;
+    outline: none !important;
+}
+#options .no-body .panel-collapse {
+    display: none;
+}
 #map-canvas {
     position: fixed;
     top: 0;
@@ -472,20 +532,6 @@ table {
     background-color: #f0ad4e;
     margin-right: 5px;
 }
-.full-page {
-    padding: 5px;
-    top: 10px;
-    position: fixed;
-    bottom: 70px;
-    left: 10px;
-    right: auto;
-    background-color: #f7f7f7;
-    width: 330px;
-    display: flex;
-}
-.full-page.show-inputs {
-    top: 90px;
-}
 .page-section {
     padding: 13px 24px 0px;
     width: 100%;
@@ -500,20 +546,30 @@ table {
     overflow: hidden;
 }
 .page-section .avatar img {
-    width: 120px;
+    width: 8em;
+    height: 8em;
     border-radius: 50%;
 }
 .page-section .info {
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+}
+.page-section .info h4 {
+    margin-bottom: 2px;
+}
+.page-section .info span {
+    display: block;
+    color: #777;
+    font-size: 0.8em;
 }
 #services {
     padding: 10px;
-    background: white;
     -webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
     box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
     z-index: 9999;
+    background-color: #EAE8E7;
 }
 .btn {
     outline: none !important;
@@ -552,8 +608,8 @@ table {
 }
 #gps {
     position: absolute;
-    right: 36px;
-    bottom: 90px;
+    right: 30px;
+    bottom: 30px;
     padding: 2px 2px 2px 6px;
     background: #efefef;
     border-radius: 50%;
@@ -566,8 +622,8 @@ table {
 }
 #refresh {
     position: absolute;
-    right: 36px;
-    bottom: 130px;
+    right: 30px;
+    bottom: 85px;
     padding: 2px 2px 2px 6px;
     background: #efefef;
     border-radius: 50%;
@@ -634,8 +690,8 @@ hr {
     #gps {
         bottom: auto;
         width: 32px;
-        right: 23px;
-        top: 140px;
+        right: 11px;
+        top: 85px;
         padding: 3px 6px 2px;
         height: 32px;
         font-size: 21px;
@@ -643,8 +699,8 @@ hr {
     #refresh {
         bottom: auto;
         width: 32px;
-        right: 23px;
-        top: 182px;
+        right: 11px;
+        top: 130px;
         padding: 3px 6px 2px;
         height: 32px;
         font-size: 21px;

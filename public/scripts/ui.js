@@ -1,5 +1,5 @@
 (function(w, a, crypto, utils, map, user, undefined) {
-    var app = a.module('chanakyaApp', ['ngSanitize', 'ui.router', 'ui.bootstrap', 'ui.bootstrap.buttons', 'firebase']);
+    var app = a.module('chanakyaApp', ['ngSanitize', 'ui.router', 'ui.bootstrap', 'firebase']);
 
     app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise("/app/now");
@@ -143,7 +143,7 @@
 
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
                 // toState.name, toState.data.selectedTab
-                if (toState.data.selectedTab)
+                if (toState.data && toState.data.selectedTab)
                     $scope.serviceRadio = toState.data.selectedTab;
             });
 
@@ -153,6 +153,40 @@
                     $location.path('/app/' + newValue);
                 }
             });
+
+            $scope.optionList = [{
+                id: 'about',
+                title: 'About',
+                content: "TaxiStop is aggrigator of cab aggrigators",
+                open: true,
+                action: function() {}
+            },{
+                id: 'coupons',
+                title: 'Coupons',
+                content: "here are the coupons",
+                action: function() {}
+            },{
+                id: 'share',
+                abstract: true,
+                title: 'Share',
+                action: function() {
+                    $scope.promoteApp('share');
+                }
+            }, {
+                id: 'like',
+                abstract: true,
+                title: 'Like',
+                action: function() {
+                    $scope.promoteApp('like');
+                }
+            }];
+
+            $scope.options = {};
+            $scope.options.opened = "";
+            $scope.optionAction = function(option) {
+                option.open = true;
+                option.action();
+            }
 
             $scope.source = {
                 lat: undefined,
@@ -289,7 +323,7 @@
             $scope.promoteApp = function(promotion) {
                 if ($scope.isAndroidApp && promotion) {
                     Android.promoteTaxiStop(promotion);
-                } else if (promotion == "like") {
+                } else if (promotion === "like" || promotion === "share") {
                     window.open('//bit.ly/TaxiStop');
                 }
             };
