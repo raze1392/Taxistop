@@ -28,6 +28,7 @@ var logger = new(winston.Logger)({
             colorize: true,
             timestamp: true
         }),
+        /*
         new winston.transports.File ({
             name: 'TaxiStop Info',
             level: "info",
@@ -43,7 +44,7 @@ var logger = new(winston.Logger)({
         new winston.transports.File ({
             name: 'TaxiStop Access',
             level: "access",
-            filename: __dirname + '/../logs/access.log',
+            //filename: __dirname + '/../logs/access.log',
             handleExceptions: true,
             json: true,
             maxsize: 5242880, //5MB
@@ -51,22 +52,25 @@ var logger = new(winston.Logger)({
             colorize: true,
             timestamp: true,
             tailable: true
+        }),
+        new(winston.transports.DailyRotateFile)({
+            name: 'file',
+            datePattern: '.yyyy-MM-ddT',
+            filename: "log_file.log"
         })
-        // new(winston.transports.DailyRotateFile)({
-        //     name: 'file',
-        //     datePattern: '.yyyy-MM-ddT',
-        //     filename: "log_file.log"
-        // })
+        */
     ],
     exceptionHandlers: [
         new(winston.transports.Console)({
             json: false,
             timestamp: true
         }),
+        /*
         new(winston.transports.File)({
             filename: __dirname + '/exceptions.log',
             json: false
         })
+        */
     ],
     exitOnError: false
 });

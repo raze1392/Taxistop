@@ -2,8 +2,8 @@ var request = require(__dirname + '/../helpers/request');
 var logger = require(__dirname + '/../helpers/log');
 var OLA = require(__dirname + '/../common/ola');
 
-function buildURL(latitude, longitude, userId) {
-    var url = '/v3/cab/info?accuracy=15.0&speed=0.0&altitude=0.0&location_type=CUSTOM&selected_by=USER&enable_auto=true&enable_delivery=true';
+function buildURL(latitude, longitude, userId) {     
+    var url = '/v3/cab/info?enable_new_state=true&accuracy=15.0&altitude=0.0&location_type=CUSTOM&selected_by=USER&enable_auto=true&enable_delivery=true';
 
     if (latitude && longitude) {
         url += '&custom_lat=' + latitude + '&custom_lng=' + longitude
@@ -12,13 +12,13 @@ function buildURL(latitude, longitude, userId) {
     if (userId) {
         url += '&user_id=' + userId;
     } else {
-        url += '&user_id=YjTgq%2F3vNPAVbf63OC3e%2FT3AYM8iYAZ5U9MZQ9NvX93iZrnhHJpmjq%2B9qvkL%0Ae5xkBh41YoCrbExGknVr2%2BSwUg%3D%3D%0A++++';
+        url += '&user_id=' + OLA.options.userId;
     }
 
     url += '&cab_category=[economy_sedan,compact,luxury_sedan,pink,local_auto]';
     url += '&fix_time=' + new Date().getTime();
 
-    //console.log('OLA API url :: ' + OLA.options.host + url);
+    console.log('OLA API url :: ' + OLA.options.host + url);
     return url;
 }
 

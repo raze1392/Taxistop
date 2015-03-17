@@ -8,7 +8,7 @@ function buildPriceURL(userId) {
     if (userId) {
         url += '&user_id=' + userId;
     } else {
-        url += '&user_id=YjTgq%2F3vNPAVbf63OC3e%2FT3AYM8iYAZ5U9MZQ9NvX93iZrnhHJpmjq%2B9qvkL%0Ae5xkBh41YoCrbExGknVr2%2BSwUg%3D%3D%0A++++';
+        url += '&user_id=' + OLA.options.userId;
     }
 
     return url;

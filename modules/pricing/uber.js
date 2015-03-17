@@ -3,7 +3,7 @@ var logger = require(__dirname + '/../helpers/log');
 var UBER = require(__dirname + '/../common/uber');
 
 function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId) {
-    var url = '/v1/estimates/price?server_token=RQ28hrjOR39zq2w5sof9xiTHolQ_z9t4n5T2etHP';
+    var url = '/v1/estimates/price?server_token=' + UBER.options.serverToken;
 
     if (srcLatitude && srcLongitude && destLatitude && destLongitude) {
         url += '&start_latitude=' + srcLatitude + '&start_longitude=' + srcLongitude;

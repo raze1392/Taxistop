@@ -3,7 +3,7 @@ var logger = require(__dirname + '/../helpers/log');
 var UBER = require(__dirname + '/../common/uber');
 
 function buildURL(latitude, longitude, userId) {
-    var url = '/v1/estimates/time?server_token=RQ28hrjOR39zq2w5sof9xiTHolQ_z9t4n5T2etHP';
+    var url = '/v1/estimates/time?server_token=' + UBER.options.serverToken;
 
     if (latitude && longitude) {
         url += '&start_latitude=' + latitude + '&start_longitude=' + longitude

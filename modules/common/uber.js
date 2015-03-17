@@ -4,7 +4,8 @@ UBER.options = {
     host: 'api.uber.com',
     port: 443,
     method: 'GET',
-    path: ''
+    path: '',
+    serverToken: 'RQ28hrjOR39zq2w5sof9xiTHolQ_z9t4n5T2etHP'
 };
 
 module.exports = UBER;
