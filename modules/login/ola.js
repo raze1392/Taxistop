@@ -30,7 +30,7 @@ function parseLoginResponse(response, status, userCookie) {
     try {
         output.userId = response.user_id;
         output.referralCode = response.referral_code;
-        output.olaMoney = response.ola_money_balance;
+        output.walletAmount = response.ola_money_balance;
 
         //var ref = new Firebase('https://flickering-inferno-5036.firebaseio.com');    
     } catch (ex) {

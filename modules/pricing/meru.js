@@ -17,8 +17,7 @@ function parseResponse(response) {
     var output = {
         status: response ? "success" : "failure",
         service: 'MERU',
-        cabs: {},
-        cabsEstimate: []
+        prices: []
     }
 
     try {
