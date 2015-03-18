@@ -157,15 +157,17 @@
             $scope.optionList = [{
                 id: 'about',
                 title: 'About',
-                content: "TaxiStop is aggrigator of cab aggrigators",
-                open: true,
-                action: function() {}
-            },{
+                content: "<p>Check available taxis and cabs in your area and their prices for making better judgement about travel time and money.</p><p>Currently it checks for Ola, Uber, Taxi for sure and Meru cabs.</p> <p>Click on the cab detail from the list to go to vendor's app to book yourself a ride.</p>",
+                open: false,
+                smallText: true,
+                action: null
+            }, {
                 id: 'coupons',
                 title: 'Coupons',
                 content: "here are the coupons",
-                action: function() {}
-            },{
+                action: null,
+                subAction: true
+            }, {
                 id: 'share',
                 abstract: true,
                 title: 'Share',
@@ -181,11 +183,16 @@
                 }
             }];
 
+            $scope.dummyAction = function() {
+                console.log("dummy");
+            };
+
             $scope.options = {};
             $scope.options.opened = "";
             $scope.optionAction = function(option) {
                 option.open = true;
-                option.action();
+                if (option.action)
+                    option.action();
             };
 
             $scope.source = {
@@ -246,7 +253,7 @@
 
             $scope.getArrivalTime = function(cab) {
                 if (cab.available)
-                    return "Arrives in " + Math.floor(cab.duration) + " mins";
+                    return Math.floor(cab.duration) + " mins away";
                 return "Not available";
             };
 
