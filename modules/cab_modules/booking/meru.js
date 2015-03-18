@@ -1,6 +1,6 @@
-var request = require(__dirname + '/../helpers/request');
-var logger = require(__dirname + '/../helpers/log');
-var TFS = require(__dirname + '/../common/tfs');
+var request = require(__dirname + '/../../helpers/request');
+var logger = require(__dirname + '/../../helpers/log');
+var MERU = require(__dirname + '/../common/meru');
 
 // TODO
 function buildBookingURL(userId, latitude, longitude, address, carType) {
@@ -8,8 +8,8 @@ function buildBookingURL(userId, latitude, longitude, address, carType) {
     url += '&user_id=' + userId;
     url += '&lat=' + latitude + '&lng=' + longitude
     url += '&fix_time=' + new Date().getTime();
-    for (key in TFS.Taxi_Name_Map) {
-        if (TFS.Taxi_Name_Map[key].toLowerCase() == carType) {
+    for (key in MERU.Taxi_Name_Map) {
+        if (MERU.Taxi_Name_Map[key].toLowerCase() == carType) {
             url += '&category_id=' + key;
             break;
         }
@@ -37,7 +37,7 @@ function buildCancelBookingURL(userId, bookingId, reason) {
 function parseBookingResponse(type, response, status) {
     var output = {
         status: response ? "success" : "failure",
-        service: 'TFS'
+        service: 'MERU'
     };
 
     if (type == 'create') {
@@ -60,9 +60,9 @@ function parseBookingResponse(type, response, status) {
 }
 
 exports.createBooking = function(responseHandler, response, userId, latitude, longitude, address, carType, shouldParseData) {
-    TFS.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+    MERU.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
 
-    request.getJSON(TFS.options, function(statusCode, result) {
+    request.getJSON(MERU.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('create', result, result.status);
@@ -72,9 +72,9 @@ exports.createBooking = function(responseHandler, response, userId, latitude, lo
 }
 
 exports.cancelBooking = function(responseHandler, response, userId, bookingId, shouldParseData, reason) {
-    TFS.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+    MERU.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
 
-    request.getJSON(TFS.options, function(statusCode, result) {
+    request.getJSON(MERU.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('cancel', result, result.status);

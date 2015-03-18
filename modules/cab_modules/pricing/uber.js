@@ -1,5 +1,5 @@
-var request = require(__dirname + '/../helpers/request');
-var logger = require(__dirname + '/../helpers/log');
+var request = require(__dirname + '/../../helpers/request');
+var logger = require(__dirname + '/../../helpers/log');
 var UBER = require(__dirname + '/../common/uber');
 
 function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId) {

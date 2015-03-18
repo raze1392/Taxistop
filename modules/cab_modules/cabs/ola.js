@@ -1,5 +1,5 @@
-var request = require(__dirname + '/../helpers/request');
-var logger = require(__dirname + '/../helpers/log');
+var request = require(__dirname + '/../../helpers/request');
+var logger = require(__dirname + '/../../helpers/log');
 var OLA = require(__dirname + '/../common/ola');
 
 function buildURL(latitude, longitude, userId) {     

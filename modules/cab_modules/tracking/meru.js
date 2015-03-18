@@ -1,6 +1,6 @@
-var request = require(__dirname + '/../helpers/request');
-var request = require(__dirname + '/../helpers/request');
-var TFS = require(__dirname + '/../common/tfs');
+var request = require(__dirname + '/../../helpers/request');
+var request = require(__dirname + '/../../helpers/request');
+var MERU = require(__dirname + '/../common/meru');
 
 function buildTrackingURL(userId) {
     var url = '';
@@ -12,7 +12,7 @@ function buildTrackingURL(userId) {
 function parseResponse(type, response, status) {
     var output = {
         status: response ? "success" : "failure",
-        service: 'TFS'
+        service: 'MERU'
     };
 
     try {
@@ -24,9 +24,9 @@ function parseResponse(type, response, status) {
 }
 
 exports.trackCab = function(responseHandler, response, userId, shouldParseData) {
-    TFS.options.path = buildTrackingURL(userId);
+    MERU.options.path = buildTrackingURL(userId);
 
-    request.getJSON(TFS.options, function(statusCode, result) {
+    request.getJSON(MERU.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);

@@ -1,14 +1,15 @@
-var request = require(__dirname + '/../helpers/request');
-var logger = require(__dirname + '/../helpers/log');
-var OLA = require(__dirname + '/../common/ola');
+var request = require(__dirname + '/../../helpers/request');
+var logger = require(__dirname + '/../../helpers/log');
+var UBER = require(__dirname + '/../common/uber');
 
+// TODO
 function buildBookingURL(userId, latitude, longitude, address, carType) {
-    var url = '/v3/booking/create?enable_auto=true&accuracy=10.0&speed=0.0&altitude=0.0&pickup_mode=NOW&location_type=CUSTOM';
+    var url = '';
     url += '&user_id=' + userId;
     url += '&lat=' + latitude + '&lng=' + longitude
     url += '&fix_time=' + new Date().getTime();
-    for (key in OLA.Taxi_Name_Map) {
-        if (OLA.Taxi_Name_Map[key].toLowerCase() == carType) {
+    for (key in UBER.Taxi_Name_Map) {
+        if (UBER.Taxi_Name_Map[key].toLowerCase() == carType) {
             url += '&category_id=' + key;
             break;
         }
@@ -18,8 +19,9 @@ function buildBookingURL(userId, latitude, longitude, address, carType) {
     return url;
 }
 
+// TODO
 function buildCancelBookingURL(userId, bookingId, reason) {
-    var url = '/v3/booking/cancel?enable_auto=true';
+    var url = '';
     url += '&user_id=' + userId;
     url += '&booking_id=' + bookingId;
 
@@ -35,7 +37,7 @@ function buildCancelBookingURL(userId, bookingId, reason) {
 function parseBookingResponse(type, response, status) {
     var output = {
         status: response ? "success" : "failure",
-        service: 'OLA'
+        service: 'UBER'
     };
 
     if (type == 'create') {
@@ -58,9 +60,9 @@ function parseBookingResponse(type, response, status) {
 }
 
 exports.createBooking = function(responseHandler, response, userId, latitude, longitude, address, carType, shouldParseData) {
-    OLA.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+    UBER.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
 
-    request.getJSON(OLA.options, function(statusCode, result) {
+    request.getJSON(UBER.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('create', result, result.status);
@@ -70,9 +72,9 @@ exports.createBooking = function(responseHandler, response, userId, latitude, lo
 }
 
 exports.cancelBooking = function(responseHandler, response, userId, bookingId, shouldParseData, reason) {
-    OLA.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+    UBER.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
 
-    request.getJSON(OLA.options, function(statusCode, result) {
+    request.getJSON(UBER.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('cancel', result, result.status);

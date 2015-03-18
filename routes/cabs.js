@@ -3,16 +3,16 @@ var router = express.Router();
 var globals = require(__dirname + '/../modules/helpers/globals');
 
 var cabServiceModules = {
-    ola: require('../modules/cabs/ola'),
-    tfs: require('../modules/cabs/tfs'),
-    uber: require('../modules/cabs/uber'),
-    meru: require('../modules/cabs/meru'),
+    ola: require('../modules/cab_modules/cabs/ola'),
+    tfs: require('../modules/cab_modules/cabs/tfs'),
+    uber: require('../modules/cab_modules/cabs/uber'),
+    meru: require('../modules/cab_modules/cabs/meru'),
 }
 var cabCostModules = {
-    ola: require('../modules/pricing/ola'),
-    tfs: require('../modules/pricing/tfs'),
-    uber: require('../modules/pricing/uber'),
-    meru: require('../modules/pricing/meru'),
+    ola: require('../modules/cab_modules/pricing/ola'),
+    tfs: require('../modules/cab_modules/pricing/tfs'),
+    uber: require('../modules/cab_modules/pricing/uber'),
+    meru: require('../modules/cab_modules/pricing/meru'),
 }
 var CAB_SERVICES = globals.getCabServices();
 

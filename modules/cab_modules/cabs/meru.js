@@ -1,6 +1,6 @@
-var request = require(__dirname + '/../helpers/request');
-var logger = require(__dirname + '/../helpers/log');
-var googleDistance = require(__dirname + '/../helpers/googleDistance');
+var request = require(__dirname + '/../../helpers/request');
+var logger = require(__dirname + '/../../helpers/log');
+var googleDistance = require(__dirname + '/../../helpers/googleDistance');
 var MERU = require(__dirname + '/../common/meru');
 
 function buildURL(latitude, longitude, userId) {

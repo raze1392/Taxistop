@@ -1,9 +1,9 @@
-var request = require(__dirname + '/../helpers/request');
-var request = require(__dirname + '/../helpers/request');
-var OLA = require(__dirname + '/../common/ola');
+var request = require(__dirname + '/../../helpers/request');
+var request = require(__dirname + '/../../helpers/request');
+var TFS = require(__dirname + '/../common/tfs');
 
 function buildTrackingURL(userId) {
-    var url = '/v3/cab/info?enable_new_state=true&enable_auto=true';
+    var url = '';
     url += '&user_id=' + userId;
 
     return url;
@@ -12,7 +12,7 @@ function buildTrackingURL(userId) {
 function parseResponse(type, response, status) {
     var output = {
         status: response ? "success" : "failure",
-        service: 'OLA'
+        service: 'TFS'
     };
 
     try {
@@ -24,9 +24,9 @@ function parseResponse(type, response, status) {
 }
 
 exports.trackCab = function(responseHandler, response, userId, shouldParseData) {
-    OLA.options.path = buildTrackingURL(userId);
+    TFS.options.path = buildTrackingURL(userId);
 
-    request.getJSON(OLA.options, function(statusCode, result) {
+    request.getJSON(TFS.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);

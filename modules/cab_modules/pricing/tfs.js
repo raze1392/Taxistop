@@ -1,6 +1,6 @@
-var request = require(__dirname + '/../helpers/request');
-var logger = require(__dirname + '/../helpers/log');
-var MERU = require(__dirname + '/../common/meru');
+var request = require(__dirname + '/../../helpers/request');
+var logger = require(__dirname + '/../../helpers/log');
+var TFS = require(__dirname + '/../common/tfs');
 
 function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId) {
     var url = '';
@@ -16,7 +16,7 @@ function buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, u
 function parseResponse(response) {
     var output = {
         status: response ? "success" : "failure",
-        service: 'MERU',
+        service: 'TFS',
         prices: []
     }
 
@@ -31,9 +31,9 @@ function parseResponse(response) {
 }
 
 exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData, userId) {
-    MERU.options.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
+    TFS.options.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
 
-    request.getJSON(MERU.options, function(statusCode, result) {
+    request.getJSON(TFS.options, function(statusCode, result) {
         if (shouldParseData && result) {
             result = parseResponse(result);
         }

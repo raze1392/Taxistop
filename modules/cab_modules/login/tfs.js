@@ -1,5 +1,5 @@
-var request = require(__dirname + '/../helpers/request');
-var logger = require(__dirname + '/../helpers/log');
+var request = require(__dirname + '/../../helpers/request');
+var logger = require(__dirname + '/../../helpers/log');
 var TFS = require(__dirname + '/../common/ola');
 var Firebase = require("firebase");
 // var crypto = require("crypto");

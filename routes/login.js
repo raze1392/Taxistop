@@ -7,10 +7,10 @@ var logger = require(__dirname + '/../modules/helpers/log');
 var router = express.Router();
 
 var cabServiceModules = {
-    ola: require('../modules/login/ola'),
-    tfs: require('../modules/login/tfs'),
-    uber: require('../modules/login/uber'),
-    meru: require('../modules/login/meru'),
+    ola: require('../modules/cab_modules/login/ola'),
+    tfs: require('../modules/cab_modules/login/tfs'),
+    uber: require('../modules/cab_modules/login/uber'),
+    meru: require('../modules/cab_modules/login/meru'),
 }
 
 router.post('/', function(request, response) {

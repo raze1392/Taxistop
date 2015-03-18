@@ -1,6 +1,6 @@
-var request = require(__dirname + '/../helpers/request');
-var request = require(__dirname + '/../helpers/request');
-var MERU = require(__dirname + '/../common/meru');
+var request = require(__dirname + '/../../helpers/request');
+var request = require(__dirname + '/../../helpers/request');
+var UBER = require(__dirname + '/../common/uber');
 
 function buildTrackingURL(userId) {
     var url = '';
@@ -24,9 +24,9 @@ function parseResponse(type, response, status) {
 }
 
 exports.trackCab = function(responseHandler, response, userId, shouldParseData) {
-    MERU.options.path = buildTrackingURL(userId);
+    UBER.options.path = buildTrackingURL(userId);
 
-    request.getJSON(MERU.options, function(statusCode, result) {
+    request.getJSON(UBER.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);

@@ -14,6 +14,7 @@ var cabs = require('./routes/cabs');
 var eta = require('./routes/eta');
 var booking = require('./routes/booking');
 var login = require('./routes/login');
+var api = require('./routes/api');
 
 var app = express();
 
@@ -43,6 +44,7 @@ app.use('/cabs', cabs);
 app.use('/eta', eta);
 app.use('/booking', booking);
 app.use('/login', login);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

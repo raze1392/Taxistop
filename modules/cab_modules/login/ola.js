@@ -1,12 +1,12 @@
-var request = require(__dirname + '/../helpers/request');
-var logger = require(__dirname + '/../helpers/log');
-var UBER = require(__dirname + '/../common/uber');
+var request = require(__dirname + '/../../helpers/request');
+var logger = require(__dirname + '/../../helpers/log');
+var OLA = require(__dirname + '/../common/ola');
 var Firebase = require("firebase");
 // var crypto = require("crypto");
 // var Buffer = require('buffer').Buffer;
 
 function buildLoginURL(email, encPassword) {
-    var url = '';
+    var url = '/v3/user/login?device_id=911380450341890&lat=29.3794796&lng=79.4637102';
     url += '&email=' + encodeURIComponent(email);
     // encPassword += '|';
     // var iv = new Buffer('');
@@ -24,12 +24,15 @@ function buildLoginURL(email, encPassword) {
 function parseLoginResponse(response, status, userCookie) {
     var output = {
         status: response ? ((status.toLowerCase() != 'failure') ? "success" : "failure") : "failure",
-        service: 'UBER'
+        service: 'OLA'
     };
 
     try {
+        output.userId = response.user_id;
+        output.referralCode = response.referral_code;
+        output.walletAmount = response.ola_money_balance;
 
-        var ref = new Firebase('https://flickering-inferno-5036.firebaseio.com');
+        //var ref = new Firebase('https://flickering-inferno-5036.firebaseio.com');    
     } catch (ex) {
         logger.warn(ex.getMessage(), ex);
         return output;
@@ -39,9 +42,9 @@ function parseLoginResponse(response, status, userCookie) {
 }
 
 exports.login = function(responseHandler, response, userCookie, email, encPassword, shouldParseData, saveCredentials) {
-    UBER.options.path = buildLoginURL(email, encPassword);
+    OLA.options.path = buildLoginURL(email, encPassword);
 
-    request.getJSON(UBER.options, function(statusCode, result) {
+    request.getJSON(OLA.options, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         saveCredentials(userCookie, email, encPassword, 'ola', result);
         if (shouldParseData && result) {
