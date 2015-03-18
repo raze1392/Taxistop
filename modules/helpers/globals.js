@@ -1,4 +1,5 @@
 var APP_TITLE = 'TaxiStop';
+var API_HASH_KEY = "TAXi$top";
 var ENV = process.env.NODE_ENV;
 
 var GOOGLE_API_KEYS = [
@@ -47,6 +48,10 @@ exports.getAppTitle = function() {
 exports.isEnvironmentProduction = function() {
     if (!ENV) return false;
     else return (ENV.toLowerCase() === 'production') ? true : false;
+}
+
+exports.getAPIHashKey = function() {
+    return API_HASH_KEY;
 }
 
 //  ================ Firebase URLs =================

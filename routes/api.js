@@ -2,20 +2,21 @@ var express = require('express');
 var router = express.Router();
 var globals = require(__dirname + '/../modules/helpers/globals');
 
-var API = require('../modules/api_modules/apiUtils');
+var APIUtils = require('../modules/api_modules/apiUtils');
 
 router.get('/generate', function(request, response) {
-    var hostInfo = request.headers.referrer || request.headers.host;
-    var apikey = API.generateAPIKey(hostInfo);
+    var hostInfo = request.query.host;
+    // var hostInfo = request.headers.referrer || request.headers.host;
+    var apikey = APIUtils.generateAPIKey(hostInfo);
     sendResponse(response, apikey);
 });
 
 router.get('/validate', function(request, response) {
     var apikey = decodeURIComponent(request.query.api);
-    var hostInfo = request.headers.referrer || request.headers.host;
+    var hostInfo = decodeURIComponent(request.query.host);
     
     var status = {
-        status: API.isAPIKeyValid(apikey, hostInfo)
+        status: APIUtils.isAPIKeyValid(apikey, hostInfo)
     };
     sendResponse(response, status);
 });

@@ -1,10 +1,12 @@
 var logger = require(__dirname + '/../helpers/log');
+var globals = require(__dirname + '/../helpers/globals');
 var crypto = require("crypto");
 var Buffer = require('buffer').Buffer;
 
 function generateAPIKey(data) {
 	var sha = crypto.createHash('sha512');
-	sha.update(data);
+	var hashInput = data + globals.getAPIHashKey();
+	sha.update(hashInput);
 	var hash = sha.digest('base64');
 	return hash;
 }
