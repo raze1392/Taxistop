@@ -49,6 +49,8 @@ exports.getJSON = function(options, onResult, hack) {
     });
     req.on('error', function(err) {
         console.log('Rest :: Error : ' + err);
+        var output = {success: false};
+        onResult(502, output);
     });
     req.end();
 };

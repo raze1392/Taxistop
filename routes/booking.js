@@ -33,7 +33,7 @@ router.get('/:cab/:bookingStatus', function(request, response) {
             sendResponse(response, result);
         } else {
             if (cabService && cabServiceModules[cabService]) {
-                cabServiceModules[cabService].createBooking(sendResponse, response, userId, srcLatitude, srcLongitude, srcAddress, carType, shouldParseData);
+                cabServiceModules[cabService].createBooking(sendResponse, response, userId, srcLatitude, srcLongitude, srcAddress, destLatitude, destLongitude, destAddress, carType, shouldParseData);
             }
         }
     } else if (bookingStatus == 'cancel') {
@@ -49,6 +49,19 @@ router.get('/:cab/:bookingStatus', function(request, response) {
         } else {
             if (cabService && cabServiceModules[cabService]) {
                 cabServiceModules[cabService].cancelBooking(sendResponse, response, userId, bookingId, shouldParseData, reason);
+            }
+        }
+    } else if (bookingStatus == 'info') {
+        var userId = request.query.userId;
+
+        if (!userId) {
+            var result = {
+                error: 'UserId not defined'
+            };
+            sendResponse(response, result);
+        } else {
+            if (cabService && cabServiceModules[cabService]) {
+                cabServiceModules[cabService].bookingInfo(sendResponse, response, userId, shouldParseData);
             }
         }
     }

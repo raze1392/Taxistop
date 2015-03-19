@@ -24,9 +24,9 @@ function parseResponse(type, response, status) {
 }
 
 exports.trackCab = function(responseHandler, response, userId, shouldParseData) {
-    UBER.options.path = buildTrackingURL(userId);
+    UBER.options.request.path = buildTrackingURL(userId);
 
-    request.getJSON(UBER.options, function(statusCode, result) {
+    request.getJSON(UBER.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);

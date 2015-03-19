@@ -1,10 +1,12 @@
 var UBER = {};
 
 UBER.options = {
-    host: 'api.uber.com',
-    port: 443,
-    method: 'GET',
-    path: '',
+    request: {
+        host: 'api.uber.com',
+        port: 443,
+        method: 'GET',
+        path: ''
+    },
     serverToken: 'RQ28hrjOR39zq2w5sof9xiTHolQ_z9t4n5T2etHP'
 };
 

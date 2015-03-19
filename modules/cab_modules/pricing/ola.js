@@ -6,7 +6,7 @@ function buildPriceURL(userId) {
     var url = '/v3/info/fare_breakup?enable_auto=true';
 
     if (userId) {
-        url += '&user_id=' + userId;
+        url += '&user_id=' + encodeURIComponent(userId);
     } else {
         url += '&user_id=' + OLA.options.userId;
     }
@@ -76,9 +76,9 @@ function parseResponse(response, status) {
 }
 
 exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData, userId) {
-    OLA.options.path = buildPriceURL(userId);
+    OLA.options.request.path = buildPriceURL(userId);
 
-    request.getJSON(OLA.options, function(statusCode, result) {
+    request.getJSON(OLA.options.request, function(statusCode, result) {
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);
         }

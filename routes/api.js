@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var globals = require(__dirname + '/../modules/helpers/globals');
 
-var APIUtils = require('../modules/api_modules/apiUtils');
+var APIUtils = require('../modules/auth_modules/apiUtils');
 
 router.get('/generate', function(request, response) {
     var hostInfo = request.query.host;

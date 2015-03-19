@@ -1,19 +1,23 @@
 var OLA = {};
 
 OLA.options = {
-    host: 'apps.olacabs.com',
-    port: 443,
-    method: 'GET',
-    headers: {
-        'api-key': '@ndro1d',
-        'Host': 'apps.olacabs.com',
-        'client': 'android',
-        'device_id': '911380450341890',
-        'enable_auto': 'true',
-        'install_id': '5f48380f-46c8-4df5-a565-2ab650bc19fd'
+    request: {
+        host: 'mapi.olacabs.com',
+        port: 80,
+        method: 'GET',
+        headers: {
+            'api-key': '@ndro1d',
+            'Host': 'mapi.olacabs.com',
+            'client': 'android',
+            'device_id': '911380450341890',
+            'enable_auto': 'true',
+            'install_id': '5f48380f-46c8-4df5-a565-2ab650bc19fd'
+        },
+        path: ''
     },
-    path: '',
-    userId: 'YjTgq%2F3vNPAVbf63OC3e%2FT3AYM8iYAZ5U9MZQ9NvX93UOVB%2F%2FnkEZ5l2pF8a%0AURmRtfID8TsJisxk6b1MG5WYUw%3D%3D%0A',
+    primaryHost: 'mapi.olacabs.com',
+    secondaryHost: 'apps.olacabs.com',
+    userId: encodeURIComponent('YjTgq/3vNPAVbf63OC3e/T3AYM8iYAZ5U9MZQ9NvX93UOVB//nkEZ5l2pF8aURmRtfID8TsJisxk6b1MG5WYUw=='),
 };
 
 OLA.Taxi_Name_Map = {

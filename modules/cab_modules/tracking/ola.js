@@ -4,7 +4,7 @@ var OLA = require(__dirname + '/../common/ola');
 
 function buildTrackingURL(userId) {
     var url = '/v3/cab/info?enable_new_state=true&enable_auto=true';
-    url += '&user_id=' + userId;
+    url += '&user_id=' + encodeURIComponent(userId);
 
     return url;
 }
@@ -24,9 +24,9 @@ function parseResponse(type, response, status) {
 }
 
 exports.trackCab = function(responseHandler, response, userId, shouldParseData) {
-    OLA.options.path = buildTrackingURL(userId);
+    OLA.options.request.path = buildTrackingURL(userId);
 
-    request.getJSON(OLA.options, function(statusCode, result) {
+    request.getJSON(OLA.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);

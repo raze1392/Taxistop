@@ -42,9 +42,9 @@ function parseLoginResponse(response, status, userCookie) {
 }
 
 exports.login = function(responseHandler, response, userCookie, email, encPassword, shouldParseData, saveCredentials) {
-    OLA.options.path = buildLoginURL(email, encPassword);
+    OLA.options.request.path = buildLoginURL(email, encPassword);
 
-    request.getJSON(OLA.options, function(statusCode, result) {
+    request.getJSON(OLA.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         saveCredentials(userCookie, email, encPassword, 'ola', result);
         if (shouldParseData && result) {

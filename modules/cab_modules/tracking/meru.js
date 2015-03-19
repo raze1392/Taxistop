@@ -24,9 +24,9 @@ function parseResponse(type, response, status) {
 }
 
 exports.trackCab = function(responseHandler, response, userId, shouldParseData) {
-    MERU.options.path = buildTrackingURL(userId);
+    MERU.options.request.path = buildTrackingURL(userId);
 
-    request.getJSON(MERU.options, function(statusCode, result) {
+    request.getJSON(MERU.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);

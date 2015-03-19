@@ -31,9 +31,9 @@ function parseResponse(response) {
 }
 
 exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData, userId) {
-    TFS.options.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
+    TFS.options.request.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
 
-    request.getJSON(TFS.options, function(statusCode, result) {
+    request.getJSON(TFS.options.request, function(statusCode, result) {
         if (shouldParseData && result) {
             result = parseResponse(result);
         }

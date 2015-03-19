@@ -87,9 +87,9 @@ function parseResponse(response, status) {
 }
 
 exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
-    TFS.options.path = buildURL(latitude, longitude, userId);
+    TFS.options.request.path = buildURL(latitude, longitude, userId);
 
-    request.getJSON(TFS.options, function(statusCode, result) {
+    request.getJSON(TFS.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result.response_data, result.status);

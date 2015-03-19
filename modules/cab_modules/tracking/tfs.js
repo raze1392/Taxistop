@@ -24,9 +24,9 @@ function parseResponse(type, response, status) {
 }
 
 exports.trackCab = function(responseHandler, response, userId, shouldParseData) {
-    TFS.options.path = buildTrackingURL(userId);
+    TFS.options.request.path = buildTrackingURL(userId);
 
-    request.getJSON(TFS.options, function(statusCode, result) {
+    request.getJSON(TFS.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);

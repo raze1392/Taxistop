@@ -45,9 +45,9 @@ function parseResponse(response) {
 }
 
 exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
-    UBER.options.path = buildURL(latitude, longitude, userId);
+    UBER.options.request.path = buildURL(latitude, longitude, userId);
 
-    request.getJSON(UBER.options, function(statusCode, result) {
+    request.getJSON(UBER.options.request, function(statusCode, result) {
         if (shouldParseData) {
             result = parseResponse(result);
         }

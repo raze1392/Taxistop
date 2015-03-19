@@ -1,10 +1,12 @@
 var TFS = {};
 
 TFS.options = {
-    host: 'iospush.taxiforsure.com',
-    port: 80,
-    method: 'GET',
-    path: ''
+    request: {
+        host: 'iospush.taxiforsure.com',
+        port: 80,
+        method: 'GET',
+        path: ''
+    }
 };
 
 TFS.Taxi_Name_Map = {

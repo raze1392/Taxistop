@@ -60,9 +60,9 @@ function parseBookingResponse(type, response, status) {
 }
 
 exports.createBooking = function(responseHandler, response, userId, latitude, longitude, address, carType, shouldParseData) {
-    UBER.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+    UBER.options.request.path = buildBookingURL(userId, latitude, longitude, address, carType);
 
-    request.getJSON(UBER.options, function(statusCode, result) {
+    request.getJSON(UBER.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('create', result, result.status);
@@ -72,9 +72,9 @@ exports.createBooking = function(responseHandler, response, userId, latitude, lo
 }
 
 exports.cancelBooking = function(responseHandler, response, userId, bookingId, shouldParseData, reason) {
-    UBER.options.path = buildBookingURL(userId, latitude, longitude, address, carType);
+    UBER.options.request.path = buildCancelBookingURL(userId, bookingId, reason);
 
-    request.getJSON(UBER.options, function(statusCode, result) {
+    request.getJSON(UBER.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('cancel', result, result.status);

@@ -39,9 +39,9 @@ function parseLoginResponse(response, status, userCookie) {
 }
 
 exports.login = function(responseHandler, response, userCookie, email, encPassword, shouldParseData, saveCredentials) {
-    MERU.options.path = buildLoginURL(email, encPassword);
+    MERU.options.request.path = buildLoginURL(email, encPassword);
 
-    request.getJSON(MERU.options, function(statusCode, result) {
+    request.getJSON(MERU.options.request, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         saveCredentials(userCookie, email, encPassword, 'ola', result);
         if (shouldParseData && result) {

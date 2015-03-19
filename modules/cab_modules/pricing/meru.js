@@ -31,9 +31,9 @@ function parseResponse(response) {
 }
 
 exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData, userId) {
-    MERU.options.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
+    MERU.options.request.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
 
-    request.getJSON(MERU.options, function(statusCode, result) {
+    request.getJSON(MERU.options.request, function(statusCode, result) {
         if (shouldParseData && result) {
             result = parseResponse(result);
         }

@@ -1,10 +1,12 @@
 var MERU = {};
 
 MERU.options = {
-    host: 'mobileapp.merucabs.com',
-    port: 80,
-    method: 'GET',
-    path: ''
+    request: {
+        host: 'mobileapp.merucabs.com',
+        port: 80,
+        method: 'GET',
+        path: ''
+    }
 };
 
 MERU.Taxi_Name_Map = {
