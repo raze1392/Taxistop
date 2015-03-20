@@ -125,8 +125,8 @@
         }());
 
         return {
-            fire: new Firebase(w.FIREBASE_URLS.app),
-            ratesfire: new Firebase(w.FIREBASE_URLS.rates),
+            fire: new Firebase(w.FIREBASE_APP_URL),
+            ratesfire: new Firebase(w.FIREBASE_RATES_URL),
             Storage: Storage,
             cookie: cookie,
             encryptOLAPassword: encryptOLAPassword,
