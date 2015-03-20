@@ -4,19 +4,19 @@ var Firebase = {};
 Firebase.dbs = {
     prod: {
         login: {
-            url: "https://taxistop.firebaseio.com",
+            url: "https://taxistop.firebaseio.com/",
             auth: "vVBHenEDBFihTCpkoADAyFbQaG1AtbsuXEROsi6g"
         }
     },
     dev: {
         login: {
-            url: "https://vivid-inferno-8339.firebaseio.com",
+            url: "https://vivid-inferno-8339.firebaseio.com/",
             auth: "4fbWFdEsKHSwkNG6xDikveNBMnSBbYGPlkn4QSNG"
         }
     },
     common: {
         rates: {
-            url: "https://taxistop-rates.firebaseio.com",
+            url: "https://taxistop-rates.firebaseio.com/",
             auth: "cogYDhJs5DhOXMcDIF2YrdsSkk5Eivx4vLli2K1d"
         },
         cab: {
