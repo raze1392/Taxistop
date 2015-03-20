@@ -3,6 +3,16 @@
  *
  */
 (function(w, $, crypto, undefined) {
+
+    // http://map.what3words.com/calls/position/25.317645,82.973914?lang=en&debug=1
+    // $.ajax({
+    //     url: "http://map.what3words.com/calls/position/25.317645,82.973914?lang=en&debug=1",
+    //     jsonp: "getW3W",
+    //     success: function(resp) {
+    //         console.log(resp);
+    //     }
+    // });
+
     w.chanakya = w.chanakya || {};
     w.chanakya.cost = (function() {
         var rates = {};

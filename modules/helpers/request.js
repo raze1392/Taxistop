@@ -62,6 +62,35 @@ exports.getJSON = function(options, onResult, hack) {
  */
 exports.postJSON = function(options, data, onResult) {
     var prot = options.port == 443 ? https : http;
+    options.method = 'POST';
+    var req = prot.request(options, function(res) {
+        var output = '';
+        console.log(options.host + ':' + res.statusCode);
+        res.setEncoding('utf8');
+        res.on('data', function(chunk) {
+            output += chunk;
+        });
+        res.on('end', function() {
+            console.log('end: ' + output);
+            var obj = eval("(" + output + ")");
+            onResult(res.statusCode, obj);
+        });
+    });
+    req.on('error', function(err) {
+        console.log('error: ' + err.message);
+    });
+    req.write(JSON.stringify(data));
+    req.end();
+};
+/**
+ * putJSON: put a JSON object to a REST service
+ *
+ * @param options
+ * @param callback: callback to pass the results JSON object(s) back
+ */
+exports.putJSON = function(options, data, onResult) {
+    var prot = options.port == 443 ? https : http;
+    options.method = 'PUT';
     var req = prot.request(options, function(res) {
         var output = '';
         console.log(options.host + ':' + res.statusCode);
@@ -90,6 +119,7 @@ exports.postJSON = function(options, data, onResult) {
  */
 exports.deleteJSON = function(options, itemId, onResult) {
     var prot = options.port == 443 ? https : http;
+    options.method = 'DELETE';
     var req = prot.request(options, function(res) {
         var output = '';
         console.log(options.host + ':' + res.statusCode);

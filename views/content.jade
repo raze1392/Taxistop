@@ -2,16 +2,16 @@ div(ng-controller="ChanakyaMainCtrl")
   div#map-canvas
   div#content(ng-show="serviceRadio == 'now' || serviceRadio == 'later'")
     img.input-action.src(
-      src=url.cdnImagePrefix + "/images/close.png" 
+      src=cdnImagePrefix + "/images/close.png" 
       ng-show="source && source.lat" 
       ng-click="clearSource()"
     )
     img.input-action.dest(
-      src=url.cdnImagePrefix + "/images/close.png" 
+      src=cdnImagePrefix + "/images/close.png" 
       ng-show="destination && destination.lat" 
       ng-click="clearDestination()"
     )
-    img.src-dest(src=url.cdnImagePrefix + "/images/src-dest.png")
+    img.src-dest(src=cdnImagePrefix + "/images/src-dest.png")
     div#locationField
          input.clearable#searchSource(
            placeholder="Enter source",
@@ -31,7 +31,7 @@ div(ng-controller="ChanakyaMainCtrl")
       div.cab-details.mask(ng-show="showMask()")
         div.loading(ng-show="loading")
           p.center-align 
-            img(alt="" src=url.cdnImagePrefix + "/images/loading.gif")
+            img(alt="" src=cdnImagePrefix + "/images/loading.gif")
             span {{ loadingMsg }}
         div.info(ng-hide="loading")
           p.center-align.mask-image
@@ -57,7 +57,7 @@ div(ng-controller="ChanakyaMainCtrl")
         div.container-fluid
           div.navbar-header
             a.navbar-brand(href="#")
-              img(alt="TaxiStop" src=url.cdnImagePrefix + "/images/taxistop.png")
+              img(alt="TaxiStop" src=cdnImagePrefix + "/images/taxistop.png")
               h4 TaxiStop
       accordion(close-others="true")
         accordion-group(

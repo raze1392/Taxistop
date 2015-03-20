@@ -517,7 +517,7 @@ table {
 }
 #details {
     background: white;
-    max-height: 215px;
+    max-height: 600px;
     padding: 2px 0;
     -webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
@@ -746,6 +746,7 @@ hr {
         z-index: 1;
     }
     #details {
+        max-height: 215px;
         margin-bottom: -5px;
         padding: 0;
         height: auto;

@@ -6,8 +6,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-	var session = req.session;
-	
+    var session = req.session;
+
     var url = {
         cdnImagePrefix: globals.getCDNUrlPrefix(),
         gMapsAPI: globals.getGmapsAPI(),
@@ -22,28 +22,14 @@ router.get('/', function(req, res) {
 });
 
 router.get('/login.html', function(req, res) {
-    var url = {
-        cdnImagePrefix: globals.getCDNUrlPrefix(),
-        gMapsAPI: globals.getGmapsAPI()
-    };
-
     res.render('login', {
-        isProd: globals.isEnvironmentProduction(),
-        title: 'TaxiStop',
-        url: url
+        cdnImagePrefix: globals.getCDNUrlPrefix()
     });
 });
 
 router.get('/content.html', function(req, res) {
-    var url = {
-        cdnImagePrefix: globals.getCDNUrlPrefix(),
-        gMapsAPI: globals.getGmapsAPI()
-    };
-
     res.render('content', {
-        isProd: globals.isEnvironmentProduction(),
-        title: 'TaxiStop',
-        url: url
+        cdnImagePrefix: globals.getCDNUrlPrefix()
     });
 });
 
