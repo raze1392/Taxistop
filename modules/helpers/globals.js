@@ -1,3 +1,5 @@
+var fbConfig = require(__dirname + '/../firebase/config');
+
 var APP_TITLE = 'TaxiStop';
 var API_HASH_KEY = "TAXi$top";
 var ENV = process.env.NODE_ENV;
@@ -57,11 +59,8 @@ exports.getAPIHashKey = function() {
 //  ================ Firebase URLs =================
 exports.getFirebaseUrls = function() {
     var urls = {
-        app: 'https://vivid-inferno-8339.firebaseio.com',
-        rates: 'https://taxistop-rates.firebaseio.com'
-    }
-    if (ENV === 'production') {
-        urls.app = 'https://taxistop.firebaseio.com';
+        app: fbConfig.getDb('app').url,
+        rates: fbConfig.getDb('rates').url
     }
     return urls;
 }

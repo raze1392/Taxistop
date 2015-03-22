@@ -139,10 +139,8 @@
                     user.logout($location);
                 }
             }
-            user.setUserInfo(utils.cookie.get('user'));
 
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-                // toState.name, toState.data.selectedTab
                 if (toState.data && toState.data.selectedTab)
                     $scope.serviceRadio = toState.data.selectedTab;
             });

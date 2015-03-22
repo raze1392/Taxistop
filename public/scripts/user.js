@@ -5,28 +5,39 @@
         var userInfo;
 
         var setUserInfo = function(hash) {
-            utils.fire.child("users").child(hash).on("value", function(user) {
-                var info = user.val();
-                if (info.ratesauth && (info.ratesauth.expires > ((new Date()).getTime() / 1000))) {
-                    userInfo = info;
-                    saveUserInfo(userInfo);
-                } else {
-                    var ratesAuth = utils.ratesfire.getAuth(),
-                        token = ratesAuth ? utils.ratesfire.getAuth().token : "",
-                        expires = ratesAuth ? utils.ratesfire.getAuth().expires : 0;
-                    if (ratesAuth && (expires > ((new Date()).getTime() / 1000))) {
-                        setUserInfoObject(hash, info, ratesAuth);
-                    } else {
-                        getRatesAuth(hash, info);
-                    }
+            console.debug('setting user info');
+            $.ajax({
+                url: utils.fire.toString() + "/users/" + hash + ".json?auth=" + utils.fire.getAuth().token,
+                jsonp: "updateUserInfo",
+                success: function(user) {
+                    getRatesAuth(hash, user);
+                },
+                error: function(xhr, status, err) {
+                    userInfo = undefined;
                 }
-            }, function(errorObject) {
-                userInfo = undefined;
             });
         };
 
-        var ratesFailed = 0;
         var getRatesAuth = function(hash, info) {
+            console.log('getting rates auth', utils.fire.toString() + "/ratesAuth/.json?auth=" + utils.fire.getAuth().token);
+            $.ajax({
+                url: utils.fire.toString() + "/ratesAuth/.json?auth=" + utils.fire.getAuth().token,
+                jsonp: "updateRatesAuth",
+                success: function(ratesAuth) {
+                    if (!ratesAuth || !ratesAuth.expires || ratesAuth.expires < ((new Date()).getTime() / 1000)) {
+                        setRatesAuth(hash, info);
+                    } else {
+                        setUserInfoObject(hash, info, ratesAuth);
+                    }
+                },
+                error: function(xhr, status, err) {
+                    console.error(err);
+                }
+            });
+        }
+
+        var ratesFailed = 0;
+        var setRatesAuth = function(hash, info) {
             utils.ratesfire.authAnonymously(function(error, ratesAuth) {
                 console.log("Authenticating for rates");
                 if (error) {
@@ -34,11 +45,15 @@
                         console.log("Authenticating for rates has failed 5 time. Reload or try again.");
                     } else {
                         ratesFailed++;
-                        getRatesAuth(info);
+                        setRatesAuth(hash, info);
                         console.log("Rates Login Failed!", error);
                     }
                 } else {
                     setUserInfoObject(hash, info, ratesAuth);
+                    utils.fire.child("ratesAuth").set({
+                        token: ratesAuth.token,
+                        expires: ratesAuth.expires
+                    });
                 }
             });
         };
@@ -49,8 +64,6 @@
                 token: ratesAuth.token,
                 expires: ratesAuth.expires
             };
-            utils.fire.child("users").child(hash).child('ratesauth').child('token').set(ratesAuth.token);
-            utils.fire.child("users").child(hash).child('ratesauth').child('expires').set(ratesAuth.expires);
             saveUserInfo(userInfo);
         }
 
@@ -89,28 +102,42 @@
         var saveAuth = function(authData, location) {
             var hash = crypto.SHA1(authData[authData.provider].email).toString();
 
-            utils.fire.child("users").child(hash).child('uid').set(authData.uid);
-            utils.fire.child("users").child(hash).child('name').set(getName(authData));
-            utils.fire.child("users").child(hash).child('email').set(authData[authData.provider].email);
+            $.ajax({
+                url: utils.fire.toString() + "/users/" + hash + ".json?auth=" + utils.fire.getAuth().token,
+                jsonp: "updateUser",
+                success: function(user) {
+                    console.log(user);
+                    user = user || {};
+                    user.uid = authData.uid;
+                    user.name = user.name || getName(authData);
+                    user.email = user.email || authData[authData.provider].email;
+                    if (authData[authData.provider].cachedUserProfile && authData[authData.provider].cachedUserProfile.picture) {
+                        if (authData.provider === 'google')
+                            user.picture = authData[authData.provider].cachedUserProfile.picture;
+                        else if (authData.provider === 'facebook')
+                            user.picture = authData[authData.provider].cachedUserProfile.picture.data.url;
+                    }
+                    user.timestamp = (new Date()).getTime();
+                    user.facebook = user.facebook || null;
+                    user.google = user.google || null;
+                    user.password = user.password || null;
+                    user[authData.provider] = authData.provider[authData.provider] || {
+                        uid: authData.uid
+                    };
+                    utils.fire.child("users").child(hash).set(user);
+                    utils.cookie.create({
+                        name: 'user',
+                        value: hash,
+                        days: 1
+                    });
 
-            if (authData[authData.provider].cachedUserProfile && authData[authData.provider].cachedUserProfile.picture) {
-                if (authData.provider === 'google')
-                    utils.fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture);
-                else if (authData.provider === 'facebook')
-                    utils.fire.child("users").child(hash).child('picture').set(authData[authData.provider].cachedUserProfile.picture.data.url);
-            }
-
-            utils.cookie.create({
-                name: 'user',
-                value: hash,
-                days: 1
+                    setUserInfo(hash);
+                    w.location.hash = '#/app';
+                },
+                error: function(xhr, status, err) {
+                    console.log(err);
+                }
             });
-            utils.fire.child("users").child(hash).child('timestamp').set((new Date()).getTime());
-            utils.fire.child("users").child(hash).child(authData.provider).set({
-                uid: authData.uid
-            });
-            setUserInfo(hash);
-            location.path('/app');
         };
 
         var register = function(options, location, showError) {
@@ -161,6 +188,7 @@
             utils.fire.unauth();
             utils.cookie.erase('user');
             utils.cookie.erase('loginClicked');
+            utils.Storage.erase('user.info');
             location.path("/login");
         };
 
