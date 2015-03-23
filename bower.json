@@ -17,5 +17,8 @@
   "dependencies": {
     "jquery": "~2.1.1",
     "react": "~0.12.2"
+  },
+  "devDependencies": {
+    "font-awesome": "~4.3.0"
   }
 }

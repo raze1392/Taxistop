@@ -7,6 +7,7 @@ var logger = require(__dirname + "/modules/helpers/log");
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var browserify = require('browserify-middleware');
+var compress = require('compression');
 
 var globals = require(__dirname + '/modules/helpers/globals');
 var routes = require('./routes/index');
@@ -17,6 +18,7 @@ var login = require('./routes/login');
 var api = require('./routes/api');
 
 var app = express();
+app.use(compress());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
