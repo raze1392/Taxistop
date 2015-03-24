@@ -90,7 +90,7 @@ div(ng-controller="ChanakyaMainCtrl")
       button(type="button" class="btn btn-primary btn-circle" ng-model="serviceRadio" btn-radio="'profile'")
         i.fa.fa-user
     div#types
-  div#gps(ng-cloak)
+  div#gps(ng-cloak ng-show="serviceRadio == 'now'")
     i.fa.fa-crosshairs(ng-click="setSourceUserLocation()")
-  div#refresh(ng-cloak)
+  div#refresh(ng-cloak ng-show="serviceRadio == 'now'")
     i.fa.fa-refresh(ng-click="selectService('all')")

@@ -40,6 +40,8 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 var oneYear = 31557600000;
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: oneYear }));
+if (process.env.NODE_ENV !== 'production')
+    app.use(express.static(path.join(__dirname, 'src')));
 
 app.use('/', routes);
 app.use('/cabs', cabs);

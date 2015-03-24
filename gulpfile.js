@@ -2,17 +2,19 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
-    minifyCSS = require('gulp-minify-css');;
+    minifyCSS = require('gulp-minify-css'),
+    autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('build', ['css', 'js']);
 
 var scriptOrder = [
-  'public/scripts/Maps/Maps.js',
-  'public/scripts/Maps/MapSearch.js',
-  'public/scripts/Maps/MapDirections.js',
-  'public/scripts/Utils.js',
-  'public/scripts/user.js',
-  'public/scripts/*.js'
+  'src/scripts/maps/Maps.js',
+  'src/scripts/maps/MapSearch.js',
+  'src/scripts/maps/MapDirections.js',
+  'src/scripts/utils/*.js',
+  'src/scripts/angular/*.js',
+  'src/scripts/angular/services/*.js',
+  'src/scripts/angular/controllers/*.js'
 ];
 gulp.task('js', function () {
    return gulp.src(scriptOrder)
@@ -24,7 +26,9 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function() {
-  gulp.src('public/stylesheets/*.css')
+  gulp.src('src/styles/compiled/*.css')
     .pipe(minifyCSS({keepBreaks:true}))
+    .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9'))
+    .pipe(concat('style.css'))
     .pipe(gulp.dest('./public/build/'))
 });

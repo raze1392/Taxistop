@@ -34,7 +34,7 @@
                     console.error(err);
                 }
             });
-        }
+        };
 
         var ratesFailed = 0;
         var setRatesAuth = function(hash, info) {
@@ -91,15 +91,15 @@
             }
         }
 
-        var authHandle = function(error, authData, location, showError) {
+        var authHandle = function(error, authData) {
             if (error) {
-                handleError(error, showError);
+                handleError(error);
             } else {
-                saveAuth(authData, location);
+                saveAuth(authData);
             }
         };
 
-        var saveAuth = function(authData, location) {
+        var saveAuth = function(authData) {
             var hash = crypto.SHA1(authData[authData.provider].email).toString();
 
             $.ajax({
@@ -140,7 +140,7 @@
             });
         };
 
-        var register = function(options, location, showError) {
+        var register = function(options) {
             utils.fire.createUser({
                 email: options.email,
                 password: options.password
@@ -152,13 +152,13 @@
                         email: options.email,
                         password: options.password
                     }, function(error, authData) {
-                        authHandle(error, authData, location, showError);
+                        authHandle(error, authData);
                     });
                 }
             });
         };
 
-        var login = function(options, location, showError) {
+        var login = function(options) {
             console.log('trying login', options);
             if (utils.cookie.get('loginClicked')) return;
             utils.cookie.create({
@@ -178,7 +178,7 @@
                     email: options.email,
                     password: options.password
                 }, function(error, authData) {
-                    authHandle(error, authData, location, showError);
+                    authHandle(error, authData);
                 });
             }
         };
@@ -232,23 +232,28 @@
             });
         };
 
-        var handleError = function(error, showError) {
+        var handleError = function(error) {
             console.log(error);
             utils.cookie.erase('user');
             utils.cookie.erase('loginClicked');
+            var err = "";
             switch (error.code) {
                 case "INVALID_EMAIL":
-                    showError("The specified user account email is invalid.");
+                    err = "The specified user account email is invalid.";
                     break;
                 case "INVALID_PASSWORD":
-                    showError("The specified user account password is incorrect.");
+                    err = "The specified user account password is incorrect.";
                     break;
                 case "INVALID_USER":
-                    showError("The specified user account does not exist.");
+                    err = "The specified user account does not exist.";
                     break;
                 default:
-                    showError("Error logging user in");
+                    err = "Error logging user in";
             }
+            console.log(err);
+            w.dispatchEvent(new CustomEvent('userLoginError', {
+                details: err
+            }));
         };
         return {
             info: getUserInfo,
