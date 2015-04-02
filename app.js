@@ -7,7 +7,8 @@ var logger = require(__dirname + "/modules/helpers/log");
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var browserify = require('browserify-middleware');
-var compress = require('compression');
+var compress = require('compression'),
+    cors = require('cors');
 
 var globals = require(__dirname + '/modules/helpers/globals');
 var routes = require('./routes/index');
@@ -39,12 +40,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 var oneYear = 31557600000;
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: oneYear }));
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: oneYear
+}));
 if (process.env.NODE_ENV !== 'production')
     app.use(express.static(path.join(__dirname, 'src')));
 
 app.use('/', routes);
-app.use('/cabs', cabs);
+app.use('/cabs', cors(), cabs);
 app.use('/eta', eta);
 app.use('/booking', booking);
 app.use('/login', login);
