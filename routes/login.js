@@ -24,38 +24,16 @@ router.get('/service/:serviceName', function(request, response) {
     var serviceName = request.params.serviceName;
     var email = request.query.email;
     var encPassword = request.query.password;
+    var phonenumber = request.query.phone;
     var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
-
     var userCookie = request.cookies.user;
 
     if (!userCookie) {
         failedResponse(response, 'user not logged in');
     } else {
-        var ref = new Firebase("https://vivid-inferno-8339.firebaseio.com/users/" + userCookie + "/timestamp");
-        var tokenGenerator = new FirebaseTokenGenerator("4fbWFdEsKHSwkNG6xDikveNBMnSBbYGPlkn4QSNG");
-        var token = tokenGenerator.createToken({
-            uid: "1",
-            taxistopService: true
-        }, {
-            admin: true
-        });
-        ref.authWithCustomToken(token, function(error, authData) {
-            if (!error) {
-                ref.on("value", function(timestamp) {
-                    if (timestamp.val()) {
-                        if (serviceName && cabServiceModules[serviceName]) {
-                            cabServiceModules[serviceName].login(sendResponse, response, userCookie, email, encPassword, shouldParseData, saveCredentials);
-                        }
-                    } else {
-                        failedResponse(response, 'invalid user');
-                    }
-                }, function(errorObject) {
-                    failedResponse(response, 'invalid user');
-                });
-            } else {
-                failedResponse(response, 'error occured');
-            }
-        });
+        if (serviceName && cabServiceModules[serviceName]) {
+            cabServiceModules[serviceName].login(sendResponse, response, userCookie, email, encPassword, phonenumber, shouldParseData, saveCredentials);
+        }
     }
 });
 

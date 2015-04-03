@@ -46,7 +46,7 @@ function parseResponse(response) {
     return output;
 }
 
-exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData, userId) {
+exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, city, shouldParseData, userId) {
     UBER.options.request.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
 
     request.getJSON(UBER.options.request, function(statusCode, result) {

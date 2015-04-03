@@ -60,11 +60,12 @@ router.get('/:cab/cost', function(request, response) {
     var srcLongitude = request.query.srcLng;
     var destLatitude = request.query.destLat;
     var destLongitude = request.query.destLng;
+    var city = request.query.city;
     var cabService = request.params.cab;
     var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
 
     if (cabService && cabCostModules[cabService]) {
-        cabCostModules[cabService].price(sendResponse, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData);
+        cabCostModules[cabService].price(sendResponse, response, srcLatitude, srcLongitude, destLatitude, destLongitude, city, shouldParseData);
     }
 });
 

@@ -2,20 +2,10 @@ var request = require(__dirname + '/../../helpers/request');
 var logger = require(__dirname + '/../../helpers/log');
 var OLA = require(__dirname + '/../common/ola');
 var Firebase = require("firebase");
-// var crypto = require("crypto");
-// var Buffer = require('buffer').Buffer;
 
 function buildLoginURL(email, encPassword) {
     var url = '/v3/user/login?device_id=911380450341890&lat=29.3794796&lng=79.4637102';
     url += '&email=' + encodeURIComponent(email);
-    // encPassword += '|';
-    // var iv = new Buffer('');
-    // var key = new Buffer('PRODKEYPRODKEY12', 'utf8');
-    // var cipher = crypto.createCipheriv('aes-128-ecb', key, iv);
-    // var chunks = [];
-    // chunks.push(cipher.update(new Buffer(encPassword, 'utf8'), 'buffer', 'base64'));
-    // chunks.push(cipher.final('base64'));
-    // encPassword = chunks.join('');
     url += '&password=' + encPassword;
 
     return url;
@@ -41,7 +31,7 @@ function parseLoginResponse(response, status, userCookie) {
     return output;
 }
 
-exports.login = function(responseHandler, response, userCookie, email, encPassword, shouldParseData, saveCredentials) {
+exports.login = function(responseHandler, response, userCookie, email, encPassword, phonenumber, shouldParseData, saveCredentials) {
     OLA.options.request.path = buildLoginURL(email, encPassword);
 
     request.getJSON(OLA.options.request, function(statusCode, result) {

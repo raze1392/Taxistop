@@ -75,7 +75,7 @@ function parseResponse(response, status) {
     return output;
 }
 
-exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData, userId) {
+exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, city, shouldParseData, userId) {
     OLA.options.request.path = buildPriceURL(userId);
 
     request.getJSON(OLA.options.request, function(statusCode, result) {

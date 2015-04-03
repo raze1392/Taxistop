@@ -8,7 +8,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var browserify = require('browserify-middleware');
 var compress = require('compression'),
-    cors = require('cors');
+var cors = require('cors');
+var mongoose = require('mongoose');
 
 var globals = require(__dirname + '/modules/helpers/globals');
 var routes = require('./routes/index');
@@ -21,11 +22,21 @@ var api = require('./routes/api');
 var app = express();
 app.use(compress());
 
+
+// DB Connection
+var dbUrl = globals.getDBUrl
+mongoose.connect('mongodb://' + dbUrl, function(err) {
+    if (err) {
+        logger.error('connection error', err);
+    } else {
+        logger.info('DB Connected Successfully');
+    }
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 logger.debug("Overriding 'Express' logger");
 app.use(log('dev'))

@@ -1,11 +1,22 @@
 var MERU = {};
 
 MERU.options = {
-    request: {
+    requestGet: {
         host: 'mobileapp.merucabs.com',
         port: 80,
         method: 'GET',
         path: ''
+    },
+    requestPost: {
+        host: 'merucabapp.com',
+        port: 80,
+        method: 'POST',
+        path: '',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': 0,
+            'Host': 'merucabapp.com',
+        }
     }
 };
 

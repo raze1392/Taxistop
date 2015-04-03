@@ -1,11 +1,34 @@
 var TFS = {};
 
 TFS.options = {
-    request: {
+    requestGet: {
         host: 'iospush.taxiforsure.com',
         port: 80,
         method: 'GET',
         path: ''
+    },
+    requestPost: {
+        host: 'iospush.taxiforsure.com',
+        port: 80,
+        method: 'POST',
+        path: '',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': 0,
+            'Host': 'iospush.taxiforsure.com',
+        }
+    },
+    requestPostAppApi: {
+        host: 'api.taxiforsure.com',
+        port: 80,
+        method: 'POST',
+        path: '',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': 0,
+            'Host': 'api.taxiforsure.com',
+            'Connection': 'Keep-Alive'
+        }
     }
 };
 

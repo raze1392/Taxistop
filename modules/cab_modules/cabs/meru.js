@@ -75,9 +75,9 @@ function parseResponse(responseHandler, responseService, location, response) {
 
 
 exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
-    MERU.options.request.path = buildURL(latitude, longitude, userId);
+    MERU.options.requestGet.path = buildURL(latitude, longitude, userId);
 
-    request.getJSON(MERU.options.request, function(statusCode, result) {
+    request.getJSON(MERU.options.requestGet, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             // Here we make a call to google service which will take care of sending the response back

@@ -30,8 +30,8 @@ function parseResponse(response) {
     return output;
 }
 
-exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, shouldParseData, userId) {
-    MERU.options.request.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId);
+exports.price = function(responseHandler, response, srcLatitude, srcLongitude, destLatitude, destLongitude, city, shouldParseData, userId) {
+    MERU.options.request.path = buildPriceURL(srcLatitude, srcLongitude, destLatitude, destLongitude, userId, city);
 
     request.getJSON(MERU.options.request, function(statusCode, result) {
         if (shouldParseData && result) {

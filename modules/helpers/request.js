@@ -111,6 +111,33 @@ exports.putJSON = function(options, data, onResult) {
     req.end();
 };
 /**
+ * postJSON: post a JSON object to a REST service
+ *
+ * @param options
+ * @param callback: callback to pass the results JSON object(s) back
+ */
+exports.post = function(options, data, onResult) {
+    var prot = options.port == 443 ? https : http;
+    var req = prot.request(options, function(res) {
+        var output = '';
+        console.log(options.host + ':' + res.statusCode);
+        res.setEncoding('utf8');
+        res.on('data', function(chunk) {
+            output += chunk;
+        });
+        res.on('end', function() {
+            console.log('end: ' + output);
+            var obj = eval("(" + output + ")");
+            onResult(res.statusCode, obj);
+        });
+    });
+    req.on('error', function(err) {
+        console.log('error: ' + err.message);
+    });
+    req.write(data);
+    req.end();
+};
+/**
  * deleteJSON: send a delete REST request with an id to delete
  *
  * @param options: http server options object

@@ -2,21 +2,44 @@ var request = require(__dirname + '/../../helpers/request');
 var logger = require(__dirname + '/../../helpers/log');
 var MERU = require(__dirname + '/../common/meru');
 
-// TODO
-function buildBookingURL(userId, latitude, longitude, address, carType) {
-    var url = '';
-    url += '&user_id=' + userId;
-    url += '&lat=' + latitude + '&lng=' + longitude
-    url += '&fix_time=' + new Date().getTime();
-    for (key in MERU.Taxi_Name_Map) {
-        if (MERU.Taxi_Name_Map[key].toLowerCase() == carType) {
-            url += '&category_id=' + key;
-            break;
-        }
-    }
-    url += 'address=' + address;
+function buildBookingURL() {
+    var url = '/assets/GenieServices/GenieBookingAPI.php';
 
     return url;
+}
+
+function buildPostData(userId, srcLat, srcLng, srcAddress, additionalInfo) {
+    var data = 'Action=currentBooking&JsoneString='
+    data += JSON.stringify({
+        "userid": userId,
+        "isgenie": "0",
+        "address": encodeURIComponent(srcAddress),
+        "sub_area_id": "2768",
+        "tracking_number": "",
+        "customer_mobile": "9448800035",
+        "PickupAreaId": "589",
+        "PickupArea": "Btm 1st stage",
+        "PickupSubArea": "Udupi garden",
+        "City": "Bangalore",
+        "PickupCityId": "5",
+        "CustomerName": "Abhinav Kushwaha",
+        "CustomerEmail": "raze.wickedxe@gmail.com",
+        "number_of_hours": "0",
+        "return_journey": "0",
+        "PromoCode": "",
+        "device_id": "911380450341890",
+        "pickupLatitude": srcLat,
+        "pickupLongitude": srcLng,
+        "CabDeviceId": "8051269,800367,801824",
+        "ETA": "6,11,13",
+        "device_type": "Android",
+        "imageType": "hdpi",
+        "auth_token": additionalInfo.authToken
+    });
+
+    console.log(data);
+
+    return data;
 }
 
 // TODO
@@ -59,10 +82,19 @@ function parseBookingResponse(type, response, status) {
     return output;
 }
 
-exports.createBooking = function(responseHandler, response, userId, latitude, longitude, address, carType, shouldParseData) {
-    MERU.options.request.path = buildBookingURL(userId, latitude, longitude, address, carType);
+exports.createBooking = function(responseHandler, response, userId, srcLatitude, srcLongitude, srcAddress, destLatitude, destLongitude, destAddress, carType, shouldParseData, additionalData) {
+    MERU.options.requestPost.path = buildBookingURL();
 
-    request.getJSON(MERU.options.request, function(statusCode, result) {
+    var aData = {
+        authToken: "9mgtdq9lqk1vncjfrchrcijiekw18c2qt6llmyttkg5x36h4okek1uywoe3k83ae"
+    }
+    var data = buildPostData(userId, srcLatitude, srcLongitude, srcAddress, aData);
+
+    MERU.options.requestPost.headers['Content-Length'] = data.length;
+    MERU.options.requestPost.headers['Oauthtoken'] =  "9mgtdq9lqk1vncjfrchrcijiekw18c2qt6llmyttkg5x36h4okek1uywoe3k83ae";
+    MERU.options.requestPost.headers['Mobilenumber'] = "9448800035";
+
+    request.post(MERU.options.requestPost, data, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseBookingResponse('create', result, result.status);

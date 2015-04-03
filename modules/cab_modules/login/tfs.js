@@ -1,24 +1,18 @@
 var request = require(__dirname + '/../../helpers/request');
 var logger = require(__dirname + '/../../helpers/log');
-var TFS = require(__dirname + '/../common/ola');
+var globals = require(__dirname + '/../../helpers/globals');
+var TFS = require(__dirname + '/../common/tfs');
 var Firebase = require("firebase");
-// var crypto = require("crypto");
-// var Buffer = require('buffer').Buffer;
 
 function buildLoginURL(email, encPassword) {
-    var url = '/v3/user/login?device_id=911380450341890&lat=29.3794796&lng=79.4637102';
-    url += '&email=' + encodeURIComponent(email);
-    // encPassword += '|';
-    // var iv = new Buffer('');
-    // var key = new Buffer('PRODKEYPRODKEY12', 'utf8');
-    // var cipher = crypto.createCipheriv('aes-128-ecb', key, iv);
-    // var chunks = [];
-    // chunks.push(cipher.update(new Buffer(encPassword, 'utf8'), 'buffer', 'base64'));
-    // chunks.push(cipher.final('base64'));
-    // encPassword = chunks.join('');
-    url += '&password=' + encPassword;
-
+    var url = '/user/login/';
     return url;
+}
+
+function buildPostData(email, password, phonenumber) {
+    var data = "appVersion=4.1.6&username=" + phonenumber;
+    data += "&password=" + encodeURIComponent(globals.decryptTaxistopPassword(password));
+    return data;
 }
 
 function parseLoginResponse(response, status, userCookie) {
@@ -38,10 +32,14 @@ function parseLoginResponse(response, status, userCookie) {
     return output;
 }
 
-exports.login = function(responseHandler, response, userCookie, email, encPassword, shouldParseData, saveCredentials) {
-    TFS.options.request.path = buildLoginURL(email, encPassword);
+exports.login = function(responseHandler, response, userCookie, email, encPassword, phonenumber, shouldParseData, saveCredentials) {
+    TFS.options.requestPostAppApi.path = buildLoginURL();
+    var data = buildPostData(email, encPassword, phonenumber);
+    TFS.options.requestPostAppApi.headers['Content-Length'] = data.length;
 
-    request.getJSON(TFS.options.request, function(statusCode, result) {
+
+
+    request.post(TFS.options.requestPostAppApi, data, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         saveCredentials(userCookie, email, encPassword, 'ola', result);
         if (shouldParseData && result) {

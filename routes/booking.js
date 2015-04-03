@@ -26,9 +26,9 @@ router.get('/:cab/:bookingStatus', function(request, response) {
         var carType = request.query.carType;
         var userId = request.query.userId;
 
-        if (!userId || isNaN(parseFloat(srcLatitude)) || isNaN(parseFloat(srcLongitude))) {
+        if (isNaN(parseFloat(srcLatitude)) || isNaN(parseFloat(srcLongitude))) {
             var result = {
-                error: 'Latitude/Longitude/UserId not defined'
+                error: 'Latitude/Longitude not defined'
             };
             sendResponse(response, result);
         } else {

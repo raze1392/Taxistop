@@ -8,7 +8,7 @@ function buildBookingURL(userId, latitude, longitude, address, carType) {
     url += '&lat=' + latitude + '&lng=' + longitude
     url += '&fix_time=' + new Date().getTime();
     for (key in OLA.Taxi_Name_Map) {
-        if (OLA.Taxi_Name_Map[key].toLowerCase() == carType.toLowerCase()) {
+        if (carType && (OLA.Taxi_Name_Map[key].toLowerCase() == carType.toLowerCase()))  {
             url += '&category_id=' + key;
             break;
         }
