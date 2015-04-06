@@ -66,6 +66,12 @@ app.use('/login', login);
 app.use('/api', api);
 app.use('/users', users);
 
+app.get('/map', function(req, res) {
+    var src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=' + globals.getGmapsAPI();
+    res.append("Content-Type", "text/javascript; charset=UTF-8");
+    res.send("(function() {document.write('<' + 'script src=\"" + src + "\"><' + '/script>');}());");
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
