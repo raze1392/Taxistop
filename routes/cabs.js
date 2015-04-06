@@ -17,7 +17,7 @@ var cabCostModules = {
 var CAB_SERVICES = globals.getCabServices();
 
 // Route to get cab list
-router.get('/:cab', function(request, response) {
+router.get('/now/:cab', function(request, response) {
     var session = request.session;
 
     var latitude = request.query.lat;
@@ -48,6 +48,29 @@ router.get('/:cab', function(request, response) {
             };
             sendResponse(response, result);
         }
+    }
+});
+
+// Route to get cab list
+router.get('/later/', function(request, response) {
+    var session = request.session;
+
+    var latitude = request.query.lat;
+    var longitude = request.query.lng;
+    var validate = request.query.i;
+    var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
+
+    // Check that latitude and longitude are present and both are float
+    if (isNaN(parseFloat(latitude)) || isNaN(parseFloat(longitude))) {
+        var result = {
+            error: 'Latitude and Longitude not defined'
+        };
+        sendResponse(response, result);
+    } else {
+        var result = {
+            error: 'Unidentified endpoint/Not Allowed'
+        };
+        sendResponse(response, result);
     }
 });
 

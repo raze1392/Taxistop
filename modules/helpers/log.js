@@ -26,7 +26,8 @@ var logger = new(winston.Logger)({
             handleExceptions: true,
             json: false,
             colorize: true,
-            timestamp: true
+            timestamp: true,
+            level: "error",
         }),
         /*
         new winston.transports.File ({

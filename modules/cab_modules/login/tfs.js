@@ -1,6 +1,7 @@
 var request = require(__dirname + '/../../helpers/request');
 var logger = require(__dirname + '/../../helpers/log');
 var globals = require(__dirname + '/../../helpers/globals');
+var cryptoTS = require(__dirname + '/../../helpers/crypt_auth');
 var TFS = require(__dirname + '/../common/tfs');
 var Firebase = require("firebase");
 
@@ -11,7 +12,7 @@ function buildLoginURL(email, encPassword) {
 
 function buildPostData(email, password, phonenumber) {
     var data = "appVersion=4.1.6&username=" + phonenumber;
-    data += "&password=" + encodeURIComponent(globals.decryptTaxistopPassword(password));
+    data += "&password=" + encodeURIComponent(cryptoTS.decryptTaxistopPassword(password));
     return data;
 }
 

@@ -1,20 +1,20 @@
 var mongoose = require('mongoose');
 
-var UserSchema = new Schema({
+var UserSchema = new mongoose.Schema({
     name: String,
     email: String,
     password: String,
-    phone: Number,
+    phone: String,
     sos: [{
         name: String,
         email: String,
-        phone: Number
+        phone: String
     }],
     connected_services: [{
         service: String,
         email: Date,
         password: String,
-        phone: Number,
+        phone: String,
         auth_token: String,
         user_id: String
     }],

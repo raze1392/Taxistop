@@ -1,6 +1,7 @@
 var request = require(__dirname + '/../../helpers/request');
 var logger = require(__dirname + '/../../helpers/log');
 var globals = require(__dirname + '/../../helpers/globals');
+var cryptoTS = require(__dirname + '/../../helpers/crypt_auth');
 var MERU = require(__dirname + '/../common/meru');
 var Firebase = require("firebase");
 
@@ -13,7 +14,7 @@ function buildPostData(email, password, phonenumber) {
     var data = "Action=userLogin&JsoneString="
     data += JSON.stringify({
         "phonenumber": phonenumber,
-        "pwd": globals.decryptTaxistopPassword(password),
+        "pwd": cryptoTS.decryptTaxistopPassword(password),
         "device_id": "911380450341890",
         "device_type": "Android",
         "isupdate": "0",

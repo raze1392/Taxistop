@@ -7,7 +7,7 @@ var logger = require(__dirname + "/modules/helpers/log");
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var browserify = require('browserify-middleware');
-var compress = require('compression'),
+var compress = require('compression');
 var cors = require('cors');
 var mongoose = require('mongoose');
 
@@ -18,13 +18,14 @@ var eta = require('./routes/eta');
 var booking = require('./routes/booking');
 var login = require('./routes/login');
 var api = require('./routes/api');
+var users = require('./routes/users');
 
 var app = express();
 app.use(compress());
 
 
 // DB Connection
-var dbUrl = globals.getDBUrl
+var dbUrl = globals.getDBUrl();
 mongoose.connect('mongodb://' + dbUrl, function(err) {
     if (err) {
         logger.error('connection error', err);
@@ -63,6 +64,7 @@ app.use('/eta', eta);
 app.use('/booking', booking);
 app.use('/login', login);
 app.use('/api', api);
+app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
