@@ -1,5 +1,6 @@
 var crypto = require("crypto");
 var Buffer = require('buffer').Buffer;
+var UUID = require('node-uuid');
 
 // Constants
 var TAXISTOP_SECRET_KEY_AES = "TAXISTOPSTOPTAXI";
@@ -13,6 +14,10 @@ exports.hashIt = function (data) {
     sha.update(hashInput);
     var hash = sha.digest('base64');
     return hash;
+}
+
+exports.getUniqueId = function() {
+    return UUID.v1();
 }
 
 //  ================ Encryption/Decryption URLs =================

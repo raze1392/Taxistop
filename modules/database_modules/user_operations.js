@@ -3,13 +3,19 @@ var logger = require(__dirname + '/../helpers/log');
 var cryptoTS = require(__dirname + '/../helpers/crypt_auth');
 var User = require(__dirname + '/models/user.js');
 
-var getUserTemplate = function(name, email, password, phonenumber) {
+function copyUser(sourceUser, destinationUser) {
+    if (sourceUser.name) destinationUser.name = sourceUser.name;
+    if (sourceUser.phone) destinationUser.phone = sourceUser.phone;
+    if (sourceUser.password) destinationUser.password = sourceUser.password;
+}
+
+var getUserTemplate = function(name, email, password, phone) {
     var user = {
         name: name,
         email: email,
         password: password,
-        id: cryptoTS.hashIt(email + '|' + cryptoTS.decryptTaxistopPassword(password)),
-        phone: phonenumber,
+        id: cryptoTS.hashIt(email),
+        phone: phone,
         bookings: [],
         connected_services: [],
         sos: [],
@@ -69,12 +75,12 @@ var getUser = function(userId, callback) {
     });
 }
 
-var authenticateUser = function(email, password, phonenumber, callback) {
+var authenticateUser = function(email, password, phone, callback) {
     var searchCriteria = {
         email: email,
         password: password
     };
-    if (phonenumber) searchCriteria['phone'] = phonenumber;
+    if (phone) searchCriteria['phone'] = phone;
 
     User.find(searchCriteria, function(err, user) {
         if (!err) {
@@ -102,12 +108,12 @@ var authenticateUser = function(email, password, phonenumber, callback) {
     });
 }
 
-var updateUser = function(userId, userDetail, callback) {
+var updateUser = function(userId, newUser, callback) {
     User.find({
         id: userId
     }, function(err, user) {
         if (!err) {
-            user = userDetail;
+            copyUser(newUser, user);
             user.save(function(err) {
                 if (!err) {
                     callback(user.id);
@@ -118,23 +124,24 @@ var updateUser = function(userId, userDetail, callback) {
             });
         } else {
             logger.error("Error finding user for update with Id " + userId);
+            callback(-1); 
         }
     });
 }
 
-var existsUser = function(email, phonenumber, callback) {
+var existsUser = function(email, phone, callback) {
     User.find({
         email: email
     }, function(err, users) {
         if (!err) {
             if (users.length < 0) {
                 User.find({
-                    phone: phonenumber
+                    phone: phone
                 }, function(err, users) {
                     if (!err) {
                         callback(users.length > 0);
                     } else {
-                        logger.error("Error getting all users");
+                        logger.error("Error checking if a user exists");
                         callback(-1);
                     }
                 });
@@ -142,7 +149,7 @@ var existsUser = function(email, phonenumber, callback) {
                 callback(users.length > 0);
             }
         } else {
-            logger.error("Error getting all users");
+            logger.error("Error checking if a user exists");
             callback(-1);
         }
     });
