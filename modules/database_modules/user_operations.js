@@ -83,8 +83,7 @@ var authenticateUser = function(email, password, phone, callback) {
         searchCriteria['email'] = email;
     if (phone)
         searchCriteria['phone'] = phone;
-    console.log(searchCriteria);
-
+    
     User.find(searchCriteria, function(err, user) {
         if (!err) {
         	if (user.length == 1) {

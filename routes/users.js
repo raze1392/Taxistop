@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var globals = require(__dirname + '/../modules/helpers/globals');
+var utils = require(__dirname + '/../modules/helpers/utils');
 var userOps = require(__dirname + '/../modules/database_modules/user_operations');
 
 router.get('/', function(request, response) {
@@ -53,6 +54,14 @@ router.get('/signup', function(request, response) {
             message: "Missing email, password, name and phone"
         }
         sendResponse(response, result);
+    } else if (utils.validateEmail(email)) {
+        sendResponse(response, {
+            message: "Invalid email id provided."
+        });
+    } else if (utils.validatePhone(phone)) {
+        sendResponse(response, {
+            message: "Invalid phone number provided."
+        });
     } else {
         var userTemplate = userOps.getUserTemplate(name, email, encPassword, phone);
         userOps.createUser(userTemplate, function(data) {
@@ -65,7 +74,7 @@ router.get('/signup', function(request, response) {
             } else {
                 result = data;
             }
-            
+
             sendResponse(response, result);
         });
     }
@@ -95,7 +104,7 @@ router.post('/', function(request, response) {
             } else {
                 result = data;
             }
-            
+
             sendResponse(response, result);
         });
     }
