@@ -42,6 +42,36 @@ router.get('/', function(request, response) {
     }
 });
 
+router.get('/signup', function(request, response) {
+    var email = request.query.email;
+    var encPassword = request.query.password;
+    var name = request.query.name;
+    var phone = request.query.phone;
+
+    if (!email || !encPassword || !name || !phone) {
+        var result = {
+            message: "Missing email, password, name and phone"
+        }
+        sendResponse(response, result);
+    } else {
+        var userTemplate = userOps.getUserTemplate(name, email, encPassword, phone);
+        userOps.createUser(userTemplate, function(data) {
+            var result = {};
+
+            if (data == -1) {
+                result = {
+                    message: "Error Creating User"
+                }
+            } else {
+                result = data;
+            }
+            
+            sendResponse(response, result);
+        });
+    }
+});
+
+// Save user via POST
 router.post('/', function(request, response) {
     var email = request.body.email;
     var password = request.body.password;
@@ -71,23 +101,23 @@ router.post('/', function(request, response) {
     }
 });
 
-router.post('/authenticate', function(request, response) {
-    var email = request.body.email;
-    var password = request.body.password;
-    var phone = request.body.phone;
+router.get('/authenticate', function(request, response) {
+    var email = request.query.email;
+    var encPassword = request.query.password;
+    var phone = request.query.phone;
 
-    if (!email || !password) {
+    if ((!email && !phone) || !encPassword) {
         var result = {
-            message: "Need email or phone, password to authenticate"
+            message: "Need email/phone and password to authenticate"
         }
         sendResponse(response, result);
     } else {
-        userOps.authenticateUser(email, password, phone, function(data) {
+        userOps.authenticateUser(email, encPassword, phone, function(data) {
             var result = {};
 
             if (data == -1) {
                 result = {
-                    message: "Error Creating User"
+                    message: "Error Authenticating User"
                 }
             } else {
                 result = data

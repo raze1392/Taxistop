@@ -31,7 +31,7 @@ var createUser = function(user, callback) {
         if (!data) {
             user.save(function(err) {
                 if (!err) {
-                    callback(user.id);
+                    callback(user);
                 } else {
                     logger.error("Error creating user " + user.name + " with Id " + user.id);
                     callback(-1);
@@ -77,15 +77,18 @@ var getUser = function(userId, callback) {
 
 var authenticateUser = function(email, password, phone, callback) {
     var searchCriteria = {
-        email: email,
         password: password
     };
-    if (phone) searchCriteria['phone'] = phone;
+    if (email)
+        searchCriteria['email'] = email;
+    if (phone)
+        searchCriteria['phone'] = phone;
+    console.log(searchCriteria);
 
     User.find(searchCriteria, function(err, user) {
         if (!err) {
         	if (user.length == 1) {
-        		callback(user);	
+        		callback(user[0]);	
         	} else if (user.length > 1) {
                 logger.error("[Database Inconsistency] Multiple user exists with this userId " + userId);
                 callback({
@@ -134,7 +137,7 @@ var existsUser = function(email, phone, callback) {
         email: email
     }, function(err, users) {
         if (!err) {
-            if (users.length < 0) {
+            if (users.length <= 0) {
                 User.find({
                     phone: phone
                 }, function(err, users) {
