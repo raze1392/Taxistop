@@ -16,7 +16,6 @@ var routes = require('./routes/index');
 var cabs = require('./routes/cabs');
 var eta = require('./routes/eta');
 var booking = require('./routes/booking');
-var login = require('./routes/login');
 var api = require('./routes/api');
 var users = require('./routes/users');
 
@@ -62,7 +61,6 @@ app.use('/', routes);
 app.use('/cabs', cors(), cabs);
 app.use('/eta', eta);
 app.use('/booking', booking);
-app.use('/login', login);
 app.use('/api', api);
 app.use('/users', users);
 
