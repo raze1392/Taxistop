@@ -8,22 +8,22 @@ function buildBookingURL() {
     return url;
 }
 
-function buildPostData(userId, srcLat, srcLng, srcAddress, additionalInfo) {
+function buildPostData(userData, srcLat, srcLng, srcAddress) {
     var data = 'Action=currentBooking&JsoneString='
     data += JSON.stringify({
-        "userid": userId,
+        "userid": userData.connected_services.meru.userId,
         "isgenie": "0",
         "address": encodeURIComponent(srcAddress),
         "sub_area_id": "2768",
         "tracking_number": "",
-        "customer_mobile": "9448800035",
+        "customer_mobile": userData.phone,
         "PickupAreaId": "589",
         "PickupArea": "Btm 1st stage",
         "PickupSubArea": "Udupi garden",
         "City": "Bangalore",
         "PickupCityId": "5",
-        "CustomerName": "Abhinav Kushwaha",
-        "CustomerEmail": "raze.wickedxe@gmail.com",
+        "CustomerName": userData.name,
+        "CustomerEmail": userData.email,
         "number_of_hours": "0",
         "return_journey": "0",
         "PromoCode": "",
@@ -34,7 +34,7 @@ function buildPostData(userId, srcLat, srcLng, srcAddress, additionalInfo) {
         "ETA": "6,11,13",
         "device_type": "Android",
         "imageType": "hdpi",
-        "auth_token": additionalInfo.authToken
+        "auth_token": userData.connected_services.meru.authToken
     });
 
     console.log(data);
@@ -82,13 +82,10 @@ function parseBookingResponse(type, response, status) {
     return output;
 }
 
-exports.createBooking = function(responseHandler, response, userId, srcLatitude, srcLongitude, srcAddress, destLatitude, destLongitude, destAddress, carType, shouldParseData, additionalData) {
+exports.createBooking = function(responseHandler, response, userData, srcLatitude, srcLongitude, srcAddress, destLatitude, destLongitude, destAddress, carType, shouldParseData) {
     MERU.options.requestPost.path = buildBookingURL();
 
-    var aData = {
-        authToken: "9mgtdq9lqk1vncjfrchrcijiekw18c2qt6llmyttkg5x36h4okek1uywoe3k83ae"
-    }
-    var data = buildPostData(userId, srcLatitude, srcLongitude, srcAddress, aData);
+    var data = buildPostData(userData, srcLatitude, srcLongitude, srcAddress);
 
     MERU.options.requestPost.headers['Content-Length'] = data.length;
     MERU.options.requestPost.headers['Oauthtoken'] =  "9mgtdq9lqk1vncjfrchrcijiekw18c2qt6llmyttkg5x36h4okek1uywoe3k83ae";

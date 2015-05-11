@@ -11,10 +11,10 @@ function copyBooking(sourceBooking, destinationBooking) {
     if (sourceBooking.source_address) destinationBooking.destination_location = sourceBooking.destination_location;
 }
 
-var getBookingTemplate = function(date, source_address, source_location destination_address, destination_location, service) {
+var getBookingTemplate = function(date, source_address, source_location, destination_address, destination_location, service) {
     var booking = {
         id: cryptoTS.getUniqueId(),
-        service: String,
+        service: service,
         date: date,
         status: "IN_PROGRESS",
         source_address: source_address,
@@ -29,7 +29,8 @@ var getBookingTemplate = function(date, source_address, source_location destinat
         },
         service_booking: {
             booking_id: null,
-        }
+            booking_data: null
+        },
         verified: false
     };
 
@@ -86,7 +87,7 @@ var getBooking = function(bookingId, callback) {
     });
 }
 
-var updateBooking = function(bookingId, newBooking, callback) {
+var updateBookingByCopy = function(bookingId, newBooking, callback) {
     Booking.find({
         id: bookingId
     }, function(err, booking) {
@@ -121,7 +122,7 @@ var existsBooking = function(bookingId, callback) {
 }
 
 var getAllBookings = function(callback) {
-    User.find({}, function(err, bookings) {
+    Booking.find({}, function(err, bookings) {
         if (!err) {
             callback(bookings);
         } else {
@@ -131,13 +132,38 @@ var getAllBookings = function(callback) {
     });
 }
 
+var updateBooking = function(bookingData, fieldsToCopyArray, callback) {
+    Booking.findOne({
+        id: bookingData.id
+    }, function(err, booking) {
+        if (!err) {
+            for (var i = fieldsToCopyArray.length - 1; i >= 0; i--) {
+                booking[fieldsToCopyArray[i]] = bookingData[fieldsToCopyArray[i]];
+            };
+
+            booking.save(function(err) {
+                if (!err) {
+                    callback(booking);
+                } else {
+                    logger.error("Error finding booking for update with Id " + bookingId);
+                    callback(-1);
+                }
+            });
+        } else {
+            logger.error("Error getting all users");
+            callback(-1);
+        }
+    });
+}
+
 var UserOps = {
-    createUser: createUser,
-    getUser: getUser,
-    authenticateUser: authenticateUser,
-    updateUser: updateUser,
-    getAllUsers: getAllUsers,
-    getUserTemplate: getUserTemplate
+    createBooking: createBooking,
+    getBooking: getBooking,
+    updateBookingByCopy: updateBookingByCopy,
+    updateBooking: updateBooking,
+    existsBooking: existsBooking,
+    getAllBookings: getAllBookings,
+    getBookingTemplate: getBookingTemplate
 };
 
 module.exports = UserOps;

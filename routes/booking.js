@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var globals = require(__dirname + '/../modules/helpers/globals');
+var session = require(__dirname + '/../modules/helpers/session_handler');
+var bookingOps = require(__dirname + '/../modules/database_modules/booking_operations');
 
 var cabServiceModules = {
     ola: require('../modules/cab_modules/booking/ola'),
@@ -8,15 +10,18 @@ var cabServiceModules = {
     uber: require('../modules/cab_modules/booking/uber'),
     meru: require('../modules/cab_modules/booking/meru'),
 }
-var CAB_SERVICES = globals.getCabServices();
 
-router.get('/:cab/:bookingStatus', function(request, response) {
-    var cabService = request.params.cab;
-    var bookingStatus = request.params.bookingStatus;
+router.get('/create', function(request, response) {
+    var service = request.query.service;
     //var validate = request.query.i;
     var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
 
-    if (bookingStatus == 'create') {
+    if (!session.isAuthenticated(request)) {
+        var result = {
+            error: 'User not logged in'
+        };
+        globals.sendResponse(response, result, 500);
+    } else {
         var srcLatitude = request.query.srcLat;
         var srcLongitude = request.query.srcLng;
         var srcAddress = request.query.srcAddr;
@@ -24,51 +29,80 @@ router.get('/:cab/:bookingStatus', function(request, response) {
         var destLongitude = request.query.destLng;
         var destAddress = request.query.destAddr;
         var carType = request.query.carType;
-        var userId = request.query.userId;
 
         if (isNaN(parseFloat(srcLatitude)) || isNaN(parseFloat(srcLongitude))) {
             var result = {
                 error: 'Latitude/Longitude not defined'
             };
-            sendResponse(response, result);
+            globals.sendResponse(response, result, 500);
         } else {
-            if (cabService && cabServiceModules[cabService]) {
-                cabServiceModules[cabService].createBooking(sendResponse, response, userId, srcLatitude, srcLongitude, srcAddress, destLatitude, destLongitude, destAddress, carType, shouldParseData);
-            }
-        }
-    } else if (bookingStatus == 'cancel') {
-        var reason = request.query.reason;
-        var bookingId = request.query.bookingId;
-        var userId = request.query.userId;
-        
-        if (!userId || !bookingId) {
-            var result = {
-                error: 'BookingId/UserId not defined'
-            };
-            sendResponse(response, result);
-        } else {
-            if (cabService && cabServiceModules[cabService]) {
-                cabServiceModules[cabService].cancelBooking(sendResponse, response, userId, bookingId, shouldParseData, reason);
-            }
-        }
-    } else if (bookingStatus == 'info') {
-        var userId = request.query.userId;
+            var local_service = 'taxistop'
+            if (!service) local_service = service;
 
-        if (!userId) {
-            var result = {
-                error: 'UserId not defined'
-            };
-            sendResponse(response, result);
-        } else {
-            if (cabService && cabServiceModules[cabService]) {
-                cabServiceModules[cabService].bookingInfo(sendResponse, response, userId, shouldParseData);
+            var bookingTemplate = bookingOps.getBookingTemplate(new Date(), srcAddress, {
+                lat: srcLatitude,
+                lng: srcLongitude
+            }, destAddress, {
+                lat: destLatitude,
+                lng: destLongitude
+            }, service);
+
+            if (service && cabService && cabServiceModules[cabService]) {
+                cabServiceModules[cabService].createBooking(globals.sendResponse, response, session.getUserData(), bookingTemplate, carType, shouldParseData);
             }
         }
     }
 });
 
-function sendResponse(response, result) {
-    response.json(result);
-}
+router.get('/cancel', function(request, response) {
+    var service = request.query.service;
+    //var validate = request.query.i;
+    var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
+
+    if (!session.isAuthenticated(request)) {
+        var result = {
+            error: 'User not logged in'
+        };
+        globals.sendResponse(response, result, 500);
+    } else {
+        var reason = request.query.reason;
+        var bookingId = request.query.bookingId;
+
+        if (!bookingId) {
+            var result = {
+                error: 'BookingId not defined'
+            };
+            globals.sendResponse(response, result, 500);
+        } else {
+            if (cabService && cabServiceModules[cabService]) {
+                cabServiceModules[cabService].cancelBooking(globals.sendResponse, response, session.getUserData(), bookingId, shouldParseData, reason);
+            }
+        }
+    }
+});
+
+router.get('/', function(request, response) {
+    var service = request.query.service;
+    //var validate = request.query.i;
+    var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
+
+    if (!session.isAuthenticated(request)) {
+        var result = {
+            error: 'User not logged in'
+        };
+        globals.sendResponse(response, result, 500);
+    } else {
+        if (!userId) {
+            var result = {
+                error: 'UserId not defined'
+            };
+            globals.sendResponse(response, result, 500);
+        } else {
+            if (cabService && cabServiceModules[cabService]) {
+                cabServiceModules[cabService].bookingInfo(globals.sendResponse, response, userId, shouldParseData);
+            }
+        }
+    }
+});
 
 module.exports = router;

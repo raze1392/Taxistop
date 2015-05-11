@@ -10,14 +10,7 @@ var UserSchema = new mongoose.Schema({
         email: String,
         phone: String
     }],
-    connected_services: [{
-        service: String,
-        email: Date,
-        password: String,
-        phone: String,
-        auth_token: String,
-        user_id: String
-    }],
+    connected_services: {},
     bookings: [{
         booking_id: String,
         status: String,
@@ -25,6 +18,8 @@ var UserSchema = new mongoose.Schema({
     }],
     verified: Boolean,
     id: String
+}, {
+    minimize: false
 });
 
 module.exports = mongoose.model('User', UserSchema);

@@ -9,14 +9,26 @@ OLA.options = {
             'api-key': '@ndro1d',
             'Host': 'mapi.olacabs.com',
             'client': 'android',
-            'device_id': '911380450341890',
-            'enable_auto': 'true',
-            'install_id': '5f48380f-46c8-4df5-a565-2ab650bc19fd'
+            'app_version': '3.3.03',
+            'User-Agent': 'OlaConsumerApp/3.3.03 (android/4.4.4)',
+            'enable_auto': 'true'
         },
         path: ''
     },
-    primaryHost: 'mapi.olacabs.com',
-    secondaryHost: 'apps.olacabs.com',
+    secureRequest: {
+        host: 'apps.olacabs.com',
+        port: 443,
+        method: 'GET',
+        headers: {
+            'api-key': '@ndro1d',
+            'Host': 'apps.olacabs.com',
+            'client': 'android',
+            'app_version': '3.3.03',
+            'User-Agent': 'OlaConsumerApp/3.3.03 (android/4.4.4)',
+            'enable_auto': 'true'
+        },
+        path: ''
+    },
     userId: encodeURIComponent('YjTgq/3vNPAVbf63OC3e/T3AYM8iYAZ5U9MZQ9NvX93UOVB//nkEZ5l2pF8aURmRtfID8TsJisxk6b1MG5WYUw=='),
 };
 

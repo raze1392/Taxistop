@@ -1,9 +1,10 @@
 var request = require(__dirname + '/../../helpers/request');
 var logger = require(__dirname + '/../../helpers/log');
+var session = require(__dirname + '/../../helpers/session_handler');
 var globals = require(__dirname + '/../../helpers/globals');
 var cryptoTS = require(__dirname + '/../../helpers/crypt_auth');
 var MERU = require(__dirname + '/../common/meru');
-var Firebase = require("firebase");
+var userOps = require(__dirname + '/../../../modules/database_modules/user_operations');
 
 function buildLoginURL(email, encPassword) {
     var url = '/assets/GenieServices/GenieUsersAPI.php'
@@ -25,16 +26,26 @@ function buildPostData(email, password, phonenumber) {
     return data;
 }
 
-function parseLoginResponse(response, status, userCookie) {
+function parseLoginResponse(response, status, userData) {
     var output = {
         status: response ? ((status.toLowerCase() != 'failure') ? "success" : "failure") : "failure",
         service: 'MERU'
     };
 
     try {
+        userData.connected_services.meru = {};
 
-        //var ref = new Firebase('https://flickering-inferno-5036.firebaseio.com');  
+        userOps.updateUser(userData, ['connected_services'], function(data) {
+            if (data == -1) {
+                output.message = "Error Authenticating User";
+                output.error = true;
+            } else {
+                output.error = false;
+                output.data = userData;
+            }
+        });
     } catch (ex) {
+        output.error = true;
         logger.warn(ex.getMessage(), ex);
         return output;
     }
@@ -42,17 +53,24 @@ function parseLoginResponse(response, status, userCookie) {
     return output;
 }
 
-exports.login = function(responseHandler, response, userCookie, email, encPassword, phonenumber, shouldParseData, saveCredentials) {
+exports.login = function(responseHandler, sessRequest, response, userData, email, encPassword, phonenumber, shouldParseData) {
     MERU.options.requestPost.path = buildLoginURL();
     var data = buildPostData(email, encPassword, phonenumber);
     MERU.options.requestPost.headers['Content-Length'] = data.length;
 
     request.post(MERU.options.requestPost, data, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
-        saveCredentials(userCookie, email, encPassword, 'meru', result);
+        var output = result;
         if (shouldParseData && result) {
-            result = parseLoginResponse(result, result.status, userCookie);
+            output = parseLoginResponse(result, result.status, userData);
+            result = output.data;
         }
-        responseHandler(response, result);
+
+        if (output.error) {
+            responseHandler(response, output, 500);
+        } else {
+            session.setUserData(sessRequest, result);
+            responseHandler(response, result);
+        }
     });
 }

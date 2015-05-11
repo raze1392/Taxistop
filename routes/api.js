@@ -8,7 +8,7 @@ router.get('/generate', function(request, response) {
     var hostInfo = request.query.host;
     // var hostInfo = request.headers.referrer || request.headers.host;
     var apikey = APIUtils.generateAPIKey(hostInfo);
-    sendResponse(response, apikey);
+    globals.sendResponse(response, apikey);
 });
 
 router.get('/validate', function(request, response) {
@@ -18,11 +18,7 @@ router.get('/validate', function(request, response) {
     var status = {
         status: APIUtils.isAPIKeyValid(apikey, hostInfo)
     };
-    sendResponse(response, status);
+    globals.sendResponse(response, status);
 });
-
-function sendResponse(response, result) {
-    response.json(result);
-}
 
 module.exports = router;

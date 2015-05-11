@@ -31,11 +31,11 @@ router.get('/now/:cab', function(request, response) {
         var result = {
             error: 'Latitude and Longitude not defined'
         };
-        sendResponse(response, result);
+        globals.sendResponse(response, result, 500);
     } else {
         // Check for cabservice and handle accordingly
         if (cabService && cabServiceModules[cabService] && (!globals.isEnvironmentProduction() || validate)) {
-            cabServiceModules[cabService].cabs(sendResponse, response, latitude, longitude, shouldParseData);
+            cabServiceModules[cabService].cabs(globals.sendResponse, response, latitude, longitude, shouldParseData);
         } else if (cabService === 'all') {
             var ALL_RESP = {};
             ALL_RESP.cabs = {};
@@ -46,7 +46,7 @@ router.get('/now/:cab', function(request, response) {
             var result = {
                 error: 'Unidentified endpoint/Not Allowed'
             };
-            sendResponse(response, result);
+            globals.sendResponse(response, result, 500);
         }
     }
 });
@@ -88,13 +88,9 @@ router.get('/:cab/cost', function(request, response) {
     var shouldParseData = request.query.parseData ? (request.query.parseData == 'false' ? false : true) : true;
 
     if (cabService && cabCostModules[cabService]) {
-        cabCostModules[cabService].price(sendResponse, response, srcLatitude, srcLongitude, destLatitude, destLongitude, city, shouldParseData);
+        cabCostModules[cabService].price(globals.sendResponse, response, srcLatitude, srcLongitude, destLatitude, destLongitude, city, shouldParseData);
     }
 });
-
-function sendResponse(response, result) {
-    response.json(result);
-}
 
 function gatherGlobalResponse(ALL_RESP, response, latitude, longitude, shouldParseData) {
     for (service in cabServiceModules) {
@@ -106,7 +102,7 @@ function gatherGlobalResponse(ALL_RESP, response, latitude, longitude, shouldPar
                 ALL_RESP.cabsEstimate = ALL_RESP.cabsEstimate.concat(result.cabsEstimate);
             }
             if (ALL_RESP.serviceAdded === CAB_SERVICES.length) {
-                sendResponse(response, ALL_RESP);
+                globals.sendResponse(response, ALL_RESP);
             }
         }, response, latitude, longitude, shouldParseData);
     }

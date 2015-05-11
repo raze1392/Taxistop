@@ -24,11 +24,7 @@ router.get('/', function(request, response) {
         sourceLocations: [srcLocation]
     }
 
-    googleDistance.call(sendResponse, data);
+    googleDistance.call(globals.sendResponse, data);
 });
-
-function sendResponse(response, result) {
-    response.json(result);
-}
 
 module.exports = router;

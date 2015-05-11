@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var BookingSchema = new mongoose.Schema({
-    id: String
+    id: String,
     service: String,
     date: String,
     status: String,
@@ -17,8 +17,10 @@ var BookingSchema = new mongoose.Schema({
     },
     service_booking: {
         booking_id: String,
-    }
+    },
     verified: Boolean
+}, {
+    minimize: false
 });
 
 module.exports = mongoose.model('Booking', BookingSchema);

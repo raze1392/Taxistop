@@ -126,7 +126,6 @@ exports.post = function(options, data, onResult) {
             output += chunk;
         });
         res.on('end', function() {
-            console.log('end: ' + output);
             var obj = eval("(" + output + ")");
             onResult(res.statusCode, obj);
         });

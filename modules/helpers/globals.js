@@ -70,3 +70,10 @@ exports.getFirebaseUrls = function() {
 exports.getDBUrl = function() {
     return DB_URL;
 }
+
+// ============== Send Response ================
+exports.sendResponse = function(response, result, status) {
+    if (!status) status = 200;
+    response.status(status).json(result);
+}
+

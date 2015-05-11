@@ -17,7 +17,7 @@ var getUserTemplate = function(name, email, password, phone) {
         id: cryptoTS.hashIt(email),
         phone: phone,
         bookings: [],
-        connected_services: [],
+        connected_services: {},
         sos: [],
         verified: false
     }
@@ -86,9 +86,9 @@ var authenticateUser = function(email, password, phone, callback) {
 
     User.find(searchCriteria, function(err, user) {
         if (!err) {
-        	if (user.length == 1) {
-        		callback(user[0]);	
-        	} else if (user.length > 1) {
+            if (user.length == 1) {
+                callback(user[0]);
+            } else if (user.length > 1) {
                 logger.error("[Database Inconsistency] Multiple user exists with this userId " + userId);
                 callback({
                     message: "Error authenticating user",
@@ -102,7 +102,7 @@ var authenticateUser = function(email, password, phone, callback) {
                     success: false
                 });
             }
-            
+
         } else {
             logger.error("Error authenticating user with Id " + userId);
             callback(-1);
@@ -110,7 +110,7 @@ var authenticateUser = function(email, password, phone, callback) {
     });
 }
 
-var updateUser = function(userId, newUser, callback) {
+var updateUserByCopy = function(userId, newUser, callback) {
     User.find({
         id: userId
     }, function(err, user) {
@@ -126,7 +126,7 @@ var updateUser = function(userId, newUser, callback) {
             });
         } else {
             logger.error("Error finding user for update with Id " + userId);
-            callback(-1); 
+            callback(-1);
         }
     });
 }
@@ -168,9 +168,34 @@ var getAllUsers = function(callback) {
     });
 }
 
+var updateUser = function(userData, fieldsToCopyArray, callback) {
+    User.findOne({
+        id: userData.id
+    }, function(err, user) {
+        if (!err) {
+            for (var i = fieldsToCopyArray.length - 1; i >= 0; i--) {
+                user[fieldsToCopyArray[i]] = userData[fieldsToCopyArray[i]];
+            };
+
+            user.save(function(err) {
+                if (!err) {
+                    callback(user);
+                } else {
+                    logger.error("Error updating user " + user.name + " with Id " + user.id);
+                    callback(-1);
+                }
+            });
+        } else {
+            logger.error("Error getting all users");
+            callback(-1);
+        }
+    });
+}
+
 var UserOps = {
     createUser: createUser,
     getUser: getUser,
+    updateUserByCopy: updateUserByCopy,
     authenticateUser: authenticateUser,
     updateUser: updateUser,
     getAllUsers: getAllUsers,
