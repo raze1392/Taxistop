@@ -8,3 +8,4 @@ nohup*
 public/build/*
 /public/build/app.js
 /public/build/style.css
+desktop/*
