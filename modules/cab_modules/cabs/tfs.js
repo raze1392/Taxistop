@@ -9,7 +9,7 @@ function buildURL(latitude, longitude, userId) {
         url += '&latitude=' + latitude + '&longitude=' + longitude
     }
 
-    //console.log('TFS API url :: ' + TFS.options.host + url);
+    logger.debug('TFS API url :: ' + TFS.options.host + url);
     return url;
 }
 

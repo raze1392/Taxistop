@@ -4,13 +4,13 @@ var googleDistance = require(__dirname + '/../../helpers/googleDistance');
 var MERU = require(__dirname + '/../common/meru');
 
 function buildURL(latitude, longitude, userId) {
-    var url = '/NearByCab_ETA/GetNearByCabs.svc/rest/nearby?SuggestedRadiusMeters=5000&CabMaxCount=10';
+    var url = '/NearByCab_Eve/GetNearByCabs.svc/rest/nearby?SuggestedRadiusMeters=5000&CabMaxCount=10';
 
     if (latitude && longitude) {
         url += '&Lat=' + latitude + '&Lng=' + longitude
     }
 
-    //console.log('MERU API url :: ' + MERU.options.host + url);
+    logger.debug('MERU API url :: ' + MERU.options.requestGet.path + url);
     return url;
 }
 
@@ -86,8 +86,7 @@ exports.cabs = function(responseHandler, response, latitude, longitude, shouldPa
                 lng: longitude
             }
             result = parseResponse(responseHandler, response, location, result);
-        } else {
-            responseHandler(response, result);
-        }
+        } 
+        responseHandler(response, result);
     }, 'meru');
 }

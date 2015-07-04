@@ -18,7 +18,7 @@ function buildURL(latitude, longitude, userId) {
     url += '&cab_category=[economy_sedan,compact,luxury_sedan,pink,local_auto]';
     url += '&fix_time=' + new Date().getTime();
 
-    console.log('OLA API url :: ' + OLA.options.request.host + url);
+    logger.debug('OLA API url :: ' + OLA.options.request.host + url);
     return url;
 }
 
@@ -85,9 +85,9 @@ function parseResponse(response, status) {
 }
 
 exports.cabs = function(responseHandler, response, latitude, longitude, shouldParseData, userId) {
-    OLA.options.request.path = buildURL(latitude, longitude, userId);
+    OLA.options.secureRequest.path = buildURL(latitude, longitude, userId);
 
-    request.getJSON(OLA.options.request, function(statusCode, result) {
+    request.getJSON(OLA.options.secureRequest, function(statusCode, result) {
         //console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
         if (shouldParseData && result) {
             result = parseResponse(result, result.status);

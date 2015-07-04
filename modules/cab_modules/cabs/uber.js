@@ -9,7 +9,7 @@ function buildURL(latitude, longitude, userId) {
         url += '&start_latitude=' + latitude + '&start_longitude=' + longitude
     }
 
-    //console.log('UBER Estimate API url :: ' + UBER.options.host + url);
+    logger.debug('UBER Estimate API url :: ' + UBER.options.host + url);
     return url;
 }
 
