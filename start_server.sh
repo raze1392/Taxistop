@@ -1,7 +1,7 @@
 #!/bin/bash
 
 clear
-cd /home/ubuntu/chanakya
+cd /home/ubuntu/taxistop
 echo "=========================TAXI STOP========================"
 echo "Setting Port to 80 and Envt to Production"
 export PORT=80
