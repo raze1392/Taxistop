@@ -38,7 +38,8 @@ OLA.Taxi_Name_Map = {
     local_auto: 'Auto',
     pink: 'Pink',
     luxury_sedan: 'Prime',
-    local_taxi: 'Kaali Peeli'
+    local_taxi: 'Kaali Peeli',
+    food_delivery: 'Cafe',
 }
 
 module.exports = OLA;

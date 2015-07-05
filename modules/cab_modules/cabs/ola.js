@@ -53,6 +53,11 @@ function parseResponse(response, status) {
 
             //detail of nearest cab
             for (var i = response.cab_categories.length - 1; i >= 0; i--) {
+                // We don't want Cafe details
+                if (OLA.Taxi_Name_Map[response.cab_categories[i].id] == 'Cafe') {
+                    continue;
+                }
+
                 var availability = response.cab_categories[i].cab_availability;
                 var cabData = {
                     available: availability,
