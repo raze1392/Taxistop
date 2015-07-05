@@ -57,12 +57,12 @@ app.use(express.static(path.join(__dirname, 'public'), {
 if (process.env.NODE_ENV !== 'production')
     app.use(express.static(path.join(__dirname, 'src')));
 
-app.use('/', routes);
-app.use('/cabs', cors(), cabs);
-app.use('/eta', eta);
-app.use('/booking', booking);
-app.use('/api', api);
-app.use('/users', users);
+app.use('/api/v1/', routes);
+app.use('/api/v1/cabs', cors(), cabs);
+app.use('/api/v1/eta', eta);
+app.use('/api/v1/booking', booking);
+app.use('/api/v1/devapi', api);
+app.use('/api/v1/users', users);
 
 app.get('/map', function(req, res) {
     var src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=' + globals.getGmapsAPI();
