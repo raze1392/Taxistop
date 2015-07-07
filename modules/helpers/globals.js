@@ -68,7 +68,10 @@ exports.getFirebaseUrls = function() {
 
 //
 exports.getDBUrl = function() {
-    return DB_URL;
+    var username = "taxistop";
+    var password = "TAXIstop421"
+    return username + ":" + password + "@ds031641.mongolab.com:31641/taxistop";
+    //return DB_URL;
 }
 
 // ============== Send Response ================
